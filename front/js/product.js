@@ -1,5 +1,4 @@
-// Essai numéro 3
-
+// Essai numéro 4
 
 // PAS TOUCHE ! Ca fonctionne !
 // Récupérer l'id dans l'url :
@@ -13,21 +12,32 @@ console.log(productId);
 
 // ************************************************
 
+// Essai avec try et catch
 // Récupération des data de l'API
-const fetchData = async () => {
-    // Prendre l'API
-    const response = await fetch(`http://localhost:3000/api/products/${productId}`);
-    // Mettre le contenu de l'API dans .json
-    const data = await response.json();
-    return data;
+const fetchData = async (productId) => {
+    try {
+        // Prendre l'API
+        const response = await fetch(`http://localhost:3000/api/products/${productId}`);
+        // Mettre le contenu de l'API dans .json
+        const data = await response.json();
+        return data;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
 };
 
+// Essai avec try et catch
 // Récupérer le produit grâce à l'id :
-
 const fetchTheProduct = async () => {
-    let products = {};
-    products = await fetchData();
-    return products[0].product;
+    try {
+    return fetchData(productId).then(insertSingleCard(products));
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
 };
 
 // Trouver pourquoi la promise est pending

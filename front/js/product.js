@@ -34,7 +34,7 @@ const fetchData = async () => {
 const insertSingleCard = async (product) => {
     // Création de l'image
     let productImg = document.createElement('img');
-    productImg.src = product.imageUrl; 
+    productImg.src = product.imageUrl;
     productImg.alt = product.altTxt;
     // productImg.setAttribute('src', product.imageUrl);
     // productImg.setAttribute('alt', product.altTxt);
@@ -51,14 +51,17 @@ const insertSingleCard = async (product) => {
     // Insertion description
     document.getElementById('description').innerText = product.description;
 
-    // // Div : colors et form
-    // // Faire une function for comme dans fetchEachProduct
-    // for (color in product in products) {
-    //     const colorOption = insertSingleCard(products[product[color]])
-    //     select.appendChild(colorOption);
-    // }
+    // Insertion options des couleurs
+    /* Etape : faire une boucle forEach */
 
+    const colorOption = document.createElement('option');
+    colorOption.innerText = product.colors;
+    colorOption.setAttribute('value', product.colors);
+
+    document.getElementById('colors').appendChild(colorOption);
 }
+
+
 
 let products = {};
 

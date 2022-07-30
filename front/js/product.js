@@ -30,21 +30,25 @@ const fetchData = async () => {
 
 // ************************************************
 
-const imgDiv = document.querySelector('.item__img');
-
 /*Essai 2 : Création et insertion d'une seule carte dans la page produit*/
 const insertSingleCard = async (product) => {
-    // Div : item__img
+    // Création de l'image
     let productImg = document.createElement('img');
-    productImg.src = product.imageUrl;
+    productImg.src = product.imageUrl; 
     productImg.alt = product.altTxt;
-    imgDiv.appendChild(productImg);
+    // productImg.setAttribute('src', product.imageUrl);
+    // productImg.setAttribute('alt', product.altTxt);
 
-    // Div : item__content__titlePrice
+    // Insertion de <img>
+    // Pourquoi l'image apparait deux fois ?
+    const imageDiv = document.getElementsByClassName('item__img');
+    imageDiv[0].appendChild(productImg);
+
+    // Insertion nom et prix
     document.getElementById('title').innerText = product.name;
     document.getElementById('price').innerText = product.price;
 
-    // Div : item__content__description
+    // Insertion description
     document.getElementById('description').innerText = product.description;
 
     // // Div : colors et form
@@ -55,6 +59,7 @@ const insertSingleCard = async (product) => {
     // }
 
 }
+
 let products = {};
 
 // Essai avec try et catch
@@ -62,12 +67,7 @@ let products = {};
 const fetchTheProduct = async () => {
     products = await fetchData(productId);
     return fetchData(productId).then(insertSingleCard(products));
-
 };
-
-
-// Trouver pourquoi la promise est pending
-
 
 const insertProductPage = async () => {
     const product = await fetchTheProduct();

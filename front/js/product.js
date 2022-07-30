@@ -30,17 +30,14 @@ const fetchData = async () => {
 
 // ************************************************
 
-/*Essai 2 : Création et insertion d'une seule carte dans la page produit*/
+/*Essai 2 : Insertion d'une carte dans la page produit*/
 const insertSingleCard = async (product) => {
     // Création de l'image
     let productImg = document.createElement('img');
     productImg.src = product.imageUrl;
     productImg.alt = product.altTxt;
-    // productImg.setAttribute('src', product.imageUrl);
-    // productImg.setAttribute('alt', product.altTxt);
-
+    
     // Insertion de <img>
-    // Pourquoi l'image apparait deux fois ?
     const imageDiv = document.getElementsByClassName('item__img');
     imageDiv[0].appendChild(productImg);
 
@@ -54,12 +51,16 @@ const insertSingleCard = async (product) => {
     // Insertion options des couleurs
     /* Etape : faire une boucle forEach */
 
-    const colorOption = document.createElement('option');
-    colorOption.innerText = product.colors;
-    colorOption.setAttribute('value', product.colors);
+    const color = product.colors;
 
-    document.getElementById('colors').appendChild(colorOption);
-}
+    color.forEach(color => {
+        const colorOption = document.createElement('option');
+        colorOption.innerText = color;
+        colorOption.value = color;
+        document.getElementById('colors').appendChild(colorOption);
+    })
+};
+
 
 
 

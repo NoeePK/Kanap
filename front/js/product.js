@@ -14,7 +14,7 @@ console.log(productId);
 
 // Essai avec try et catch
 // Récupération des data de l'API
-const fetchData = async (productId) => {
+const fetchData = async () => {
     try {
         // Prendre l'API
         const response = await fetch(`http://localhost:3000/api/products/${productId}`);
@@ -27,22 +27,6 @@ const fetchData = async (productId) => {
         return null;
     }
 };
-
-// Essai avec try et catch
-// Récupérer le produit grâce à l'id :
-const fetchTheProduct = async () => {
-    try {
-    return fetchData(productId).then(insertSingleCard(products));
-    }
-    catch (err) {
-        console.log(err);
-        return null;
-    }
-};
-
-// Trouver pourquoi la promise est pending
-const product = fetchTheProduct();
-console.log(product);
 
 // ************************************************
 
@@ -71,5 +55,23 @@ const insertSingleCard = async (product) => {
     // }
 
 }
+let products = {};
 
-insertSingleCard(product);
+// Essai avec try et catch
+// Récupérer le produit grâce à l'id :
+const fetchTheProduct = async () => {
+    products = await fetchData(productId);
+    return fetchData(productId).then(insertSingleCard(products));
+
+};
+
+
+// Trouver pourquoi la promise est pending
+
+
+const insertProductPage = async () => {
+    const product = await fetchTheProduct();
+    insertSingleCard(product);
+}
+
+insertProductPage();

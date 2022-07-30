@@ -62,20 +62,14 @@ const insertSingleCard = async (product) => {
 };
 
 
-
-
 let products = {};
 
 // Essai avec try et catch
 // Récupérer le produit grâce à l'id :
-const fetchTheProduct = async () => {
-    products = await fetchData(productId);
-    return fetchData(productId).then(insertSingleCard(products));
-};
 
 const insertProductPage = async () => {
-    const product = await fetchTheProduct();
-    insertSingleCard(product);
+    products = await fetchData(productId);
+    return fetchData(productId).then(insertSingleCard(products));
 }
 
 insertProductPage();

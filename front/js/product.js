@@ -1,6 +1,6 @@
-// Essai numéro 4
+// Essai numéro 4 - Ca fonctionne !
+// PAS TOUCHE sans l'avis de Delphine ! 
 
-// PAS TOUCHE ! Ca fonctionne !
 // Récupérer l'id dans l'url :
 
 const productPageURL = window.location.href;
@@ -12,8 +12,8 @@ console.log(productId);
 
 // ************************************************
 
-// Essai avec try et catch
 // Récupération des data de l'API
+// Important : utiliser try et catch !
 const fetchData = async () => {
     try {
         // Prendre l'API
@@ -30,7 +30,7 @@ const fetchData = async () => {
 
 // ************************************************
 
-/*Essai 2 : Insertion d'une carte dans la page produit*/
+// Création de la carte produit
 const insertSingleCard = async (product) => {
     // Création de l'image
     let productImg = document.createElement('img');
@@ -61,15 +61,44 @@ const insertSingleCard = async (product) => {
     })
 };
 
-
 let products = {};
 
-// Essai avec try et catch
-// Récupérer le produit grâce à l'id :
-
+// Insertion de la carte produit :
 const insertProductPage = async () => {
+    // Récupérer le bon produit dans une Promise
     products = await fetchData(productId);
+    // Utiliser la Promise pour insérer la carte
     return fetchData(productId).then(insertSingleCard(products));
 }
 
 insertProductPage();
+
+// ************************************************************
+
+// Essai 1 : Ajout au panier
+
+// Récupérer la valeur de l'option choisie
+const colorSelect = document.getElementById('colors');
+const colorChoice = colorSelect.options[colorSelect.selectedIndex].text;
+
+// Récupérer la valeur de la quantité choisie
+const itemQuantity = document.getElementById('quantity').value;
+// Ajouter au panier
+const addToCart = async () => {
+    try {
+        localStorage.setItem("id", productId);
+        localStorage.setItem("color", colorChoice);
+        localStorage.setItem("quantity", itemQuantity);
+
+    } catch {}
+}
+
+
+// Déclencher l'ajout au panier par le clic
+const addToCartBtn = document.getElementById('addToCart');
+addToCartBtn.addEventListener("click", addToCart());
+
+
+
+
+

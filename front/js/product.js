@@ -36,7 +36,7 @@ const insertSingleCard = async (product) => {
     let productImg = document.createElement('img');
     productImg.src = product.imageUrl;
     productImg.alt = product.altTxt;
-    
+
     // Insertion de <img>
     const imageDiv = document.getElementsByClassName('item__img');
     imageDiv[0].appendChild(productImg);
@@ -75,26 +75,39 @@ insertProductPage();
 
 // ************************************************************
 
-// Essai 1 : Ajout au panier
+// Essai 2 : Ajout au panier
 
-// Récupérer la valeur de l'option choisie
-const colorSelect = document.getElementById('colors');
-const colorChoice = colorSelect.options[colorSelect.selectedIndex].text;
+// Créer l'array des 3 valeurs
 
-// Récupérer la valeur de la quantité choisie
-const itemQuantity = document.getElementById('quantity').value;
+const cartArray = async () => {
+    // Récupérer la valeur de l'option choisie
+    const colorSelect = document.getElementById('colors');
+    const colorChoice = colorSelect.options[colorSelect.selectedIndex].text;
+
+    // Récupérer la valeur de la quantité choisie
+    const itemQuantity = document.getElementById('quantity').value;
+
+    // Tout récupérer dans un array
+    const cartItems = [[localStorage.setItem("id", productId)], [localStorage.setItem("color", colorChoice)], [localStorage.setItem("quantity", itemQuantity)]
+    ];
+}
+
+cartArray();
+console.log(cartArray())
+
 // Ajouter au panier
 const addToCart = async () => {
     try {
-        localStorage.setItem("id", productId);
-        localStorage.setItem("color", colorChoice);
-        localStorage.setItem("quantity", itemQuantity);
-
-    } catch {}
+        cartArray();
+    }
+    catch (err) {
+        console.log(err)
+        return null
+    }
 }
 
 
-// Déclencher l'ajout au panier par le clic
+// Déclencher l'ajout au panier avec le clic
 const addToCartBtn = document.getElementById('addToCart');
 addToCartBtn.addEventListener("click", addToCart());
 

@@ -120,7 +120,8 @@ const addToCart = async () => {
 
 };
 
-
+addToCart();
+let colorItem = localStorage.getItem("colorChoice");
 
 
 // Raccourci pour le btn addToCart

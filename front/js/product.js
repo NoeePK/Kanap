@@ -101,27 +101,25 @@ const cartItems = async () => {
     // Mettre l'objet dans le localStorage
     localStorage.setItem("item", itemInfoString);
 
-
     // // Tout récupérer dans un array
     // const cartItems = [[localStorage.setItem("id", productId)], [localStorage.setItem("color", colorChoice)], [localStorage.setItem("quantity", itemQuantity)]
     // ];
 
-
-}
+};
 
 
 
 
 // Ajouter au panier
-const addToCart = async () => {
-    try {
-        cartItems();
-    }
-    catch (err) {
-        console.log(err)
-        return null
-    }
-}
+const addToCart = async (id, color, quantity) => {
+    
+    cartItems();
+    
+};
+
+// Ajouter if quantity = 0 avec mssg
+// Ajouter if quantity > 100 alert mssg
+// Article identique déjà dans le panier mettre +1
 
 
 // Raccourci pour le btn addToCart

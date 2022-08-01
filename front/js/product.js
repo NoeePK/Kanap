@@ -77,58 +77,54 @@ insertProductPage();
 
 // Essai 3 : Ajout au panier
 
+// Récupérer les 3 valeurs
+const cartItems = async () => {
+    
+};
+
 // Ajouter au panier
 const addToCart = async () => {
-    let itemInfo = await cartItems();
+
     // https://tutowebdesign.com/localstorage-javascript.php
     // Utiliser stringify pour transformer l'objet
-    let itemString = JSON.stringify(itemInfo);
+    let itemInfo = JSON.stringify(item);
 
-    // Utiliser try/catch
-    // https://code-garage.fr/blog/comment-utiliser-le-localstorage-pour-stocker-des-donnees-en-local-sur-le-navigateur/
-    try {
-        // Mettre l'objet dans le localStorage
-        localStorage.setItem("item", itemString);
-    } 
-    catch (error) {
-        alert('This is not a string');
-    }
+    // Mettre l'objet dans le localStorage
+    localStorage.setItem("item", itemInfo);
 
 };
 
+// Raccourci pour le btn addToCart
+const addToCartBtn = document.getElementById('addToCart');
 
-// Récupérer les 3 valeurs
-const cartItems = async () => {
-    // Récupérer la valeur de l'option choisie
-    const colorSelect = document.getElementById('colors');
-    const colorChoice = colorSelect.options[colorSelect.selectedIndex].text;
+// Déclencher l'ajout au clic sur le btn
+addToCartBtn.addEventListener("click", async () => {
+    // Récupérer la valeur de la couleur choisie
+    const itemColor = document.getElementById('colors').value;
 
     // Récupérer la valeur de la quantité choisie
     const itemQuantity = document.getElementById('quantity').value;
 
     // Tout stocker dans un objet
-    let item = {
+    /* Ca ne fonctionne pas : item n'est pas défini, donc essai avec item défini petit à petit*/
+    const itemDetails = {
         id: productId,
-        color: colorChoice,
+        color: itemColor,
         quantity: itemQuantity,
     };
+    const item = object.assign(itemDetails);
+
 
     // Ajouter if quantity = 0 avec mssg
     // Ajouter if quantity > 100 alert mssg
     // Article identique déjà dans le panier mettre +1
 
-    addToCart()
-};
+    addToCart();
+});
 
 
 
-// Raccourci pour le btn addToCart
-const addToCartBtn = document.getElementById('addToCart');
-
-// Déclencher l'ajout au clic sur le btn addToCart
-addToCartBtn.addEventListener("click", cartItems());
-
-
+console.log(localStorage);
 
 
 

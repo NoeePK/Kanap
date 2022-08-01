@@ -95,8 +95,11 @@ const cartItems = async () => {
         quantity: itemQuantity,
     };
 
-    
-
+    // https://tutowebdesign.com/localstorage-javascript.php
+    // Utiliser stringify pour transformer l'objet
+    let itemInfoString = JSON.stringify(itemInfo);
+    // Mettre l'objet dans le localStorage
+    localStorage.setItem("item", itemInfoString);
 
 
     // // Tout récupérer dans un array

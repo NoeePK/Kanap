@@ -97,22 +97,22 @@ const cartItems = async () => {
     // Ajouter if quantity > 100 alert mssg
     // Article identique déjà dans le panier mettre +1
 
-    addToCart();
 };
 
 
 
 // Ajouter au panier
 const addToCart = async () => {
+    let itemInfo = await cartItems();
     // https://tutowebdesign.com/localstorage-javascript.php
     // Utiliser stringify pour transformer l'objet
-    let itemInfo = JSON.stringify(item);
+    let itemString = JSON.stringify(itemInfo);
 
     // Utiliser try/catch
     // https://code-garage.fr/blog/comment-utiliser-le-localstorage-pour-stocker-des-donnees-en-local-sur-le-navigateur/
     try {
         // Mettre l'objet dans le localStorage
-        localStorage.setItem("item", itemInfo);
+        localStorage.setItem("item", itemString);
     } 
     catch (error) {
         alert('This is not a string');

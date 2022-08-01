@@ -75,11 +75,12 @@ insertProductPage();
 
 // ************************************************************
 
-// Essai 2 : Ajout au panier
+// Essai 3 : Ajout au panier
 
-// Créer l'array des 3 valeurs
 
-const cartArray = async () => {
+// Récupérer les 3 valeurs
+
+const cartItems = async () => {
     // Récupérer la valeur de l'option choisie
     const colorSelect = document.getElementById('colors');
     const colorChoice = colorSelect.options[colorSelect.selectedIndex].text;
@@ -87,18 +88,31 @@ const cartArray = async () => {
     // Récupérer la valeur de la quantité choisie
     const itemQuantity = document.getElementById('quantity').value;
 
-    // Tout récupérer dans un array
-    const cartItems = [[localStorage.setItem("id", productId)], [localStorage.setItem("color", colorChoice)], [localStorage.setItem("quantity", itemQuantity)]
-    ];
+    // Tout stocker dans un objet
+    let itemInfo = {
+        id: productId,
+        color: colorChoice,
+        quantity: itemQuantity,
+    };
+
+    
+
+
+
+    // // Tout récupérer dans un array
+    // const cartItems = [[localStorage.setItem("id", productId)], [localStorage.setItem("color", colorChoice)], [localStorage.setItem("quantity", itemQuantity)]
+    // ];
+
+
 }
 
-cartArray();
-console.log(cartArray())
+
+
 
 // Ajouter au panier
 const addToCart = async () => {
     try {
-        cartArray();
+        cartItems();
     }
     catch (err) {
         console.log(err)
@@ -107,8 +121,10 @@ const addToCart = async () => {
 }
 
 
-// Déclencher l'ajout au panier avec le clic
+// Raccourci pour le btn addToCart
 const addToCartBtn = document.getElementById('addToCart');
+
+// Déclencher l'ajout au clic sur le btn addToCart
 addToCartBtn.addEventListener("click", addToCart());
 
 

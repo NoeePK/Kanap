@@ -2,7 +2,6 @@
 // PAS TOUCHE sans l'avis de Delphine ! 
 
 // Récupérer l'id dans l'url :
-
 const productPageURL = window.location.href;
 const url = new URL(productPageURL);
 const productId = url.searchParams.get("id");
@@ -74,12 +73,11 @@ const insertProductPage = async () => {
 insertProductPage();
 
 // ************************************************************
+// ************************************************************
 
 // Essai 3 : Ajout au panier
 
-
 // Récupérer les 3 valeurs
-
 const cartItems = async () => {
     // Récupérer la valeur de l'option choisie
     const colorSelect = document.getElementById('colors');
@@ -89,37 +87,40 @@ const cartItems = async () => {
     const itemQuantity = document.getElementById('quantity').value;
 
     // Tout stocker dans un objet
-    let itemInfo = {
+    let item = {
         id: productId,
         color: colorChoice,
         quantity: itemQuantity,
     };
 
-    // https://tutowebdesign.com/localstorage-javascript.php
-    // Utiliser stringify pour transformer l'objet
-    let itemInfoString = JSON.stringify(itemInfo);
-    // Mettre l'objet dans le localStorage
-    localStorage.setItem("item", itemInfoString);
+    // Ajouter if quantity = 0 avec mssg
+    // Ajouter if quantity > 100 alert mssg
+    // Article identique déjà dans le panier mettre +1
 
-    // // Tout récupérer dans un array
-    // const cartItems = [[localStorage.setItem("id", productId)], [localStorage.setItem("color", colorChoice)], [localStorage.setItem("quantity", itemQuantity)]
-    // ];
-
+    addToCart();
 };
-
 
 
 
 // Ajouter au panier
-const addToCart = async (id, color, quantity) => {
-    
-    cartItems();
-    
+const addToCart = async () => {
+    // https://tutowebdesign.com/localstorage-javascript.php
+    // Utiliser stringify pour transformer l'objet
+    let itemInfo = JSON.stringify(item);
+
+    // Utiliser try/catch
+    // https://code-garage.fr/blog/comment-utiliser-le-localstorage-pour-stocker-des-donnees-en-local-sur-le-navigateur/
+    try {
+        // Mettre l'objet dans le localStorage
+        localStorage.setItem("item", itemInfo);
+    } 
+    catch (error) {
+        alert('This is not a string');
+    }
+
 };
 
-// Ajouter if quantity = 0 avec mssg
-// Ajouter if quantity > 100 alert mssg
-// Article identique déjà dans le panier mettre +1
+
 
 
 // Raccourci pour le btn addToCart

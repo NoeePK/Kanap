@@ -77,6 +77,26 @@ insertProductPage();
 
 // Essai 3 : Ajout au panier
 
+// Ajouter au panier
+const addToCart = async () => {
+    let itemInfo = await cartItems();
+    // https://tutowebdesign.com/localstorage-javascript.php
+    // Utiliser stringify pour transformer l'objet
+    let itemString = JSON.stringify(itemInfo);
+
+    // Utiliser try/catch
+    // https://code-garage.fr/blog/comment-utiliser-le-localstorage-pour-stocker-des-donnees-en-local-sur-le-navigateur/
+    try {
+        // Mettre l'objet dans le localStorage
+        localStorage.setItem("item", itemString);
+    } 
+    catch (error) {
+        alert('This is not a string');
+    }
+
+};
+
+
 // Récupérer les 3 valeurs
 const cartItems = async () => {
     // Récupérer la valeur de l'option choisie
@@ -97,38 +117,16 @@ const cartItems = async () => {
     // Ajouter if quantity > 100 alert mssg
     // Article identique déjà dans le panier mettre +1
 
+    addToCart()
 };
 
-
-
-// Ajouter au panier
-const addToCart = async () => {
-    let itemInfo = await cartItems();
-    // https://tutowebdesign.com/localstorage-javascript.php
-    // Utiliser stringify pour transformer l'objet
-    let itemString = JSON.stringify(itemInfo);
-
-    // Utiliser try/catch
-    // https://code-garage.fr/blog/comment-utiliser-le-localstorage-pour-stocker-des-donnees-en-local-sur-le-navigateur/
-    try {
-        // Mettre l'objet dans le localStorage
-        localStorage.setItem("item", itemString);
-    } 
-    catch (error) {
-        alert('This is not a string');
-    }
-
-};
-
-addToCart();
-let colorItem = localStorage.getItem("colorChoice");
 
 
 // Raccourci pour le btn addToCart
 const addToCartBtn = document.getElementById('addToCart');
 
 // Déclencher l'ajout au clic sur le btn addToCart
-addToCartBtn.addEventListener("click", addToCart());
+addToCartBtn.addEventListener("click", cartItems());
 
 
 

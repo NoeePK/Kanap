@@ -87,10 +87,16 @@ const addToCart = async () => {
 
     // https://tutowebdesign.com/localstorage-javascript.php
     // Utiliser stringify pour transformer l'objet
-    let itemInfo = JSON.stringify(item);
-
     // Mettre l'objet dans le localStorage
-    localStorage.setItem("item", itemInfo);
+
+    // let itemInfo = JSON.stringify(itemDetails);
+    // localStorage.setItem("item", itemInfo);
+
+    // Essai : Même chose en une ligne
+    localStorage.setItem("item", JSON.stringify(itemDetails));
+
+    // Essai : localisation du localStorage ?
+    location.href = "http://127.0.0.1:5500/front/html/cart.html"
 
 };
 
@@ -106,20 +112,20 @@ addToCartBtn.addEventListener("click", async () => {
     const itemQuantity = document.getElementById('quantity').value;
 
     // Tout stocker dans un objet
-    /* Ca ne fonctionne pas : item n'est pas défini, donc essai avec item défini petit à petit*/
     const itemDetails = {
         id: productId,
         color: itemColor,
         quantity: itemQuantity,
     };
-    const item = object.assign(itemDetails);
+    
+    // problème avec plusieurs produits de pages différentes
+    // Essai avec parse pour ajouter
 
 
     // Ajouter if quantity = 0 avec mssg
     // Ajouter if quantity > 100 alert mssg
     // Article identique déjà dans le panier mettre +1
 
-    addToCart();
 });
 
 

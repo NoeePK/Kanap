@@ -92,7 +92,6 @@ addToCartBtn.addEventListener("click", (event) => {
 
     // Stocker les 3 valeurs dans un objet
     const itemDetails = {
-        // Corriger pb de l'id en direct qui change
         id: productId,
         color: itemColor,
         quantity: itemQuantity
@@ -100,6 +99,14 @@ addToCartBtn.addEventListener("click", (event) => {
 
     console.log(itemDetails);
 });
+
+// ************************************************************
+
+// Essai 2 : Stocker les valeurs dans le localStorage
+
+// Utiliser parse pour rendre le contenu du panier lisible en JS
+let productInLocalStorage = JSON.parse(localStorage.getItem('product'));
+
 
 
 

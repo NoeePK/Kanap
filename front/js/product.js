@@ -76,6 +76,7 @@ insertProductPage();
 // ************************************************************
 
 // Essai 4 : Récupérer les infos du formulaire
+
 // Raccourci pour le btn addToCart
 const addToCartBtn = document.getElementById('addToCart');
 
@@ -91,6 +92,7 @@ addToCartBtn.addEventListener("click", (event) => {
     const itemQuantity = document.getElementById('quantity').value;
 
     // Stocker les 3 valeurs dans un objet
+    // Le prix aussi ?
     const itemDetails = {
         id: productId,
         color: itemColor,
@@ -141,13 +143,13 @@ addToCartBtn.addEventListener("click", (event) => {
         console.log(itemInLocalStorage);
     }
 
-
-
 });
 
 // ************************************************************
-// ************Formules à créer***************
+// ************Formules à créer et améliorations***************
 // ************************************************************
 // Ajouter if quantity = 0 avec mssg
 // Ajouter if quantity > 100 alert mssg
 // Article identique déjà dans le panier mettre +1
+// Optimiser les noms + optimiser les formules au max
+// Apprendre à exporter/importer des fonctions JS

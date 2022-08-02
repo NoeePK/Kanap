@@ -10,14 +10,14 @@ console.log(productPageURL);
 console.log(productId);
 
 // ************************************************
-
-// Récupération des data de l'API
+// Récupération du produit dans l'API
 // Important : utiliser try et catch !
+
 const fetchData = async () => {
     try {
-        // Prendre l'API
+        // Récupérer l'API
         const response = await fetch(`http://localhost:3000/api/products/${productId}`);
-        // Mettre le contenu de l'API dans .json
+        // Récupérer les produits dans .json
         const data = await response.json();
         return data;
     }
@@ -28,46 +28,47 @@ const fetchData = async () => {
 };
 
 // ************************************************
-
 // Création de la carte produit
+
 const insertSingleCard = async (product) => {
     // Création de l'image
     let productImg = document.createElement('img');
     productImg.src = product.imageUrl;
     productImg.alt = product.altTxt;
 
-    // Insertion de <img>
+    // Insertion de l'image
     const imageDiv = document.getElementsByClassName('item__img');
+    // Préciser que c'est la première (comme c'est pas un id)
     imageDiv[0].appendChild(productImg);
 
-    // Insertion nom et prix
+    // Insertion nom, prix, description
     document.getElementById('title').innerText = product.name;
     document.getElementById('price').innerText = product.price;
-
-    // Insertion description
     document.getElementById('description').innerText = product.description;
 
     // Insertion options des couleurs
-    /* Etape : faire une boucle forEach */
-
     const color = product.colors;
 
+    // Pour chaque couleur...
     color.forEach(color => {
+        // ... créer une option...
         const colorOption = document.createElement('option');
+        // ... avec la couleur comme nom et comme valeur...
         colorOption.innerText = color;
         colorOption.value = color;
+        // ... et ajouter l'option créée dans l'élément 'select'
         document.getElementById('colors').appendChild(colorOption);
     })
 };
 
-let products = {};
+// ************************************************
+// Insertion de la carte produit
 
-// Insertion de la carte produit :
 const insertProductPage = async () => {
     // Récupérer le bon produit dans une Promise
-    products = await fetchData(productId);
+    let products = await fetchData();
     // Utiliser la Promise pour insérer la carte
-    return fetchData(productId).then(insertSingleCard(products));
+    return fetchData().then(insertSingleCard(products));
 }
 
 insertProductPage();
@@ -77,7 +78,6 @@ insertProductPage();
 
 // Essai 4 : Récupérer les infos du formulaire
 
-// Raccourci pour le btn addToCart
 const addToCartBtn = document.getElementById('addToCart');
 
 // Déclencher l'ajout au clic sur le btn
@@ -85,10 +85,8 @@ addToCartBtn.addEventListener("click", (event) => {
     // Empêcher la réactualisation de la page lors du clic
     event.preventDefault();
 
-    // Récupérer la valeur de la couleur choisie
+    // Récupérer la valeur de la couleur/quantité choisie
     const itemColor = document.getElementById('colors').value;
-
-    // Récupérer la valeur de la quantité choisie
     const itemQuantity = document.getElementById('quantity').value;
 
     // Stocker les 3 valeurs dans un objet
@@ -101,46 +99,47 @@ addToCartBtn.addEventListener("click", (event) => {
 
     console.log(itemDetails);
 
-    // Essai 2 : Stocker les valeurs dans le localStorage
+    // SI la quantité est inf ou égale à 0 ou sup à 100...
+    if (itemQuantity <= 0 || itemQuantity > 100) {
+        // ... envoyer ce message d'alerte...
+        alert("Veuillez choisir un nombre d'article valide (entre 1 et 100)");
+        // ... et ne pas ajouter le produit au panier
+        // Comment annuler l'ajout au panier ?
+    };
 
-    // Utiliser parse pour rendre le contenu du panier lisible en JS
+
+
+
+
+    // ************************************************************
+
+    // Stocker les valeurs dans le localStorage
+
+    // Utiliser parse pour rendre le contenu lisible en JS
     let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
     // Trouver un nom plus court
-    console.log(itemInLocalStorage);
 
-    // Utiliser push pour ajouter
-    // Essai : Utiliser if/else ?
-
-    // Client a déjà un panier
+    // SI Client a déjà un panier
     if (itemInLocalStorage) {
-        // Mettre le produit dans l'array
+        // Push le produit dans l'array
         itemInLocalStorage.push(itemDetails);
-
-        console.log(itemInLocalStorage);
 
         // https://tutowebdesign.com/localstorage-javascript.php
 
         // Mettre l'array dans localStorage
         // Utiliser stringify pour transformer l'objet
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
-
-        console.log(itemInLocalStorage);
-
     }
-    // Client n'a pas de panier
+    // SINON Client n'a pas de panier
     else {
         // Créer l'array
         itemInLocalStorage = [];
 
-        // Mettre le produit dans l'array
+        // Push le produit dans l'array
         itemInLocalStorage.push(itemDetails);
-
-        console.log(itemInLocalStorage);
 
         // Mettre l'array dans localStorage
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
-
-        console.log(itemInLocalStorage);
     }
 
 });
@@ -148,8 +147,7 @@ addToCartBtn.addEventListener("click", (event) => {
 // ************************************************************
 // ************Formules à créer et améliorations***************
 // ************************************************************
-// Ajouter if quantity = 0 avec mssg
-// Ajouter if quantity > 100 alert mssg
+
 // Article identique déjà dans le panier mettre +1
 // Article ajouté : mssg de confirmation de l'ajout
 // Optimiser les noms + optimiser les formules au max

@@ -30,8 +30,6 @@ function insertProductCard(product) {
     let productLink = document.createElement('a');
     // Ne pas oublier les guillemets inversés ici
     // Trouver le bon href
-    // productLink.href = window.location.href + `/${product._id}`;
-    // productLink.href = `http://localhost:3000/api/products/${id}`
     productLink.href = 'product.html?id=' + product._id;
     itemSection.appendChild(productLink);
 

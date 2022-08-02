@@ -106,12 +106,11 @@ addToCartBtn.addEventListener("click", (event) => {
 
 // Utiliser parse pour rendre le contenu du panier lisible en JS
 let productInLocalStorage = JSON.parse(localStorage.getItem('product'));
+// Trouver un nom plus court
+console.log(productInLocalStorage);
+// Renvoie null => créer 'product' s'il n'y a pas déjà de panier
 
 
-
-
-// problème avec plusieurs produits de pages différentes
-// Essai avec parse pour ajouter
 
 
 // Ajouter if quantity = 0 avec mssg

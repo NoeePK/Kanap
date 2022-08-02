@@ -111,6 +111,18 @@ addToCartBtn.addEventListener("click", (event) => {
 
     // Client a déjà un panier
     if (itemInLocalStorage) {
+        // Mettre le produit dans l'array
+        itemInLocalStorage.push(itemDetails);
+
+        console.log(itemInLocalStorage);
+
+        // https://tutowebdesign.com/localstorage-javascript.php
+
+        // Mettre l'array dans localStorage
+        // Utiliser stringify pour transformer l'objet
+        localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+
+        console.log(itemInLocalStorage);
 
     }
     // Client n'a pas de panier
@@ -123,12 +135,9 @@ addToCartBtn.addEventListener("click", (event) => {
 
         console.log(itemInLocalStorage);
 
-        // https://tutowebdesign.com/localstorage-javascript.php
-
         // Mettre l'array dans localStorage
-        // Utiliser stringify pour transformer l'objet
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
-        
+
         console.log(itemInLocalStorage);
     }
 

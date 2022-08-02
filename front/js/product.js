@@ -105,25 +105,31 @@ addToCartBtn.addEventListener("click", (event) => {
     let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
     // Trouver un nom plus court
     console.log(itemInLocalStorage);
-    // Renvoie null => créer 'product' s'il n'y a pas déjà de panier
+
     // Utiliser push pour ajouter
     // Essai : Utiliser if/else ?
+
+    // Client a déjà un panier
     if (itemInLocalStorage) {
 
     }
+    // Client n'a pas de panier
     else {
+        // Créer l'array
         itemInLocalStorage = [];
+
+        // Mettre le produit dans l'array
         itemInLocalStorage.push(itemDetails);
+
         console.log(itemInLocalStorage);
+
         // https://tutowebdesign.com/localstorage-javascript.php
+
+        // Mettre l'array dans localStorage
         // Utiliser stringify pour transformer l'objet
-        // puis mettre l'objet dans le localStorage
-
-        // let itemInfo = JSON.stringify(itemDetails);
-        // localStorage.setItem("item", itemInfo);
-
-        // Essai : Même chose en une ligne
-        localStorage.setItem("product", JSON.stringify(itemDetails));
+        localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+        
+        console.log(itemInLocalStorage);
     }
 
 
@@ -131,10 +137,8 @@ addToCartBtn.addEventListener("click", (event) => {
 });
 
 // ************************************************************
-
-
-
-
+// ************Formules à créer***************
+// ************************************************************
 // Ajouter if quantity = 0 avec mssg
 // Ajouter if quantity > 100 alert mssg
 // Article identique déjà dans le panier mettre +1

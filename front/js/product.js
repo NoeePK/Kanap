@@ -80,41 +80,36 @@ insertProductPage();
 const addToCartBtn = document.getElementById('addToCart');
 
 // Déclencher l'ajout au clic sur le btn
-addToCartBtn.addEventListener("click", (event)=>{
+addToCartBtn.addEventListener("click", (event) => {
     // Empêcher la réactualisation de la page lors du clic
     event.preventDefault();
-    
-});
 
-// Essai de récup des val sans const/function
-// Récupérer la valeur de la couleur choisie
-const itemColor = document.getElementById('colors').value;
+    // Récupérer la valeur de la couleur choisie
+    const itemColor = document.getElementById('colors').value;
 
-// Récupérer la valeur de la quantité choisie
-const itemQuantity = document.getElementById('quantity').value;
+    // Récupérer la valeur de la quantité choisie
+    const itemQuantity = document.getElementById('quantity').value;
 
-
-
-
-// Récupérer les 3 valeurs
-const cartItems = async () => {
-
-    // Tout stocker dans un objet
+    // Stocker les 3 valeurs dans un objet
     const itemDetails = {
+        // Corriger pb de l'id en direct qui change
         id: productId,
         color: itemColor,
-        quantity: itemQuantity,
+        quantity: itemQuantity
     };
 
-    // problème avec plusieurs produits de pages différentes
-    // Essai avec parse pour ajouter
+    console.log(itemDetails);
+});
 
 
-    // Ajouter if quantity = 0 avec mssg
-    // Ajouter if quantity > 100 alert mssg
-    // Article identique déjà dans le panier mettre +1
 
-};
+// problème avec plusieurs produits de pages différentes
+// Essai avec parse pour ajouter
+
+
+// Ajouter if quantity = 0 avec mssg
+// Ajouter if quantity > 100 alert mssg
+// Article identique déjà dans le panier mettre +1
 
 
 
@@ -135,12 +130,3 @@ const addToCart = async () => {
     location.href = "http://127.0.0.1:5500/front/html/cart.html"
 
 };
-
-
-
-
-
-console.log(localStorage);
-
-
-

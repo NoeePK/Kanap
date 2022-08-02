@@ -98,17 +98,39 @@ addToCartBtn.addEventListener("click", (event) => {
     };
 
     console.log(itemDetails);
+
+    // Essai 2 : Stocker les valeurs dans le localStorage
+
+    // Utiliser parse pour rendre le contenu du panier lisible en JS
+    let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
+    // Trouver un nom plus court
+    console.log(itemInLocalStorage);
+    // Renvoie null => créer 'product' s'il n'y a pas déjà de panier
+    // Utiliser push pour ajouter
+    // Essai : Utiliser if/else ?
+    if (itemInLocalStorage) {
+
+    }
+    else {
+        itemInLocalStorage = [];
+        itemInLocalStorage.push(itemDetails);
+        console.log(itemInLocalStorage);
+        // https://tutowebdesign.com/localstorage-javascript.php
+        // Utiliser stringify pour transformer l'objet
+        // puis mettre l'objet dans le localStorage
+
+        // let itemInfo = JSON.stringify(itemDetails);
+        // localStorage.setItem("item", itemInfo);
+
+        // Essai : Même chose en une ligne
+        localStorage.setItem("product", JSON.stringify(itemDetails));
+    }
+
+
+
 });
 
 // ************************************************************
-
-// Essai 2 : Stocker les valeurs dans le localStorage
-
-// Utiliser parse pour rendre le contenu du panier lisible en JS
-let productInLocalStorage = JSON.parse(localStorage.getItem('product'));
-// Trouver un nom plus court
-console.log(productInLocalStorage);
-// Renvoie null => créer 'product' s'il n'y a pas déjà de panier
 
 
 
@@ -116,23 +138,3 @@ console.log(productInLocalStorage);
 // Ajouter if quantity = 0 avec mssg
 // Ajouter if quantity > 100 alert mssg
 // Article identique déjà dans le panier mettre +1
-
-
-
-// Ajouter au panier
-const addToCart = async () => {
-
-    // https://tutowebdesign.com/localstorage-javascript.php
-    // Utiliser stringify pour transformer l'objet
-    // Mettre l'objet dans le localStorage
-
-    // let itemInfo = JSON.stringify(itemDetails);
-    // localStorage.setItem("item", itemInfo);
-
-    // Essai : Même chose en une ligne
-    localStorage.setItem("product", JSON.stringify(itemDetails));
-
-    // Essai : localisation du localStorage ?
-    location.href = "http://127.0.0.1:5500/front/html/cart.html"
-
-};

@@ -151,5 +151,6 @@ addToCartBtn.addEventListener("click", (event) => {
 // Ajouter if quantity = 0 avec mssg
 // Ajouter if quantity > 100 alert mssg
 // Article identique déjà dans le panier mettre +1
+// Article ajouté : mssg de confirmation de l'ajout
 // Optimiser les noms + optimiser les formules au max
 // Apprendre à exporter/importer des fonctions JS

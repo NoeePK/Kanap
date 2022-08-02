@@ -99,6 +99,9 @@ addToCartBtn.addEventListener("click", (event) => {
 
     console.log(itemDetails);
 
+    // ************************************************************
+    // FONCTIONS A METTRE EN PLACE*********************************
+
     // SI la quantité est inf ou égale à 0 ou sup à 100...
     if (itemQuantity <= 0 || itemQuantity > 100) {
         // ... envoyer ce message d'alerte...
@@ -114,7 +117,12 @@ addToCartBtn.addEventListener("click", (event) => {
         alert("Veuillez choisir une couleur pour procéder à l'ajout");
         // ... et ne pas ajouter le produit au panier
         // Même problème qu'au-dessus
-    }
+    };
+
+    // Article identique déjà dans le panier mettre +1
+    // Chercher le contenu du panier dans localStorage
+    // Comparer le panier et le nouveau produit
+    // Si id et couleur identiques, quantity +
 
 
 
@@ -157,7 +165,7 @@ addToCartBtn.addEventListener("click", (event) => {
 // ************Formules à créer et améliorations***************
 // ************************************************************
 
-// Article identique déjà dans le panier mettre +1
+
 // Article ajouté : mssg de confirmation de l'ajout
 // Optimiser les noms + optimiser les formules au max
 // Apprendre à exporter/importer des fonctions JS

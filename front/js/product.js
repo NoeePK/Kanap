@@ -107,6 +107,15 @@ addToCartBtn.addEventListener("click", (event) => {
         // Comment annuler l'ajout au panier ?
     };
 
+    // SI la couleur n'a pas été sélectionnée...
+    // == ou === ?
+    if (itemColor == "") {
+        // ... envoyer ce message d'alerte...
+        alert("Veuillez choisir une couleur pour procéder à l'ajout");
+        // ... et ne pas ajouter le produit au panier
+        // Même problème qu'au-dessus
+    }
+
 
 
 

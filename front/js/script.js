@@ -1,5 +1,5 @@
-/*Essai 6 FONCTIONNE ! Ne pas toucher avant d'avoir l'avis de Delphine !*/
-
+/*Essai 6 FONCTIONNE ! 
+Ne pas toucher avant d'avoir l'avis de Delphine !*/
 
 const itemSection = document.getElementById("items");
 
@@ -10,14 +10,17 @@ const fetchEachProduct = async () => {
     // Récupérer les produits dans .json
     const products = await response.json();
     let product = {};
-    // Récupérer chaque Id pour créer une carte
+    // Pour chaque produit dans products...
     for (product in products) {
         const productLink = insertProductCard(products[product])
+        // .... créer une carte dans la section
         itemSection.appendChild(productLink)
     }
 };
 
 fetchEachProduct();
+
+// ************************************************************
 
 /*Création et insertion des cartes
 dans la page d'accueil*/

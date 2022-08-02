@@ -3,23 +3,14 @@
 
 const itemSection = document.getElementById("items");
 
-// Récupération des data de l'API
-const fetchData = async () => {
-    // Prendre l'API
+// Récupération des produits de l'API
+const fetchEachProduct = async () => {
+    // Récupérer l'API
     const response = await fetch('http://localhost:3000/api/products');
-
-    // Mettre le contenu de l'API dans .json
-    const data = await response.json();
-
-    return data;
-};
-
-// Récupérer des data d'un produit à la fois
-async function fetchEachProduct() {
-    // Produits = résultat du fetch précédent
-    products = await fetchData();
+    // Récupérer les produits dans .json
+    const products = await response.json();
     let product = {};
-    // Création d'une carte pour chaque Id dans l'API
+    // Récupérer chaque Id pour créer une carte
     for (product in products) {
         const productLink = insertProductCard(products[product])
         itemSection.appendChild(productLink)
@@ -27,7 +18,6 @@ async function fetchEachProduct() {
 };
 
 fetchEachProduct();
-
 
 /*Création et insertion des cartes
 dans la page d'accueil*/
@@ -65,5 +55,3 @@ function insertProductCard(product) {
 };
 
 insertProductCard();
-
-

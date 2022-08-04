@@ -76,12 +76,13 @@ insertProductPage();
 // ************************************************************
 // ************************************************************
 
+// Refactoring : Essai avec une fonction hors event
+// Utiliser parse pour rendre le contenu lisible en JS
+let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
+// Trouver un nom plus court si possible
+
 // Stocker les valeurs dans le localStorage
 const addToCart = async () => {
-    // Utiliser parse pour rendre le contenu lisible en JS
-    let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
-    // Trouver un nom plus court si possible
-
     // Push le produit dans l'array
     itemInLocalStorage.push(itemDetails);
 
@@ -90,7 +91,7 @@ const addToCart = async () => {
     // Mettre l'array dans localStorage
     // Utiliser stringify pour transformer l'objet
     localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
-}
+};
 
 
 // Essai 4 : Récupérer les infos du formulaire
@@ -119,7 +120,7 @@ addToCartBtn.addEventListener("click", (event) => {
     // ************************************************************
     // FONCTIONS A METTRE EN PLACE*********************************
 
-    // SI la quantité est inf ou égale à 0 ou sup à 100...
+    // SI la quantité est inf ou égale à 0 OU sup à 100...
     if (itemQuantity <= 0 || itemQuantity > 100) {
         // ... envoyer ce message d'alerte...
         alert("Veuillez choisir un nombre d'article valide (entre 1 et 100)");
@@ -137,28 +138,31 @@ addToCartBtn.addEventListener("click", (event) => {
     };
 
     // Article identique déjà dans le panier mettre +1
-    // Chercher le contenu du panier dans localStorage
-    // Comparer le panier et le nouveau produit
-    // Si id et couleur identiques, quantity +
-    // Commencer par refactoriser push pour l'utiliser ici aussi !!!!
 
 
-    // ************************************************************
+    // Refactoring essai : const avec comparaison du panier et du nouvel ajout
+    const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
+    console.log(alreadyInCart);
 
-    
-
-
-    // SI Client a déjà un panier
+    // SI Client a un panier => article id et color identiques dans panier...
+    if (alreadyInCart) {
+        // ... additionner la quantité passée et la nouvelle quantité
+        itemInLocalStorage.quantity = + itemQuantity;
+        // Utiliser push ?
+    }
+    // SI Client a déjà un panier mais id et couleur différents...
     if (itemInLocalStorage) {
+        // ... ajouter le produit au panier
         addToCart();
     }
+
     // SINON Client n'a pas de panier
     else {
         // Créer l'array
         itemInLocalStorage = [];
+        // ... et ajouter le produit au panier
         addToCart();
     }
-
 });
 
 // ************************************************************

@@ -137,7 +137,6 @@ let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
     };
 
     // Article identique déjà dans le panier
-
     // Refactoring essai : const avec comparaison du panier et du nouvel ajout
     const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
 
@@ -145,6 +144,7 @@ let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
     if (alreadyInCart) {
         // ... additionner la quantité actuelle et la nouvelle quantité
         itemInLocalStorage.quantity += itemQuantity;
+        // Pourquoi ça remplace l'ancienne valeur par la nouvelle ?
         // Utiliser push ?
     }
     // SI : Client a déjà un panier mais id et couleur différents...

@@ -76,6 +76,23 @@ insertProductPage();
 // ************************************************************
 // ************************************************************
 
+// Stocker les valeurs dans le localStorage
+const addToCart = async () => {
+    // Utiliser parse pour rendre le contenu lisible en JS
+    let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
+    // Trouver un nom plus court si possible
+
+    // Push le produit dans l'array
+    itemInLocalStorage.push(itemDetails);
+
+    // https://tutowebdesign.com/localstorage-javascript.php
+
+    // Mettre l'array dans localStorage
+    // Utiliser stringify pour transformer l'objet
+    localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+}
+
+
 // Essai 4 : Récupérer les infos du formulaire
 
 const addToCartBtn = document.getElementById('addToCart');
@@ -123,40 +140,23 @@ addToCartBtn.addEventListener("click", (event) => {
     // Chercher le contenu du panier dans localStorage
     // Comparer le panier et le nouveau produit
     // Si id et couleur identiques, quantity +
-
-
-
+    // Commencer par refactoriser push pour l'utiliser ici aussi !!!!
 
 
     // ************************************************************
 
-    // Stocker les valeurs dans le localStorage
+    
 
-    // Utiliser parse pour rendre le contenu lisible en JS
-    let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
-    // Trouver un nom plus court
 
     // SI Client a déjà un panier
     if (itemInLocalStorage) {
-        // Push le produit dans l'array
-        itemInLocalStorage.push(itemDetails);
-
-        // https://tutowebdesign.com/localstorage-javascript.php
-
-        // Mettre l'array dans localStorage
-        // Utiliser stringify pour transformer l'objet
-        localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+        addToCart();
     }
     // SINON Client n'a pas de panier
     else {
         // Créer l'array
         itemInLocalStorage = [];
-
-        // Push le produit dans l'array
-        itemInLocalStorage.push(itemDetails);
-
-        // Mettre l'array dans localStorage
-        localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+        addToCart();
     }
 
 });
@@ -164,8 +164,6 @@ addToCartBtn.addEventListener("click", (event) => {
 // ************************************************************
 // ************Formules à créer et améliorations***************
 // ************************************************************
-
-
 // Article ajouté : mssg de confirmation de l'ajout
 // Optimiser les noms + optimiser les formules au max
 // Apprendre à exporter/importer des fonctions JS

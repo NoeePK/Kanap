@@ -76,24 +76,6 @@ insertProductPage();
 // ************************************************************
 // ************************************************************
 
-// Refactoring : Essai avec une fonction hors event
-// Utiliser parse pour rendre le contenu lisible en JS
-let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
-// Trouver un nom plus court si possible
-
-// Stocker les valeurs dans le localStorage
-const addToCart = async () => {
-    // Push le produit dans l'array
-    itemInLocalStorage.push(itemDetails);
-
-    // https://tutowebdesign.com/localstorage-javascript.php
-
-    // Mettre l'array dans localStorage
-    // Utiliser stringify pour transformer l'objet
-    localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
-};
-
-
 // Essai 4 : Récupérer les infos du formulaire
 
 const addToCartBtn = document.getElementById('addToCart');
@@ -102,6 +84,11 @@ const addToCartBtn = document.getElementById('addToCart');
 addToCartBtn.addEventListener("click", (event) => {
     // Empêcher la réactualisation de la page lors du clic
     event.preventDefault();
+
+    // Refactoring : Essai dans l'event à nouveau
+// Utiliser parse pour rendre le contenu lisible en JS
+let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
+// Trouver un nom plus court si possible
 
     // Récupérer la valeur de la couleur/quantité choisie
     const itemColor = document.getElementById('colors').value;
@@ -117,10 +104,22 @@ addToCartBtn.addEventListener("click", (event) => {
 
     console.log(itemDetails);
 
+    // Essai : changement de place
+    // Stocker les valeurs dans le localStorage
+    const addToCart = async () => {
+        // Push le produit dans l'array
+        itemInLocalStorage.push(itemDetails);
+
+        // https://tutowebdesign.com/localstorage-javascript.php
+
+        // Mettre l'array dans localStorage
+        // Utiliser stringify pour transformer l'objet
+        localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+    };
     // ************************************************************
     // FONCTIONS A METTRE EN PLACE*********************************
 
-    // SI la quantité est inf ou égale à 0 OU sup à 100...
+    // SI : la quantité est inf/égale à 0 OU sup à 100...
     if (itemQuantity <= 0 || itemQuantity > 100) {
         // ... envoyer ce message d'alerte...
         alert("Veuillez choisir un nombre d'article valide (entre 1 et 100)");
@@ -128,7 +127,7 @@ addToCartBtn.addEventListener("click", (event) => {
         // Comment annuler l'ajout au panier ?
     };
 
-    // SI la couleur n'a pas été sélectionnée...
+    // SI : la couleur n'a pas été sélectionnée...
     // == ou === ?
     if (itemColor == "") {
         // ... envoyer ce message d'alerte...
@@ -137,26 +136,23 @@ addToCartBtn.addEventListener("click", (event) => {
         // Même problème qu'au-dessus
     };
 
-    // Article identique déjà dans le panier mettre +1
-
+    // Article identique déjà dans le panier
 
     // Refactoring essai : const avec comparaison du panier et du nouvel ajout
     const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
-    console.log(alreadyInCart);
 
-    // SI Client a un panier => article id et color identiques dans panier...
+    // SI : article id et color identiques dans panier...
     if (alreadyInCart) {
-        // ... additionner la quantité passée et la nouvelle quantité
-        itemInLocalStorage.quantity = + itemQuantity;
+        // ... additionner la quantité actuelle et la nouvelle quantité
+        itemInLocalStorage.quantity += itemQuantity;
         // Utiliser push ?
     }
-    // SI Client a déjà un panier mais id et couleur différents...
+    // SI : Client a déjà un panier mais id et couleur différents...
     if (itemInLocalStorage) {
         // ... ajouter le produit au panier
         addToCart();
     }
-
-    // SINON Client n'a pas de panier
+    // SINON : Client n'a pas de panier
     else {
         // Créer l'array
         itemInLocalStorage = [];

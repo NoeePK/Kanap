@@ -122,7 +122,7 @@ addToCartBtn.addEventListener("click", (event) => {
         alert("Veuillez choisir un nombre d'article(s) valide");
         // ... et ne pas ajouter le produit au panier
         // Comment annuler l'ajout au panier ?
-        return "";
+
     };
 
     // SI : la couleur n'a pas été sélectionnée...
@@ -141,9 +141,24 @@ addToCartBtn.addEventListener("click", (event) => {
     // SI : id et color identiques déjà dans le panier...
     if (alreadyInCart) {
         // ... additionner la quantité actuelle et la nouvelle quantité
-        number(itemInLocalStorage.quantity) += number(itemQuantity);
+        itemInLocalStorage.quantity += itemQuantity;
         // Pourquoi ça remplace l'ancienne valeur par la nouvelle ?
         // Utiliser push ? number()?
+
+        console.log(itemInLocalStorage)
+
+        // ... vérifier que la somme des quantités est inf à 100
+        // SI : la nouvelle quantité est sup à 100...
+        if (itemInLocalStorage.quantity > 100) {
+            // ... envoyer un mss d'alerte et empêcher l'ajout
+            // Ou ne pas ajouter surplus et quantité = 100 par défaut ?
+            alert("Nombre maximum du même article atteint")
+        }
+        // SINON : remplacer l'ancienne quantité par la somme dans le localStorage 
+        else {
+            addToCart();
+            console.log('Modification de la quantité effectuée')
+        }
 
     }
     // SI : Client a déjà un panier mais id et couleur différents...
@@ -165,6 +180,7 @@ addToCartBtn.addEventListener("click", (event) => {
 // *******************************
 // ******Formules à créer et améliorations******
 // *******************************
-// Article ajouté : mssg de confirmation de l'ajout
-// Optimiser les noms + optimiser les formules au max
+// Article ajouté : mssg de confirmation
+// Optimiser les noms
+// Optimiser les formules au max
 // Apprendre à exporter/importer des fonctions JS

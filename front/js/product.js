@@ -1,5 +1,4 @@
-// Essai numéro 4 - Ca fonctionne !
-// PAS TOUCHE sans l'avis de Delphine ! 
+ 
 
 // Récupérer l'id dans l'url :
 const productPageURL = window.location.href;
@@ -90,7 +89,6 @@ addToCartBtn.addEventListener("click", (event) => {
     const itemQuantity = document.getElementById('quantity').value;
 
     // Stocker les 3 valeurs dans un objet
-    // Le prix aussi ?
     const itemDetails = {
         id: productId,
         color: itemColor,
@@ -101,7 +99,6 @@ addToCartBtn.addEventListener("click", (event) => {
 
     // Utiliser parse pour rendre le contenu lisible en JS
     let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
-    // Trouver un nom plus court si possible
 
     // Essai : changement de place
     // Stocker les valeurs dans le localStorage
@@ -120,9 +117,15 @@ addToCartBtn.addEventListener("click", (event) => {
     if (itemQuantity <= 0 || itemQuantity > 100) {
         // ... envoyer ce message d'alerte...
         alert("Veuillez choisir un nombre d'article(s) valide");
+        // obliger à choisir
         // ... et ne pas ajouter le produit au panier
-        // Comment annuler l'ajout au panier ?
+        // Comment empêcher l'ajout au panier ?
+        // Return "" vide ne fonctionne pas
+        // Placer la condition dans un autre if ?
 
+        // attention aux -1 etc
+        // utiliser confirm
+        
     };
 
     // SI : la couleur n'a pas été sélectionnée...
@@ -130,6 +133,7 @@ addToCartBtn.addEventListener("click", (event) => {
     if (itemColor == "") {
         // ... envoyer ce message d'alerte...
         alert("Veuillez choisir une couleur pour procéder à l'ajout");
+        // obliger à choisir une couleur
         // ... et ne pas ajouter le produit au panier
         // Même problème qu'au-dessus
     };
@@ -142,22 +146,21 @@ addToCartBtn.addEventListener("click", (event) => {
     if (alreadyInCart) {
         // ... additionner la quantité actuelle et la nouvelle quantité
         itemInLocalStorage.quantity += itemQuantity;
-        // Pourquoi ça remplace l'ancienne valeur par la nouvelle ?
-        // Utiliser push ? number()?
 
         console.log(itemInLocalStorage)
+        
 
         // ... vérifier que la somme des quantités est inf à 100
         // SI : la nouvelle quantité est sup à 100...
         if (itemInLocalStorage.quantity > 100) {
             // ... envoyer un mss d'alerte et empêcher l'ajout
-            // Ou ne pas ajouter surplus et quantité = 100 par défaut ?
+            // Ou ne pas ajouter surplus et prévenir
             alert("Nombre maximum du même article atteint")
         }
         // SINON : remplacer l'ancienne quantité par la somme dans le localStorage 
         else {
             addToCart();
-            console.log('Modification de la quantité effectuée')
+            console.log('Quantité modifiée')
         }
 
     }
@@ -175,12 +178,12 @@ addToCartBtn.addEventListener("click", (event) => {
         addToCart();
         console.log('Création du panier');
     }
+
+    // confirm : retour à l'accueil/rester ou aller au panier
 });
 
 // *******************************
 // ******Formules à créer et améliorations******
 // *******************************
-// Article ajouté : mssg de confirmation
-// Optimiser les noms
+
 // Optimiser les formules au max
-// Apprendre à exporter/importer des fonctions JS

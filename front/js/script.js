@@ -1,5 +1,3 @@
-/*Essai 6 FONCTIONNE ! 
-Ne pas toucher avant d'avoir l'avis de Delphine !*/
 
 const itemSection = document.getElementById("items");
 
@@ -30,7 +28,7 @@ function insertProductCard(product) {
     let productLink = document.createElement('a');
     // Ne pas oublier les guillemets inversés ici
     // Trouver le bon href
-    productLink.href = 'product.html?id=' + product._id;
+    productLink.href = `product.html?id=` + product._id;
     itemSection.appendChild(productLink);
 
     let productArticle = document.createElement('article');

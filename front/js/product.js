@@ -73,8 +73,8 @@ const insertProductPage = async () => {
 
 insertProductPage();
 
-// ************************************************************
-// ************************************************************
+// *************************************************
+// *************************************************
 
 // Essai 4 : Récupérer les infos du formulaire
 
@@ -84,11 +84,6 @@ const addToCartBtn = document.getElementById('addToCart');
 addToCartBtn.addEventListener("click", (event) => {
     // Empêcher la réactualisation de la page lors du clic
     event.preventDefault();
-
-    // Refactoring : Essai dans l'event à nouveau
-// Utiliser parse pour rendre le contenu lisible en JS
-let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
-// Trouver un nom plus court si possible
 
     // Récupérer la valeur de la couleur/quantité choisie
     const itemColor = document.getElementById('colors').value;
@@ -104,6 +99,10 @@ let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
 
     console.log(itemDetails);
 
+    // Utiliser parse pour rendre le contenu lisible en JS
+    let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
+    // Trouver un nom plus court si possible
+
     // Essai : changement de place
     // Stocker les valeurs dans le localStorage
     const addToCart = async () => {
@@ -111,18 +110,19 @@ let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
         itemInLocalStorage.push(itemDetails);
 
         // https://tutowebdesign.com/localstorage-javascript.php
-
-        // Mettre l'array dans localStorage
-        // Utiliser stringify pour transformer l'objet
+        // Utiliser stringify avant de mettre dans le localStorage
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
     };
-    // ************************************************************
-    // FONCTIONS A METTRE EN PLACE*********************************
+
+    // **************************************
+    // FONCTIONS A METTRE EN PLACE***********
+
+// ESSAI avec RETURN
 
     // SI : la quantité est inf/égale à 0 OU sup à 100...
     if (itemQuantity <= 0 || itemQuantity > 100) {
         // ... envoyer ce message d'alerte...
-        alert("Veuillez choisir un nombre d'article valide (entre 1 et 100)");
+        return alert("Veuillez choisir un nombre d'article valide (entre 1 et 100)");
         // ... et ne pas ajouter le produit au panier
         // Comment annuler l'ajout au panier ?
     };
@@ -131,16 +131,16 @@ let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
     // == ou === ?
     if (itemColor == "") {
         // ... envoyer ce message d'alerte...
-        alert("Veuillez choisir une couleur pour procéder à l'ajout");
+        return alert("Veuillez choisir une couleur pour procéder à l'ajout");
         // ... et ne pas ajouter le produit au panier
         // Même problème qu'au-dessus
     };
 
     // Article identique déjà dans le panier
-    // Refactoring essai : const avec comparaison du panier et du nouvel ajout
+    // Refactoring : const avec comparaison du panier et du nouvel ajout
     const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
 
-    // SI : article id et color identiques dans panier...
+    // SI : id et color identiques déjà dans le panier...
     if (alreadyInCart) {
         // ... additionner la quantité actuelle et la nouvelle quantité
         itemInLocalStorage.quantity += itemQuantity;
@@ -151,6 +151,7 @@ let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
     if (itemInLocalStorage) {
         // ... ajouter le produit au panier
         addToCart();
+        console.log('Ajouté au panier');
     }
     // SINON : Client n'a pas de panier
     else {
@@ -158,12 +159,13 @@ let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
         itemInLocalStorage = [];
         // ... et ajouter le produit au panier
         addToCart();
+        console.log('Création du panier');
     }
 });
 
-// ************************************************************
-// ************Formules à créer et améliorations***************
-// ************************************************************
+// *******************************
+// ******Formules à créer et améliorations******
+// *******************************
 // Article ajouté : mssg de confirmation de l'ajout
 // Optimiser les noms + optimiser les formules au max
 // Apprendre à exporter/importer des fonctions JS

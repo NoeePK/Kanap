@@ -141,9 +141,10 @@ addToCartBtn.addEventListener("click", (event) => {
     // SI : id et color identiques déjà dans le panier...
     if (alreadyInCart) {
         // ... additionner la quantité actuelle et la nouvelle quantité
-        itemInLocalStorage.quantity += itemQuantity;
+        number(itemInLocalStorage.quantity) += number(itemQuantity);
         // Pourquoi ça remplace l'ancienne valeur par la nouvelle ?
-        // Utiliser push ?
+        // Utiliser push ? number()?
+
     }
     // SI : Client a déjà un panier mais id et couleur différents...
     if (itemInLocalStorage) {

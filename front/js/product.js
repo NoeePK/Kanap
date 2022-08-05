@@ -109,7 +109,6 @@ addToCartBtn.addEventListener("click", (event) => {
         // Push le produit dans l'array
         itemInLocalStorage.push(itemDetails);
 
-        // https://tutowebdesign.com/localstorage-javascript.php
         // Utiliser stringify avant de mettre dans le localStorage
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
     };
@@ -117,21 +116,20 @@ addToCartBtn.addEventListener("click", (event) => {
     // **************************************
     // FONCTIONS A METTRE EN PLACE***********
 
-// ESSAI avec RETURN
-
     // SI : la quantité est inf/égale à 0 OU sup à 100...
     if (itemQuantity <= 0 || itemQuantity > 100) {
         // ... envoyer ce message d'alerte...
-        return alert("Veuillez choisir un nombre d'article valide (entre 1 et 100)");
+        alert("Veuillez choisir un nombre d'article(s) valide");
         // ... et ne pas ajouter le produit au panier
         // Comment annuler l'ajout au panier ?
+        return "";
     };
 
     // SI : la couleur n'a pas été sélectionnée...
     // == ou === ?
     if (itemColor == "") {
         // ... envoyer ce message d'alerte...
-        return alert("Veuillez choisir une couleur pour procéder à l'ajout");
+        alert("Veuillez choisir une couleur pour procéder à l'ajout");
         // ... et ne pas ajouter le produit au panier
         // Même problème qu'au-dessus
     };

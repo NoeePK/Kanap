@@ -107,6 +107,9 @@ addToCartBtn.addEventListener("click", (event) => {
 
         // Utiliser stringify avant de mettre dans le localStorage
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+
+        // Confirmer l'ajout
+        alert('Article ajouté au panier');
     };
 
     // **************************************
@@ -123,14 +126,11 @@ addToCartBtn.addEventListener("click", (event) => {
 
 
     // SI : la quantité est inf/égale à 0 OU sup à 100...
-    if (itemQuantity <= 0 || itemQuantity > 100) {
+    if (itemQuantity <= 0 || itemQuantity > 100 || math.sign(-1)) {
         // ... envoyer ce message d'alerte...
         confirmation("Veuillez choisir un nombre d'article(s) valide");
         // obliger à choisir
-        // ... et ne pas ajouter le produit au panier
-        // Comment empêcher l'ajout au panier ?
-        // Return "" vide ne fonctionne pas
-        // Placer la condition dans un autre if ?
+   
 
         // attention aux -1 etc
         // utiliser confirm
@@ -174,15 +174,13 @@ addToCartBtn.addEventListener("click", (event) => {
     if (itemInLocalStorage) {
         // ... ajouter le produit au panier
         addToCart();
-        console.log('Ajouté au panier');
     }
     // SINON : Client n'a pas de panier
     else {
         // Créer l'array
         itemInLocalStorage = [];
         // ... et ajouter le produit au panier
-        addToCart();
-        console.log('Création du panier');
+        addToCart(); 
     }
 
     // confirm : retour à l'accueil/rester ou aller au panier

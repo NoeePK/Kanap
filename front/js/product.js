@@ -115,8 +115,8 @@ addToCartBtn.addEventListener("click", (event) => {
     // **************************************
     // FONCTIONS A METTRE EN PLACE***********
 
-    const confirmation = async (mssg) => {
-        if (windows.confirm(mssg + "\nOK pour modifier ou Annuler pour retourner à l'accueil") == true) {
+    const confirmation = async () => {
+        if (windows.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
             location.reload();
         }
         else {
@@ -128,7 +128,7 @@ addToCartBtn.addEventListener("click", (event) => {
     // SI : la quantité est inf/égale à 0 OU sup à 100...
     if (itemQuantity <= 0 || itemQuantity > 100 || math.sign(-1)) {
         // ... envoyer ce message d'alerte...
-        confirmation("Veuillez choisir un nombre d'article(s) valide");
+        confirmation();
         // obliger à choisir
    
 
@@ -141,7 +141,7 @@ addToCartBtn.addEventListener("click", (event) => {
     // == ou === ?
     if (itemColor == "") {
         // ... envoyer ce message d'alerte...
-        confirmation("Veuillez choisir une couleur pour procéder à l'ajout");
+        confirmation();
     };
 
     // Article identique déjà dans le panier

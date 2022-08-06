@@ -1,4 +1,4 @@
- 
+
 
 // Récupérer l'id dans l'url :
 const productPageURL = window.location.href;
@@ -100,7 +100,6 @@ addToCartBtn.addEventListener("click", (event) => {
     // Utiliser parse pour rendre le contenu lisible en JS
     let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
 
-    // Essai : changement de place
     // Stocker les valeurs dans le localStorage
     const addToCart = async () => {
         // Push le produit dans l'array
@@ -113,10 +112,20 @@ addToCartBtn.addEventListener("click", (event) => {
     // **************************************
     // FONCTIONS A METTRE EN PLACE***********
 
+    const confirmation = async (mssg) => {
+        if (windows.confirm(mssg + "\nOK pour modifier ou Annuler pour retourner à l'accueil") == true) {
+            location.reload();
+        }
+        else {
+            window.location.href = "../index.html";
+        }
+    }
+
+
     // SI : la quantité est inf/égale à 0 OU sup à 100...
     if (itemQuantity <= 0 || itemQuantity > 100) {
         // ... envoyer ce message d'alerte...
-        alert("Veuillez choisir un nombre d'article(s) valide");
+        confirmation("Veuillez choisir un nombre d'article(s) valide");
         // obliger à choisir
         // ... et ne pas ajouter le produit au panier
         // Comment empêcher l'ajout au panier ?
@@ -125,17 +134,14 @@ addToCartBtn.addEventListener("click", (event) => {
 
         // attention aux -1 etc
         // utiliser confirm
-        
+
     };
 
     // SI : la couleur n'a pas été sélectionnée...
     // == ou === ?
     if (itemColor == "") {
         // ... envoyer ce message d'alerte...
-        alert("Veuillez choisir une couleur pour procéder à l'ajout");
-        // obliger à choisir une couleur
-        // ... et ne pas ajouter le produit au panier
-        // Même problème qu'au-dessus
+        confirmation("Veuillez choisir une couleur pour procéder à l'ajout");
     };
 
     // Article identique déjà dans le panier
@@ -148,7 +154,7 @@ addToCartBtn.addEventListener("click", (event) => {
         itemInLocalStorage.quantity += itemQuantity;
 
         console.log(itemInLocalStorage)
-        
+
 
         // ... vérifier que la somme des quantités est inf à 100
         // SI : la nouvelle quantité est sup à 100...

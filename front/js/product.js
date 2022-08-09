@@ -134,6 +134,21 @@ const checkFormInput = async () => {
     };
 
     // ****************************************************
+    // Correction des inputs
+    // ****************************************************
+
+    function rectifyInput() {
+        const userChoice = window.confirm("Nombre maximum du même article atteint \nOK pour accéder au panier sans modifier Annuler pour modifier");
+
+        if (userChoice) {
+            window.location.href = "cart.html";
+        }
+        else {
+            location.reload();
+        }
+    };
+
+    // ****************************************************
     // Vérification : doublons
     // ****************************************************
 
@@ -144,43 +159,30 @@ const checkFormInput = async () => {
     if (alreadyInCart) {
         // ... vérifier si la somme des quantités est sup à 100
         if (itemInLocalStorage.quantity += itemQuantity > 100) {
-            confirm("Nombre maximum du même article atteint \nOK pour accéder au panier sans modifier Annuler pour modifier") 
+            // Si true : forcer la correction ou l'abandon
+            rectifyInput();
         }
-
-
-
-        // ... additionner la quantité actuelle et la nouvelle quantité
-        ;
-
-        
-        // SI : la nouvelle quantité est sup à 100...
-        if (itemInLocalStorage.quantity > 100) {
-            // ... envoyer un mss d'alerte et empêcher l'ajout
-            // Ou ne pas ajouter surplus et prévenir
-            alert("Nombre maximum du même article atteint")
-        }
-        // SINON : remplacer l'ancienne quantité par la somme dans le localStorage 
         else {
-            addToCart();
+            // Si false : additionner new et old quantité
+            itemInLocalStorage.quantity += itemQuantity;
             console.log('Quantité modifiée')
         }
-
-    }
+    };
 
     // ****************************************************
-    // Ajout au panier
+    // Inputs valides : Ajout au panier
     // ****************************************************
 
-    // SI : Client a déjà un panier mais id et couleur différents...
+    // SI : Client a déjà un panier sans doublon...
     if (itemInLocalStorage) {
         // ... ajouter le produit au panier
         addToCart();
     }
-    // SINON : Client n'a pas de panier
+    // SINON : Client n'a pas de panier...
     else {
         // Créer le panier...
         itemInLocalStorage = [];
-        // ... et ajouter le produit au panier
+        // ... ajouter le produit au panier
         addToCart();
     }
 };

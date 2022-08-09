@@ -1,16 +1,10 @@
-
-
 // Récupérer l'id dans l'url :
 const productPageURL = window.location.href;
 const url = new URL(productPageURL);
 const productId = url.searchParams.get("id");
 
-console.log(productPageURL);
-console.log(productId);
-
 // ************************************************
 // Récupération du produit dans l'API
-// Important : utiliser try et catch !
 
 const fetchData = async () => {
     try {
@@ -68,14 +62,12 @@ const insertProductPage = async () => {
     let products = await fetchData();
     // Utiliser la Promise pour insérer la carte
     return fetchData().then(insertSingleCard(products));
-}
+};
 
 insertProductPage();
 
 // *************************************************
-// *************************************************
-
-// Essai 4 : Récupérer les infos du formulaire
+// Récupérer les infos du formulaire
 
 const addToCartBtn = document.getElementById('addToCart');
 
@@ -97,6 +89,33 @@ addToCartBtn.addEventListener("click", (event) => {
 
     console.log(itemDetails);
 
+    // *************************************************
+    // Fenêtres PopUp
+
+    // Confirmation en cas d'input non-valide
+    const confirmChange = async () => {
+        if (window.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
+            location.reload();
+            // Demander l'avis de Delphine : aller à l'accueil ou faire quelque chose d'autre ?
+        }
+        else {
+            window.location.href = "index.html";
+        }
+    };
+
+    // Confirmation de l'ajout et choix de la destination
+    const confirmAddition = async () => {
+        if (window.confirm("Article ajouté au panier\nOK pour accéder au panier ou Annuler pour rester sur cette page")) {
+            window.location.href = "cart.html";
+        }
+        else {
+            location.reload();
+        }
+    };
+
+    // *************************************************
+    // Ajout au localStorage
+
     // Utiliser parse pour rendre le contenu lisible en JS
     let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
 
@@ -109,38 +128,27 @@ addToCartBtn.addEventListener("click", (event) => {
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
 
         // Confirmer l'ajout
-        alert('Article ajouté au panier');
+        confirmAddition();
     };
 
-    // **************************************
-    // FONCTIONS A METTRE EN PLACE***********
-
-    // Fenêtre confirmation en cas d'input non-valide
-    const confirmation = async () => {
-        if (window.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
-            location.reload();
-            // Demander l'avis de Delphine : aller à l'accueil ou faire quelque chose d'autre ?
-        }
-        else {
-            window.location.href = "index.html";
-        }
-    }
+    // *************************************************
+    // Prise en charge des exceptions
 
     // SI : la quantité est inf/égale à 0 OU sup à 100 OU négative...
-    if (itemQuantity <= 0 || itemQuantity > 100 || math.sign(-1)) {
+    if (itemQuantity <= 0 || itemQuantity > 100 || Math.sign(-1)) {
         // ... envoyer ce message pour corriger ou retourner à l'accueil
-        confirmation();
+        confirmChange();
     };
 
     // SI : la couleur n'a pas été sélectionnée...
     // == ou === ?
     if (itemColor == "") {
         // ... envoyer ce message pour corriger ou retourner à l'accueil
-        confirmation();
+        confirmChange();
     };
 
     // Article identique déjà dans le panier
-    
+
     // Comparaison du panier et du nouvel ajout
     const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
 
@@ -176,14 +184,8 @@ addToCartBtn.addEventListener("click", (event) => {
         // Créer l'array
         itemInLocalStorage = [];
         // ... et ajouter le produit au panier
-        addToCart(); 
+        addToCart();
     }
 
-    // confirm : retour à l'accueil/rester ou aller au panier
+
 });
-
-// *******************************
-// ******Formules à créer et améliorations******
-// *******************************
-
-// Optimiser les formules au max

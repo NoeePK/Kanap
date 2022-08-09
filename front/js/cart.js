@@ -1,18 +1,22 @@
 // ************************************************
-// Contenu du panier dans le localStorage
+// Récupérer panier dans le localStorage
 // ************************************************
 
 const cart = JSON.parse(localStorage.getItem('product'));
-console.log(cart);
-
 
 // ************************************************
-// Récupération du produit dans l'API
+
+let productId = product.id;
+let productColor = product.color;
+let productQuantity = product.quantity;
+
+// ************************************************
+// Récupérer les produits dans l'API
 // ************************************************
 
-const fetchData = async (productId) => {
+const fetchData = async () => {
     try {
-        // Récupérer l'API
+        // Récupérer le produit dans l'API
         const response = await fetch(`http://localhost:3000/api/products/${productId}`);
         // Récupérer les produits dans .json
         const data = await response.json();
@@ -24,26 +28,11 @@ const fetchData = async (productId) => {
     }
 };
 
-
-
-// ************************************************
-// Récupérer les produits 
-// ************************************************
-
-
-
 // ************************************************
 // Création d'une carte produit
 // ************************************************
 
-const insertArticle = async (product) => {
-
-// Pour chaque produit dans le panier...
-cart.forEach(product => {
-    let productId = product.id;
-    let productColor = product.color;
-    let productQuantity = product.quantity; 
-   
+const createArticle = async () => {
 
     const article = document.createElement('article');
     article.classList.add('cart__item');
@@ -53,7 +42,7 @@ cart.forEach(product => {
     const itemImg = document.createElement('div');
     divImg.classList.add('cart__item__img');
     article.appendChild(itemImg);
-    
+
     const productImg = document.createElement('img');
     productImg.src = product.imageUrl;
     productImg.alt = product.altTxt;
@@ -108,10 +97,20 @@ cart.forEach(product => {
     deleteItem.classList.add('deleteItem');
     deleteItem.innerText = "Supprimer";
     settingsDelete.appendChild(deleteItem);
-  });  
 };
 
+// ************************************************
+// Insertion des cartes produit
+// ************************************************
 
+const insertArticle = async () => {
+    // Récupérer le bon produit dans une Promise
+    let products = await fetchData();
+    // Utiliser la Promise pour insérer la carte
+    return fetchData().then(createArticle(products));
+};
+
+insertArticle();
 
 
 
@@ -122,14 +121,7 @@ cart.forEach(product => {
 
  // ... créer un article et l'insérer dans la section
     // document.getElementById('cart__items').appendChild(insertArticle(product);
+
 // Fonction if panier vide
 
-
-
-
-
-
-
-
-
-
+// Fonction : calculer total et l'insérer dans la page

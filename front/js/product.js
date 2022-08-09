@@ -8,7 +8,7 @@ const productId = url.searchParams.get("id");
 console.log(productId);
 
 // ************************************************
-// Récupération du produit dans l'API
+// Récupérer le produit dans l'API
 // ************************************************
 
 const fetchData = async () => {
@@ -29,7 +29,7 @@ const fetchData = async () => {
 // Création de la carte produit
 // ************************************************
 
-const insertSingleCard = async (product) => {
+const createCard = async (product) => {
     // Création de l'image
     let productImg = document.createElement('img');
     productImg.src = product.imageUrl;
@@ -64,18 +64,21 @@ const insertSingleCard = async (product) => {
 // Insertion de la carte produit
 // ************************************************
 
-const insertProductPage = async () => {
+const insertCard = async () => {
     // Récupérer le bon produit dans une Promise
     let products = await fetchData();
     // Utiliser la Promise pour insérer la carte
-    return fetchData().then(insertSingleCard(products));
+    return fetchData().then(createCard(products));
 };
 
-insertProductPage();
+insertCard();
 
+
+// ************************************************
 // *************************************************
 // Envoi du formulaire
 // *************************************************
+// ************************************************
 
 const addToCartBtn = document.getElementById('addToCart');
 

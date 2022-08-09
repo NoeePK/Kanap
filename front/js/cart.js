@@ -12,29 +12,30 @@ const insertArticle = async (product) => {
     article.setAttribute('data-id', product.id);
     article.setAttribute('data-color', product.color);
 
-    let divImg = document.createElement('div');
+    let itemImg = document.createElement('div');
     divImg.classList.add('cart__item__img');
+    article.appendChild(itemImg);
     
     let productImg = document.createElement('img');
     productImg.src = product.imageUrl;
     productImg.alt = product.altTxt;
-    divImg.appendChild(productImg);
+    itemImg.appendChild(productImg);
+
+    let itemContent = document.createElement('div');
+    itemContent.classList.add('cart__item__content');
+    article.appendChild(itemContent);
+
+    let description = document.createElement('div');
+    description.classList.add('cart__item__content__description');
+    
+    itemContent.appendChild(description);
+
+
+
+
+    let settings = document.createElement('div');
+    itemContent.appendChild(settings);
 } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -66,16 +66,14 @@ const insertProductPage = async () => {
 
 insertProductPage();
 
-// *************************************************
-// Récupérer les infos du formulaire
+// ************************************************
+// ************************************************
+// Ajout au panier
+// ************************************************
 
-const addToCartBtn = document.getElementById('addToCart');
-
-// Déclencher l'ajout au clic sur le btn
-addToCartBtn.addEventListener("click", (event) => {
-    // Empêcher la réactualisation de la page lors du clic
-    event.preventDefault();
-
+// ************************************************
+// Récupérer les inputs du formulaire
+const getFormInput = async () => {
     // Récupérer la valeur de la couleur/quantité choisie
     const itemColor = document.getElementById('colors').value;
     const itemQuantity = document.getElementById('quantity').value;
@@ -88,61 +86,61 @@ addToCartBtn.addEventListener("click", (event) => {
     };
 
     console.log(itemDetails);
+};
 
-    // *************************************************
+// *************************************************
+// Création du localStorage et fonction ajout au panier
 
-    // Fenêtre de confirmation de l'ajout et choix de la destination
-    const confirmAddition = async () => {
-        if (window.confirm("Article ajouté au panier\nOK pour accéder au panier ou Annuler pour rester sur cette page")) {
-            window.location.href = "cart.html";
-        }
-        else {
-            location.reload();
-        }
-    };
+// Utiliser parse pour rendre le contenu lisible en JS
+let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
 
-    // *************************************************
-    // Ajout au localStorage
+// Stocker les valeurs dans le localStorage
+const addToCart = async () => {
+    // Push le produit dans l'array
+    itemInLocalStorage.push(itemDetails);
 
-    // Utiliser parse pour rendre le contenu lisible en JS
-    let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
+    // Utiliser stringify avant de mettre dans le localStorage
+    localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
 
-    // Stocker les valeurs dans le localStorage
-    const addToCart = async () => {
-        // Push le produit dans l'array
-        itemInLocalStorage.push(itemDetails);
+    // Confirmer l'ajout
+    alert("Article(s) ajouté(s) au panier");
+};
 
-        // Utiliser stringify avant de mettre dans le localStorage
-        localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
 
-        // Confirmer l'ajout
-        confirmAddition();
-    };
+// ************************************************
+// Ajout au panier après vérification
+
+const checkFormInput = async () => {
+
+    getFormInput();
+
+
 
     // *************************************************
     // Prise en charge des exceptions
 
-    // Fenêtre en cas d'input non-valide
-    const confirmChange = async () => {
-        if (window.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
-            location.reload();
-            // Demander l'avis de Delphine : aller à l'accueil ou faire quelque chose d'autre ?
-        }
-        else {
-            window.location.href = "index.html";
-        }
-    };
+    //     // Fenêtre en cas d'input non-valide
+    // const confirmation = async () => {
+    //     // Demander un nouvel input
+    //     if (window.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
+    //         location.reload();
+    //         // Demander l'avis de Delphine : aller à l'accueil ou faire quelque chose d'autre ?
+    //     }
+    //     else {
+    //         window.location.href = "index.html";
+    //     }
+    // };
 
     // SI : la quantité est inf/égale à 0 OU sup à 100 OU négative...
     if (itemQuantity <= 0 || itemQuantity > 100 || Math.sign(-1)) {
         // ... envoyer ce message pour corriger ou retourner à l'accueil
-        confirmChange();
+
     };
 
     // SI : la couleur n'a pas été sélectionnée...
     if (itemColor == "") {
         // ... envoyer ce message pour corriger ou retourner à l'accueil
-        confirmChange();
+
     };
 
     // Comparaison du panier et du nouvel ajout
@@ -181,4 +179,20 @@ addToCartBtn.addEventListener("click", (event) => {
         // ... et ajouter le produit au panier
         addToCart();
     }
+};
+
+
+
+
+// *************************************************
+// Envoi du formulaire valide
+
+const addToCartBtn = document.getElementById('addToCart');
+
+// Déclencher l'ajout au clic sur le btn
+addToCartBtn.addEventListener("click", (event) => {
+    // Empêcher la réactualisation de la page lors du clic
+    event.preventDefault();
+    // Vérifier le produit et l'ajouter au panier
+    checkFormInput();
 });

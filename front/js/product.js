@@ -115,37 +115,33 @@ addToCartBtn.addEventListener("click", (event) => {
     // **************************************
     // FONCTIONS A METTRE EN PLACE***********
 
+    // Fenêtre confirmation en cas d'input non-valide
     const confirmation = async () => {
-        if (windows.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
+        if (window.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
             location.reload();
+            // Demander l'avis de Delphine : aller à l'accueil ou faire quelque chose d'autre ?
         }
         else {
-            window.location.href = "../index.html";
+            window.location.href = "index.html";
         }
     }
 
-
-    // SI : la quantité est inf/égale à 0 OU sup à 100...
+    // SI : la quantité est inf/égale à 0 OU sup à 100 OU négative...
     if (itemQuantity <= 0 || itemQuantity > 100 || math.sign(-1)) {
-        // ... envoyer ce message d'alerte...
+        // ... envoyer ce message pour corriger ou retourner à l'accueil
         confirmation();
-        // obliger à choisir
-   
-
-        // attention aux -1 etc
-        // utiliser confirm
-
     };
 
     // SI : la couleur n'a pas été sélectionnée...
     // == ou === ?
     if (itemColor == "") {
-        // ... envoyer ce message d'alerte...
+        // ... envoyer ce message pour corriger ou retourner à l'accueil
         confirmation();
     };
 
     // Article identique déjà dans le panier
-    // Refactoring : const avec comparaison du panier et du nouvel ajout
+    
+    // Comparaison du panier et du nouvel ajout
     const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
 
     // SI : id et color identiques déjà dans le panier...

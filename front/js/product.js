@@ -89,13 +89,12 @@ addToCartBtn.addEventListener("click", (event) => {
     // ************************************************
 
     // Récupérer la valeur de la couleur/quantité choisie
-    const inputId = productId;
     const inputColor = document.getElementById('colors').value;
     const inputQuantity = document.getElementById('quantity').value;
 
     // Stocker les 3 valeurs dans un objet
     const itemDetails = {
-        id: inputId,
+        id: productId,
         color: inputColor,
         quantity: inputQuantity
     };
@@ -128,7 +127,7 @@ addToCartBtn.addEventListener("click", (event) => {
     // ****************************************************
 
     // Utiliser parse pour rendre le contenu lisible en JS
-    let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
+    let cart = JSON.parse(localStorage.getItem('product'));
 
     // ************************************************
     // Fonction : Ajout au panier
@@ -137,10 +136,10 @@ addToCartBtn.addEventListener("click", (event) => {
     // Stocker les valeurs dans le panier
     const addToCart = async () => {
         // Push le produit dans le panier
-        itemInLocalStorage.push(itemDetails);
+        cart.push(itemDetails);
 
         // Utiliser stringify avant de mettre dans le localStorage
-        localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+        localStorage.setItem("product", JSON.stringify(cart));
     };
 
     // ****************************************************
@@ -158,8 +157,8 @@ addToCartBtn.addEventListener("click", (event) => {
     // ****************************************************
 
     // Comparaison du panier et du nouvel ajout
-    const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === inputColor;
-    const newQuantity = itemInLocalStorage.quantity += inputQuantity;
+    const alreadyInCart = cart.id === productId && cart.color === inputColor;
+    const newQuantity = cart.quantity += inputQuantity;
 
     // SI : id et color identiques déjà dans le panier...
     if (alreadyInCart) {
@@ -180,7 +179,7 @@ addToCartBtn.addEventListener("click", (event) => {
     // ****************************************************
 
     // SI : Client a déjà un panier sans doublon...
-    if (itemInLocalStorage) {
+    if (cart) {
         // ... ajouter le produit au panier
         addToCart();
         // Confirmer l'ajout
@@ -189,7 +188,7 @@ addToCartBtn.addEventListener("click", (event) => {
     // SINON : Client n'a pas de panier...
     else {
         // Créer le panier...
-        itemInLocalStorage = [];
+        cart = [];
         // ... ajouter le produit au panier
         addToCart();
         // Confirmer l'ajout

@@ -53,10 +53,24 @@ const insertArticle = async (product) => {
     quantity.innerText = "Qté : ";
     settingsQuantity.appendChild(quantity);
 
-    let inputQuantity = document.createElement('input');
-    
+    let itemQuantity = document.createElement('input');
+    itemQuantity.classList.add('itemQuantity');
+    itemQuantity.setAttribute('type', 'number');
+    itemQuantity.setAttribute('name', 'itemQuantity');
+    itemQuantity.setAttribute('min', 1);
+    itemQuantity.setAttribute('max', 100);
+    itemQuantity.setAttribute('value', product.quantity);
+    settingsQuantity.appendChild(itemQuantity);
 
-} 
+    let settingsDelete = document.createElement('div');
+    settingsDelete.classList.add('cart__item__content__settings__delete');
+    settings.appendChild(settingsDelete);
+
+    let deleteItem = document.createElement('p');
+    deleteItem.classList.add('deleteItem');
+    deleteItem.innerText = "Supprimer";
+    settingsDelete.appendChild(deleteItem);
+};
 
 
 

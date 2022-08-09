@@ -5,6 +5,8 @@ const productPageURL = window.location.href;
 const url = new URL(productPageURL);
 const productId = url.searchParams.get("id");
 
+console.log(productId);
+
 // ************************************************
 // Récupération du produit dans l'API
 // ************************************************
@@ -71,28 +73,53 @@ const insertProductPage = async () => {
 
 insertProductPage();
 
-// ************************************************
-// Ajout au panier après vérification
-// ************************************************
+// *************************************************
+// Envoi du formulaire
+// *************************************************
 
-const checkFormInput = async () => {
+const addToCartBtn = document.getElementById('addToCart');
+
+// Déclencher l'ajout au clic sur le btn
+addToCartBtn.addEventListener("click", (event) => {
+    // Empêcher la réactualisation de la page lors du clic
+    event.preventDefault();
 
     // ************************************************
     // Récupérer les inputs du formulaire
     // ************************************************
 
     // Récupérer la valeur de la couleur/quantité choisie
-    const itemColor = document.getElementById('colors').value;
-    const itemQuantity = document.getElementById('quantity').value;
+    const inputId = productId;
+    const inputColor = document.getElementById('colors').value;
+    const inputQuantity = document.getElementById('quantity').value;
 
     // Stocker les 3 valeurs dans un objet
     const itemDetails = {
-        id: productId,
-        color: itemColor,
-        quantity: itemQuantity
+        id: inputId,
+        color: inputColor,
+        quantity: inputQuantity
     };
 
     console.log(itemDetails);
+
+    // ****************************************************
+    // Correction des inputs
+    // ****************************************************
+
+    const maxInput = "Nombre maximum du même article atteint. \nOK pour accéder au panier sans modifier Annuler pour modifier.";
+    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour accéder au panier sans modifier Annuler pour modifier.";
+    const validInput = "Article(s) ajouté(s) au panier. \nOK pour accéder au panier Annuler pour rester sur cette page.";
+
+    function confirmMessage(userMessage) {
+        const userChoice = window.confirm(userMessage);
+
+        if (userChoice) {
+            window.location.href = "cart.html";
+        }
+        else {
+            location.reload();
+        }
+    };
 
     // ****************************************************
     // Création du panier dans le localStorage
@@ -114,38 +141,17 @@ const checkFormInput = async () => {
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
 
         // Confirmer l'ajout
-        alert("Article(s) ajouté(s) au panier");
+        confirmMessage(validInput);
     };
 
     // ****************************************************
     // Vérification : validité des inputs
     // ****************************************************
 
-    // SI : la quantité est inf/égale à 0 OU sup à 100 OU négative...
-    if (itemQuantity <= 0 || itemQuantity > 100 || Math.sign(-1)) {
+    // SI : la quantité est entre 1 et 100, positive, et une couleur sélectionnée...
+    if (inputQuantity <= 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
         // ... envoyer ce message pour corriger ou retourner à l'accueil
-
-    };
-
-    // SI : la couleur n'a pas été sélectionnée...
-    if (itemColor == "") {
-        // ... envoyer ce message pour corriger ou retourner à l'accueil
-
-    };
-
-    // ****************************************************
-    // Correction des inputs
-    // ****************************************************
-
-    function rectifyInput() {
-        const userChoice = window.confirm("Nombre maximum du même article atteint \nOK pour accéder au panier sans modifier Annuler pour modifier");
-
-        if (userChoice) {
-            window.location.href = "cart.html";
-        }
-        else {
-            location.reload();
-        }
+        confirmMessage(invalidInput);
     };
 
     // ****************************************************
@@ -153,19 +159,20 @@ const checkFormInput = async () => {
     // ****************************************************
 
     // Comparaison du panier et du nouvel ajout
-    const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
+    const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === inputColor;
+    const newQuantity = itemInLocalStorage.quantity += inputQuantity;
 
     // SI : id et color identiques déjà dans le panier...
     if (alreadyInCart) {
         // ... vérifier si la somme des quantités est sup à 100
-        if (itemInLocalStorage.quantity += itemQuantity > 100) {
+        if (newQuantity > 100) {
             // Si true : forcer la correction ou l'abandon
-            rectifyInput();
+            confirmMessage(maxInput);
         }
         else {
             // Si false : additionner new et old quantité
-            itemInLocalStorage.quantity += itemQuantity;
-            console.log('Quantité modifiée')
+            newQuantity;
+            confirmMessage(validInput);
         }
     };
 
@@ -185,18 +192,4 @@ const checkFormInput = async () => {
         // ... ajouter le produit au panier
         addToCart();
     }
-};
-
-// *************************************************
-// Envoi du formulaire valide
-// *************************************************
-
-const addToCartBtn = document.getElementById('addToCart');
-
-// Déclencher l'ajout au clic sur le btn
-addToCartBtn.addEventListener("click", (event) => {
-    // Empêcher la réactualisation de la page lors du clic
-    event.preventDefault();
-    // Vérifier le produit et l'ajouter au panier
-    checkFormInput();
 });

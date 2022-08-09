@@ -11,7 +11,7 @@ console.log(productId);
 // Récupérer le produit dans l'API
 // ************************************************
 
-const fetchData = async () => {
+const fetchProducts = async () => {
     try {
         // Récupérer l'API
         const response = await fetch(`http://localhost:3000/api/products/${productId}`);
@@ -66,9 +66,9 @@ const createCard = async (product) => {
 
 const insertCard = async () => {
     // Récupérer le bon produit dans une Promise
-    let products = await fetchData();
+    let products = await fetchProducts();
     // Utiliser la Promise pour insérer la carte
-    return fetchData().then(createCard(products));
+    return fetchProducts().then(createCard(products));
 };
 
 insertCard();

@@ -5,16 +5,10 @@
 const cart = JSON.parse(localStorage.getItem('product'));
 
 // ************************************************
-
-let productId = product.id;
-let productColor = product.color;
-let productQuantity = product.quantity;
-
-// ************************************************
 // Récupérer les produits dans l'API
 // ************************************************
 
-const fetchData = async () => {
+const fetchProducts = async () => {
     try {
         // Récupérer le produit dans l'API
         const response = await fetch(`http://localhost:3000/api/products/${productId}`);
@@ -33,11 +27,13 @@ const fetchData = async () => {
 // ************************************************
 
 const createArticle = async () => {
+    const section = document.getElementById('cart__items');
 
     const article = document.createElement('article');
     article.classList.add('cart__item');
     article.setAttribute('data-id', productId);
     article.setAttribute('data-color', productColor);
+    section.appendChild(article);
 
     const itemImg = document.createElement('div');
     divImg.classList.add('cart__item__img');
@@ -97,6 +93,8 @@ const createArticle = async () => {
     deleteItem.classList.add('deleteItem');
     deleteItem.innerText = "Supprimer";
     settingsDelete.appendChild(deleteItem);
+
+
 };
 
 // ************************************************
@@ -105,9 +103,17 @@ const createArticle = async () => {
 
 const insertArticle = async () => {
     // Récupérer le bon produit dans une Promise
-    let products = await fetchData();
+    let products = await fetchProducts();
+
+    cart.forEach(product => {
+        let productId = products.id;
+        let productColor = products.color;
+        let productQuantity = products.quantity;
+    
+
     // Utiliser la Promise pour insérer la carte
-    return fetchData().then(createArticle(products));
+    return fetchProducts().then(createArticle(product));
+});
 };
 
 insertArticle();
@@ -119,8 +125,6 @@ insertArticle();
 // ************************************************
 // ************************************************
 
- // ... créer un article et l'insérer dans la section
-    // document.getElementById('cart__items').appendChild(insertArticle(product);
 
 // Fonction if panier vide
 

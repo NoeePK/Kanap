@@ -1,6 +1,42 @@
-// Récupérer le contenu du localStorage
-const cart = JSON.parse(window.localStorage.getItem('product'));
+// ************************************************
+// Contenu du panier dans le localStorage
+// ************************************************
 
+const cart = JSON.parse(localStorage.getItem('product'));
+console.log(cart);
+
+
+// ************************************************
+// Récupération du produit dans l'API
+// ************************************************
+
+const fetchData = async (productId) => {
+    try {
+        // Récupérer l'API
+        const response = await fetch(`http://localhost:3000/api/products/${productId}`);
+        // Récupérer les produits dans .json
+        const data = await response.json();
+        return data;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+};
+
+
+
+// ************************************************
+// Récupérer les produits 
+// ************************************************
+
+// Pour chaque produit dans le panier...
+cart.forEach(product => {
+    let id = product.id;
+    let color = product.color;
+    let quantity = product.quantity; 
+   
+});
 
 // ************************************************
 // Création d'une carte produit
@@ -9,8 +45,8 @@ const cart = JSON.parse(window.localStorage.getItem('product'));
 const insertArticle = async (product) => {
     let article = document.createElement('article');
     article.classList.add('cart__item');
-    article.setAttribute('data-id', product.id);
-    article.setAttribute('data-color', product.color);
+    article.setAttribute('data-id', id);
+    article.setAttribute('data-color', itemColor);
 
     let itemImg = document.createElement('div');
     divImg.classList.add('cart__item__img');
@@ -59,7 +95,7 @@ const insertArticle = async (product) => {
     itemQuantity.setAttribute('name', 'itemQuantity');
     itemQuantity.setAttribute('min', 1);
     itemQuantity.setAttribute('max', 100);
-    itemQuantity.setAttribute('value', product.quantity);
+    itemQuantity.setAttribute('value', quantity);
     settingsQuantity.appendChild(itemQuantity);
 
     let settingsDelete = document.createElement('div');
@@ -76,17 +112,20 @@ const insertArticle = async (product) => {
 
 
 
-
-
-
-
-
 // ************************************************
-// Insertion des cartes produit
+// ************************************************
 // ************************************************
 
-// Pour chaque produit dans le panier...
-cart.forEach(product => {
-    // ... créer un article et l'insérer dans la section
-    document.getElementById('cart__items').appendChild(insertArticle(product));
-});
+ // ... créer un article et l'insérer dans la section
+    // document.getElementById('cart__items').appendChild(insertArticle(product);
+// Fonction if panier vide
+
+
+
+
+
+
+
+
+
+

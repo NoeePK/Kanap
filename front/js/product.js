@@ -106,18 +106,21 @@ addToCartBtn.addEventListener("click", (event) => {
     // Correction des inputs
     // ****************************************************
 
-    const maxInput = "Nombre maximum du même article atteint. \nOK pour accéder au panier sans modifier Annuler pour modifier.";
-    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour accéder au panier sans modifier Annuler pour modifier.";
-    const validInput = "Article(s) ajouté(s) au panier. \nOK pour accéder au panier Annuler pour rester sur cette page.";
+    // Messages possibles selon la situation
+    const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page Annuler pour accéder au panier.";
+    const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, Annuler pour accéder au panier sans modifier.";
+    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, Annuler pour accéder au panier sans modifier.";
 
+
+    // Fonction confirmation à utiliser avec une des options ci-dessus
     function confirmMessage(userMessage) {
         const userChoice = window.confirm(userMessage);
 
         if (userChoice) {
-            window.location.href = "cart.html";
+            location.reload();
         }
         else {
-            location.reload();
+            window.location.href = "cart.html";
         }
     };
 
@@ -184,6 +187,9 @@ addToCartBtn.addEventListener("click", (event) => {
     if (itemInLocalStorage) {
         // ... ajouter le produit au panier
         addToCart();
+        // Confirmer l'ajout
+        confirmMessage(validInput);
+
     }
     // SINON : Client n'a pas de panier...
     else {
@@ -191,5 +197,7 @@ addToCartBtn.addEventListener("click", (event) => {
         itemInLocalStorage = [];
         // ... ajouter le produit au panier
         addToCart();
+        // Confirmer l'ajout
+        confirmMessage(validInput);
     }
 });

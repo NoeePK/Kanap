@@ -30,83 +30,87 @@ const fetchData = async (productId) => {
 // Récupérer les produits 
 // ************************************************
 
-// Pour chaque produit dans le panier...
-cart.forEach(product => {
-    let id = product.id;
-    let color = product.color;
-    let quantity = product.quantity; 
-   
-});
+
 
 // ************************************************
 // Création d'une carte produit
 // ************************************************
 
 const insertArticle = async (product) => {
-    let article = document.createElement('article');
-    article.classList.add('cart__item');
-    article.setAttribute('data-id', id);
-    article.setAttribute('data-color', itemColor);
 
-    let itemImg = document.createElement('div');
+// Pour chaque produit dans le panier...
+cart.forEach(product => {
+    let productId = product.id;
+    let productColor = product.color;
+    let productQuantity = product.quantity; 
+   
+
+    const article = document.createElement('article');
+    article.classList.add('cart__item');
+    article.setAttribute('data-id', productId);
+    article.setAttribute('data-color', productColor);
+
+    const itemImg = document.createElement('div');
     divImg.classList.add('cart__item__img');
     article.appendChild(itemImg);
     
-    let productImg = document.createElement('img');
+    const productImg = document.createElement('img');
     productImg.src = product.imageUrl;
     productImg.alt = product.altTxt;
     itemImg.appendChild(productImg);
 
-    let itemContent = document.createElement('div');
+    const itemContent = document.createElement('div');
     itemContent.classList.add('cart__item__content');
     article.appendChild(itemContent);
 
-    let description = document.createElement('div');
+    const description = document.createElement('div');
     description.classList.add('cart__item__content__description');
     itemContent.appendChild(description);
 
-    let productName = document.createElement('h2');
+    const productName = document.createElement('h2');
     productName.innerText = product.name;
     description.appendChild(productName);
 
-    let productColor = document.createElement('p');
-    productColor.innerText = product.color;
-    description.appendChild(productColor);
+    const colorOption = document.createElement('p');
+    colorOption.innerText = productColor;
+    description.appendChild(colorOption);
 
-    let productPrice = document.createElement('p');
+    const productPrice = document.createElement('p');
     productPrice.innerText = product.price;
     description.appendChild(productPrice);
 
-    let settings = document.createElement('div');
+    const settings = document.createElement('div');
     settings.classList.add('cart__item__content__settings');
     itemContent.appendChild(settings);
 
-    let settingsQuantity = document.createElement('div');
+    const settingsQuantity = document.createElement('div');
     settingsQuantity.classList.add('cart__item__content__settings__quantity');
     settings.appendChild(settingsQuantity);
 
-    let quantity = document.createElement('p');
+    const quantity = document.createElement('p');
     quantity.innerText = "Qté : ";
     settingsQuantity.appendChild(quantity);
 
-    let itemQuantity = document.createElement('input');
+    const itemQuantity = document.createElement('input');
     itemQuantity.classList.add('itemQuantity');
     itemQuantity.setAttribute('type', 'number');
     itemQuantity.setAttribute('name', 'itemQuantity');
     itemQuantity.setAttribute('min', 1);
     itemQuantity.setAttribute('max', 100);
-    itemQuantity.setAttribute('value', quantity);
+    itemQuantity.setAttribute('value', productQuantity);
     settingsQuantity.appendChild(itemQuantity);
 
-    let settingsDelete = document.createElement('div');
+    const settingsDelete = document.createElement('div');
     settingsDelete.classList.add('cart__item__content__settings__delete');
     settings.appendChild(settingsDelete);
 
-    let deleteItem = document.createElement('p');
+    const deleteItem = document.createElement('p');
     deleteItem.classList.add('deleteItem');
     deleteItem.innerText = "Supprimer";
     settingsDelete.appendChild(deleteItem);
+  });  
 };
+
 
 
 

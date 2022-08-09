@@ -90,20 +90,8 @@ addToCartBtn.addEventListener("click", (event) => {
     console.log(itemDetails);
 
     // *************************************************
-    // Fenêtres PopUp
 
-    // Confirmation en cas d'input non-valide
-    const confirmChange = async () => {
-        if (window.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
-            location.reload();
-            // Demander l'avis de Delphine : aller à l'accueil ou faire quelque chose d'autre ?
-        }
-        else {
-            window.location.href = "index.html";
-        }
-    };
-
-    // Confirmation de l'ajout et choix de la destination
+    // Fenêtre de confirmation de l'ajout et choix de la destination
     const confirmAddition = async () => {
         if (window.confirm("Article ajouté au panier\nOK pour accéder au panier ou Annuler pour rester sur cette page")) {
             window.location.href = "cart.html";
@@ -134,6 +122,17 @@ addToCartBtn.addEventListener("click", (event) => {
     // *************************************************
     // Prise en charge des exceptions
 
+    // Fenêtre en cas d'input non-valide
+    const confirmChange = async () => {
+        if (window.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
+            location.reload();
+            // Demander l'avis de Delphine : aller à l'accueil ou faire quelque chose d'autre ?
+        }
+        else {
+            window.location.href = "index.html";
+        }
+    };
+
     // SI : la quantité est inf/égale à 0 OU sup à 100 OU négative...
     if (itemQuantity <= 0 || itemQuantity > 100 || Math.sign(-1)) {
         // ... envoyer ce message pour corriger ou retourner à l'accueil
@@ -141,13 +140,10 @@ addToCartBtn.addEventListener("click", (event) => {
     };
 
     // SI : la couleur n'a pas été sélectionnée...
-    // == ou === ?
     if (itemColor == "") {
         // ... envoyer ce message pour corriger ou retourner à l'accueil
         confirmChange();
     };
-
-    // Article identique déjà dans le panier
 
     // Comparaison du panier et du nouvel ajout
     const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
@@ -158,7 +154,6 @@ addToCartBtn.addEventListener("click", (event) => {
         itemInLocalStorage.quantity += itemQuantity;
 
         console.log(itemInLocalStorage)
-
 
         // ... vérifier que la somme des quantités est inf à 100
         // SI : la nouvelle quantité est sup à 100...
@@ -186,6 +181,4 @@ addToCartBtn.addEventListener("click", (event) => {
         // ... et ajouter le produit au panier
         addToCart();
     }
-
-
 });

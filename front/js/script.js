@@ -1,4 +1,3 @@
-
 const itemSection = document.getElementById("items");
 
 // Récupération des produits de l'API
@@ -26,7 +25,6 @@ dans la page d'accueil*/
 function insertProductCard(product) {
 
     let productLink = document.createElement('a');
-    // Ne pas oublier les guillemets inversés ici
     // Trouver le bon href
     productLink.href = `product.html?id=` + product._id;
     itemSection.appendChild(productLink);

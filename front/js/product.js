@@ -111,13 +111,12 @@ addToCartBtn.addEventListener("click", (event) => {
     const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, Annuler pour accéder au panier sans modifier.";
     const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, Annuler pour accéder au panier sans modifier.";
 
-
     // Fonction confirmation à utiliser avec une des options ci-dessus
     function confirmMessage(userMessage) {
         const userChoice = window.confirm(userMessage);
 
         if (userChoice) {
-            location.reload();
+            window.location.href;
         }
         else {
             window.location.href = "cart.html";
@@ -132,7 +131,7 @@ addToCartBtn.addEventListener("click", (event) => {
     let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
 
     // ************************************************
-    // Fonction 'ajout au panier'
+    // Fonction : Ajout au panier
     // ************************************************
 
     // Stocker les valeurs dans le panier
@@ -142,13 +141,10 @@ addToCartBtn.addEventListener("click", (event) => {
 
         // Utiliser stringify avant de mettre dans le localStorage
         localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
-
-        // Confirmer l'ajout
-        confirmMessage(validInput);
     };
 
     // ****************************************************
-    // Vérification : validité des inputs
+    // Inputs invalides : forcer la correction
     // ****************************************************
 
     // SI : la quantité est entre 1 et 100, positive, et une couleur sélectionnée...
@@ -158,7 +154,7 @@ addToCartBtn.addEventListener("click", (event) => {
     };
 
     // ****************************************************
-    // Vérification : doublons
+    // Input doublon : prévenir et forcer la correction
     // ****************************************************
 
     // Comparaison du panier et du nouvel ajout
@@ -189,7 +185,6 @@ addToCartBtn.addEventListener("click", (event) => {
         addToCart();
         // Confirmer l'ajout
         confirmMessage(validInput);
-
     }
     // SINON : Client n'a pas de panier...
     else {
@@ -199,5 +194,5 @@ addToCartBtn.addEventListener("click", (event) => {
         addToCart();
         // Confirmer l'ajout
         confirmMessage(validInput);
-    }
+    };
 });

@@ -1,10 +1,13 @@
+// ************************************************
 // Récupérer l'id dans l'url :
+// ************************************************
 const productPageURL = window.location.href;
 const url = new URL(productPageURL);
 const productId = url.searchParams.get("id");
 
 // ************************************************
 // Récupération du produit dans l'API
+// ************************************************
 
 const fetchData = async () => {
     try {
@@ -22,6 +25,7 @@ const fetchData = async () => {
 
 // ************************************************
 // Création de la carte produit
+// ************************************************
 
 const insertSingleCard = async (product) => {
     // Création de l'image
@@ -56,6 +60,7 @@ const insertSingleCard = async (product) => {
 
 // ************************************************
 // Insertion de la carte produit
+// ************************************************
 
 const insertProductPage = async () => {
     // Récupérer le bon produit dans une Promise
@@ -67,13 +72,15 @@ const insertProductPage = async () => {
 insertProductPage();
 
 // ************************************************
-// ************************************************
-// Ajout au panier
+// Ajout au panier après vérification
 // ************************************************
 
-// ************************************************
-// Récupérer les inputs du formulaire
-const getFormInput = async () => {
+const checkFormInput = async () => {
+
+    // ************************************************
+    // Récupérer les inputs du formulaire
+    // ************************************************
+
     // Récupérer la valeur de la couleur/quantité choisie
     const itemColor = document.getElementById('colors').value;
     const itemQuantity = document.getElementById('quantity').value;
@@ -86,50 +93,33 @@ const getFormInput = async () => {
     };
 
     console.log(itemDetails);
-};
 
-// *************************************************
-// Création du localStorage et fonction ajout au panier
+    // ****************************************************
+    // Création du panier dans le localStorage
+    // ****************************************************
 
-// Utiliser parse pour rendre le contenu lisible en JS
-let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
+    // Utiliser parse pour rendre le contenu lisible en JS
+    let itemInLocalStorage = JSON.parse(localStorage.getItem('product'));
 
-// Stocker les valeurs dans le localStorage
-const addToCart = async () => {
-    // Push le produit dans l'array
-    itemInLocalStorage.push(itemDetails);
+    // ************************************************
+    // Fonction 'ajout au panier'
+    // ************************************************
 
-    // Utiliser stringify avant de mettre dans le localStorage
-    localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
+    // Stocker les valeurs dans le panier
+    const addToCart = async () => {
+        // Push le produit dans le panier
+        itemInLocalStorage.push(itemDetails);
 
-    // Confirmer l'ajout
-    alert("Article(s) ajouté(s) au panier");
-};
+        // Utiliser stringify avant de mettre dans le localStorage
+        localStorage.setItem("product", JSON.stringify(itemInLocalStorage));
 
+        // Confirmer l'ajout
+        alert("Article(s) ajouté(s) au panier");
+    };
 
-// ************************************************
-// Ajout au panier après vérification
-
-const checkFormInput = async () => {
-
-    getFormInput();
-
-
-
-    // *************************************************
-    // Prise en charge des exceptions
-
-    //     // Fenêtre en cas d'input non-valide
-    // const confirmation = async () => {
-    //     // Demander un nouvel input
-    //     if (window.confirm("Veuillez choisir une couleur et une quantité valide\nOK pour modifier ou Annuler pour retourner à l'accueil")) {
-    //         location.reload();
-    //         // Demander l'avis de Delphine : aller à l'accueil ou faire quelque chose d'autre ?
-    //     }
-    //     else {
-    //         window.location.href = "index.html";
-    //     }
-    // };
+    // ****************************************************
+    // Vérification : validité des inputs
+    // ****************************************************
 
     // SI : la quantité est inf/égale à 0 OU sup à 100 OU négative...
     if (itemQuantity <= 0 || itemQuantity > 100 || Math.sign(-1)) {
@@ -143,17 +133,26 @@ const checkFormInput = async () => {
 
     };
 
+    // ****************************************************
+    // Vérification : doublons
+    // ****************************************************
+
     // Comparaison du panier et du nouvel ajout
     const alreadyInCart = itemInLocalStorage.id === productId && itemInLocalStorage.color === itemColor;
 
     // SI : id et color identiques déjà dans le panier...
     if (alreadyInCart) {
+        // ... vérifier si la somme des quantités est sup à 100
+        if (itemInLocalStorage.quantity += itemQuantity > 100) {
+            confirm("Nombre maximum du même article atteint \nOK pour accéder au panier sans modifier Annuler pour modifier") 
+        }
+
+
+
         // ... additionner la quantité actuelle et la nouvelle quantité
-        itemInLocalStorage.quantity += itemQuantity;
+        ;
 
-        console.log(itemInLocalStorage)
-
-        // ... vérifier que la somme des quantités est inf à 100
+        
         // SI : la nouvelle quantité est sup à 100...
         if (itemInLocalStorage.quantity > 100) {
             // ... envoyer un mss d'alerte et empêcher l'ajout
@@ -167,6 +166,11 @@ const checkFormInput = async () => {
         }
 
     }
+
+    // ****************************************************
+    // Ajout au panier
+    // ****************************************************
+
     // SI : Client a déjà un panier mais id et couleur différents...
     if (itemInLocalStorage) {
         // ... ajouter le produit au panier
@@ -174,18 +178,16 @@ const checkFormInput = async () => {
     }
     // SINON : Client n'a pas de panier
     else {
-        // Créer l'array
+        // Créer le panier...
         itemInLocalStorage = [];
         // ... et ajouter le produit au panier
         addToCart();
     }
 };
 
-
-
-
 // *************************************************
 // Envoi du formulaire valide
+// *************************************************
 
 const addToCartBtn = document.getElementById('addToCart');
 

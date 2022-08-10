@@ -73,31 +73,25 @@ const insertCard = async () => {
 
 insertCard();
 
-
-// ************************************************
 // *************************************************
 // Envoi du formulaire
 // *************************************************
-// ************************************************
 
-// *************************************************
-// Ajouter l'attribut required pour les inputs
-// *************************************************
-
+// Attribut required pour les inputs
 document.getElementById('colors').required = true;
 document.getElementById('quantity').required = true;
 
-// ************************************************
-
+// Attribut onsubmit pour forcer la validation des inputs
 const addToCartBtn = document.getElementById('addToCart');
+addToCartBtn.setAttribute("onsubmit", "return validateForm()")
 
-// Déclencher l'ajout au clic sur le btn
+// Déclencher l'ajout au clic
 addToCartBtn.addEventListener("click", (event) => {
     // Empêcher la réactualisation de la page lors du clic
     event.preventDefault();
 
     // *********************************************
-    // Récupérer les inputs du formulaire
+    // Récupérer les inputs
     // *********************************************
 
     // Récupérer la valeur de la couleur/quantité choisie
@@ -113,17 +107,16 @@ addToCartBtn.addEventListener("click", (event) => {
 
     console.log(itemDetails);
 
-    // ****************************************************
+    // **************************************************
     // Correction des inputs
-    // ****************************************************
+    // **************************************************
 
     // Messages possibles selon la situation
-
-    const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
+    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans modifier.";
     const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans modifier.";
-    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans modifier."; 
-
-    // Fonction confirmation d'ajout au panier
+    const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
+    
+    // Message d'erreur ou de confirmation
     const confirmMessage = (message) => {
         if (window.confirm(message)) {
             location.reload;
@@ -154,55 +147,53 @@ addToCartBtn.addEventListener("click", (event) => {
     };
 
     // ****************************************************
-    // Inputs invalides : forcer la correction
+    // Validation du formulaire
     // ****************************************************
 
-    // SI : la quantité est entre 1 et 100, positive, et une couleur sélectionnée...
-    if (inputQuantity <= 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
-        // ... envoyer ce message pour corriger ou retourner à l'accueil
-        confirmMessage(invalidInput);
-    };
+    function validateForm() {
 
-    // ****************************************************
-    // Input doublon : prévenir et forcer la correction
-    // ****************************************************
+        // SI : la quantité est =0 ou >100 ou négative, et pas de couleur sélectionnée...
+        if (inputQuantity = 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
+            // ... envoyer ce message pour forcer la correction
+            confirmMessage(invalidInput);
+        };
 
-    // Comparaison du panier et du nouvel ajout
-    const alreadyInCart = cart.id === productId && cart.color === inputColor;
-    const newQuantity = cart.quantity += inputQuantity;
+        // Comparaison du panier et du nouvel ajout
+        const alreadyInCart = cart.id === productId && cart.color === inputColor;
+        // Somme des deux quantités
+        const newQuantity = cart.quantity += inputQuantity;
 
-    // SI : id et color identiques déjà dans le panier...
-    if (alreadyInCart) {
-        // ... vérifier si la somme des quantités est sup à 100
-        if (newQuantity > 100) {
-            // Si true : forcer la correction ou l'abandon
-            confirmMessage(maxInput);
-        }
-        else {
-            // Si false : additionner new et old quantité
-            newQuantity;
+        // SI : id et color identiques déjà dans le panier...
+        if (alreadyInCart) {
+            // ... vérifier si la somme des quantités est sup à 100
+            if (newQuantity > 100) {
+                // Si true : forcer la correction ou l'abandon
+                confirmMessage(maxInput);
+            }
+            else {
+                // Si false : additionner les deux quantités
+                newQuantity;
+                confirmMessage(validInput);
+            }
+        };
+
+        // SI : Client a déjà un panier (sans doublon)...
+        if (cart) {
+            // ... ajouter le produit au panier
+            addToCart();
+            // Confirmer l'ajout
             confirmMessage(validInput);
         }
+        // SI : Client n'a pas de panier...
+        else {
+            // Créer le panier...
+            cart = [];
+            // ... ajouter le produit au panier
+            addToCart();
+            // Confirmer l'ajout
+            confirmMessage(validInput);
+        };
     };
 
-    // ****************************************************
-    // Inputs valides : Ajout au panier
-    // ****************************************************
-
-    // SI : Client a déjà un panier (sans doublon)...
-    if (cart) {
-        // ... ajouter le produit au panier
-        addToCart();
-        // Confirmer l'ajout
-        confirmMessage(validInput);
-    }
-    // SI : Client n'a pas de panier...
-    else {
-        // Créer le panier...
-        cart = [];
-        // ... ajouter le produit au panier
-        addToCart();
-        // Confirmer l'ajout
-        confirmMessage(validInput);
-    };
+    validateForm();
 });

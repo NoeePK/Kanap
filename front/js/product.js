@@ -113,9 +113,11 @@ addToCartBtn.addEventListener("click", (event) => {
 
     // Messages possibles selon la situation
     const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans modifier.";
+
     const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans modifier.";
+
     const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
-    
+
     // Message d'erreur ou de confirmation
     const confirmMessage = (message) => {
         if (window.confirm(message)) {
@@ -153,8 +155,9 @@ addToCartBtn.addEventListener("click", (event) => {
     function validateForm() {
 
         // SI : la quantité est =0 ou >100 ou négative, et pas de couleur sélectionnée...
-        if (inputQuantity = 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
+        if (inputQuantity <= 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
             // ... envoyer ce message pour forcer la correction
+            
             confirmMessage(invalidInput);
         };
 

@@ -80,6 +80,15 @@ insertCard();
 // *************************************************
 // ************************************************
 
+// *************************************************
+// Ajouter l'attribut required pour les inputs
+// *************************************************
+
+document.getElementById('colors').required = true;
+document.getElementById('quantity').required = true;
+
+// ************************************************
+
 const addToCartBtn = document.getElementById('addToCart');
 
 // Déclencher l'ajout au clic sur le btn
@@ -87,9 +96,9 @@ addToCartBtn.addEventListener("click", (event) => {
     // Empêcher la réactualisation de la page lors du clic
     event.preventDefault();
 
-    // ************************************************
+    // *********************************************
     // Récupérer les inputs du formulaire
-    // ************************************************
+    // *********************************************
 
     // Récupérer la valeur de la couleur/quantité choisie
     const inputColor = document.getElementById('colors').value;
@@ -109,25 +118,24 @@ addToCartBtn.addEventListener("click", (event) => {
     // ****************************************************
 
     // Messages possibles selon la situation
-    const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page Annuler pour accéder au panier.";
-    const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, Annuler pour accéder au panier sans modifier.";
-    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, Annuler pour accéder au panier sans modifier.";
 
-    // Fonction confirmation à utiliser avec une des options ci-dessus
-    function confirmMessage(userMessage) {
-        const userChoice = window.confirm(userMessage);
+    const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
+    const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans modifier.";
+    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans modifier."; 
 
-        if (userChoice) {
-            window.location.href;
+    // Fonction confirmation d'ajout au panier
+    const confirmMessage = (message) => {
+        if (window.confirm(message)) {
+            location.reload;
         }
         else {
             window.location.href = "cart.html";
         }
     };
 
-    // ****************************************************
+    // **********************************************
     // Création du panier dans le localStorage
-    // ****************************************************
+    // *******************************************
 
     // Utiliser parse pour rendre le contenu lisible en JS
     let cart = JSON.parse(localStorage.getItem('product'));
@@ -181,14 +189,14 @@ addToCartBtn.addEventListener("click", (event) => {
     // Inputs valides : Ajout au panier
     // ****************************************************
 
-    // SI : Client a déjà un panier sans doublon...
+    // SI : Client a déjà un panier (sans doublon)...
     if (cart) {
         // ... ajouter le produit au panier
         addToCart();
         // Confirmer l'ajout
         confirmMessage(validInput);
     }
-    // SINON : Client n'a pas de panier...
+    // SI : Client n'a pas de panier...
     else {
         // Créer le panier...
         cart = [];

@@ -1,3 +1,8 @@
+// CORRECTIONS A METTRE EN PLACE :
+// Message confirm
+// Empêcher ajout inputs invalides
+
+
 // ************************************************
 // Récupérer l'id dans l'url :
 // ************************************************
@@ -5,13 +10,11 @@ const productPageURL = window.location.href;
 const url = new URL(productPageURL);
 const productId = url.searchParams.get("id");
 
-console.log(productId);
-
 // ************************************************
 // Récupérer le produit dans l'API
 // ************************************************
 
-const fetchProducts = async () => {
+const fetchProduct = async () => {
     try {
         // Récupérer l'API
         const response = await fetch(`http://localhost:3000/api/products/${productId}`);
@@ -20,7 +23,7 @@ const fetchProducts = async () => {
         return data;
     }
     catch (err) {
-        console.log(err);
+        console.log("Erreur");
         return null;
     }
 };
@@ -39,9 +42,9 @@ const createCard = async (product) => {
     const imageDiv = document.getElementsByClassName('item__img');
     imageDiv[0].appendChild(productImg);
 
-    // Insertion nom, prix, description
+    // Insertion nom, prix, description (+ espace avant €)
     document.getElementById('title').innerText = product.name;
-    document.getElementById('price').innerText = product.price;
+    document.getElementById('price').innerText = product.price + " ";
     document.getElementById('description').innerText = product.description;
 
     // Insertion options des couleurs
@@ -65,9 +68,9 @@ const createCard = async (product) => {
 
 const insertCard = async () => {
     // Récupérer le bon produit dans une Promise
-    let products = await fetchProducts();
-    // Utiliser la Promise pour insérer la carte
-    return fetchProducts().then(createCard(products));
+    let products = await fetchProduct();
+    // Utiliser la Promise pour insérer la carte (avec .then)
+    return fetchProduct().then(createCard(products));
 };
 
 insertCard();

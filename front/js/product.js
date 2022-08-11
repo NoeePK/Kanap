@@ -62,6 +62,33 @@ const createCard = async (product) => {
     });
 };
 
+// **************************************************
+// Messages pour utilisations
+// **************************************************
+
+// Message de confirmation
+const successMessage = () => {
+    if (window.confirm("Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.")) {
+        location.reload;
+    } else {
+        window.location.href = "http://127.0.0.1:5500/front/html/cart.html";
+    }
+};
+
+// Messages possibles selon la situation
+const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
+
+const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
+
+// Message d'erreur
+const errorMessage = (message) => {
+    if (window.confirm(message)) {
+        window.location.href;
+    } else {
+        window.location.href = "http://127.0.0.1:5500/front/html/cart.html";
+    }
+};
+
 // ************************************************
 // Insertion de la carte produit
 // ************************************************
@@ -81,38 +108,10 @@ const insertCard = async () => {
     document.getElementById('colors').required = true;
     document.getElementById('quantity').required = true;
 
-    // **************************************************
-    // Messages pour user : Correction des inputs
-    // **************************************************
-
-    // Messages possibles selon la situation
-    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
-
-    const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
-
-    const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
-
-    // Première destination
-    const reloadPage = location.reload;
-    const stayOnPage = window.location.href;
-
-    // Message d'erreur ou de confirmation
-    const confirmMessage = (message, destination) => {
-        if (window.confirm(message)) {
-            destination;
-            // reload ou rester sur la page ? Que faire ?
-        }
-        else {
-            window.location.href = "http://127.0.0.1:5500/front/html/cart.html";
-        }
-    };
-
     // Déclencher l'ajout au clic sur "Ajouter au panier"
     addToCartBtn.addEventListener("click", (event) => {
         // Empêcher la réactualisation de la page lors du clic
         event.preventDefault();
-
-
 
         // Processus d'ajout du produit dans le panier
         const processAddition = () => {
@@ -154,9 +153,8 @@ const insertCard = async () => {
                 localStorage.setItem("product", JSON.stringify(cart));
 
                 // Confirmer ajout et proposer destinations
-                confirmMessage(validInput, reloadPage);
+                successMessage();
             };
-
 
             // ****************************************************
             // Validation du formulaire
@@ -165,7 +163,7 @@ const insertCard = async () => {
             // SI : la quantité est <=0 ou >100 ou négative ou pas de couleur sélectionnée...
             if (inputQuantity <= 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
                 // ... envoyer ce message pour forcer la correction
-                confirmMessage(invalidInput, stayOnPage);
+                errorMessage(invalidInput);
                 // Empêcher l'ajout au panier !!!!
             }
 
@@ -177,8 +175,8 @@ const insertCard = async () => {
                 // Comparaison du panier et du nouvel ajout
                 const alreadyInCart = cart.find(
                     (product) =>
-                    product.itemId === productId &&
-                    product.itemColor === inputColor
+                        product.itemId === productId &&
+                        product.itemColor === inputColor
                 );
 
                 // Somme des deux quantités
@@ -189,7 +187,7 @@ const insertCard = async () => {
                     // ... vérifier si la somme des quantités est sup à 100
                     if (newQuantity > 100) {
                         // Si true : forcer la correction ou l'abandon
-                        confirmMessage(maxInput, stayOnPage);
+                        errorMessage(maxInput);
                     }
                     else {
                         // Si false : somme des deux quantités remplace ancienne
@@ -197,7 +195,7 @@ const insertCard = async () => {
                         // informations sont converti avec stringify
                         localStorage.setItem("product", JSON.stringify(cart));
                         // Message de confirmation
-                        confirmMessage(validInput, reloadPage);
+                        successMessage();
                     }
                 }
                 // SI : id et color ne sont pas identiques...

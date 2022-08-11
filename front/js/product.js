@@ -86,7 +86,7 @@ const insertCard = async () => {
         // Empêcher la réactualisation de la page lors du clic
         event.preventDefault();
         // Processus d'ajout du produit dans le panier
-        const processAddition = (product) => {
+        const processAddition = () => {
 
             // **********************************************
             // Création du panier dans le localStorage
@@ -154,8 +154,6 @@ const insertCard = async () => {
                 }
             };
 
-
-
             // ****************************************************
             // Validation du formulaire
             // ****************************************************
@@ -198,14 +196,10 @@ const insertCard = async () => {
                 // ... ajouter le produit au panier
                 addToCart();
             };
-
-
-
         };
         // Appel du processus d'ajout
-        processAddition(data);
+        processAddition();
     });
 
 };
-
 insertCard();

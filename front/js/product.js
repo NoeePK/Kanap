@@ -81,6 +81,32 @@ const insertCard = async () => {
     document.getElementById('colors').required = true;
     document.getElementById('quantity').required = true;
 
+    // **************************************************
+    // Messages pour user : Correction des inputs
+    // **************************************************
+
+    // Messages possibles selon la situation
+    const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
+
+    const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
+
+    const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
+
+    // Première destination
+    const reloadPage = location.reload;
+    const stayOnPage = window.location.href;
+
+    // Message d'erreur ou de confirmation
+    const confirmMessage = (message, destination) => {
+        if (window.confirm(message)) {
+            destination;
+            // reload ou rester sur la page ? Que faire ?
+        }
+        else {
+            window.location.href = "http://127.0.0.1:5500/front/html/cart.html";
+        }
+    };
+
     // Déclencher l'ajout au clic sur "Ajouter au panier"
     addToCartBtn.addEventListener("click", (event) => {
         // Empêcher la réactualisation de la page lors du clic
@@ -128,31 +154,7 @@ const insertCard = async () => {
 
             console.log(itemDetails);
 
-            // **************************************************
-            // Messages : Correction des inputs
-            // **************************************************
 
-            // Messages possibles selon la situation
-            const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
-
-            const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
-
-            const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
-
-            // Première destination
-            const reloadPage = location.reload;
-            const stayOnPage = window.location.href;
-
-            // Message d'erreur ou de confirmation
-            const confirmMessage = (message, destination) => {
-                if (window.confirm(message)) {
-                    destination;
-                    // reload ou rester sur la page ? Que faire ?
-                }
-                else {
-                    window.location.href = "http://127.0.0.1:5500/front/html/cart.html";
-                }
-            };
 
             // ****************************************************
             // Validation du formulaire

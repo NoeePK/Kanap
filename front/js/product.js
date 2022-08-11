@@ -59,7 +59,7 @@ const createCard = async (product) => {
         colorOption.value = color;
         // ... et ajouter l'option créée dans l'élément 'select'
         document.getElementById('colors').appendChild(colorOption);
-    })
+    });
 };
 
 // ************************************************
@@ -68,8 +68,8 @@ const createCard = async (product) => {
 
 const insertCard = async () => {
     // Récupérer le bon produit dans une Promise
-    let product = await fetchProduct();
-    createCard(product);
+    let data = await fetchProduct();
+    createCard(data);
 
     // *************************************************
     // Envoi du formulaire
@@ -85,8 +85,31 @@ const insertCard = async () => {
     addToCartBtn.addEventListener("click", (event) => {
         // Empêcher la réactualisation de la page lors du clic
         event.preventDefault();
+        // Processus d'ajout du produit dans le panier
+        const processAddition = (product) => {
 
-        const processAddition = () => {
+            // **********************************************
+            // Création du panier dans le localStorage
+            // *******************************************
+
+            // Utiliser parse pour rendre le contenu lisible en JS
+            let cart = JSON.parse(localStorage.getItem('product'));
+
+            // ************************************************
+            // Fonction : Ajout au panier
+            // ************************************************
+
+            // Stocker les valeurs dans le panier
+            const addToCart = async () => {
+                // Push le produit dans le panier
+                cart.push(itemDetails);
+
+                // Stringify avant de mettre dans le localStorage
+                localStorage.setItem("product", JSON.stringify(cart));
+
+                // Confirmer ajout et proposer destinations
+                confirmMessage(validInput);
+            };
 
             // *********************************************
             // Récupérer les inputs
@@ -106,13 +129,13 @@ const insertCard = async () => {
             console.log(itemDetails);
 
             // **************************************************
-            // Correction des inputs
+            // Messages : Correction des inputs
             // **************************************************
 
             // Messages possibles selon la situation
-            const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans modifier.";
+            const invalidInput = "Veuillez choisir une couleur et une quantité valide. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
 
-            const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans modifier.";
+            const maxInput = "Nombre maximum du même article atteint. \nOK pour modifier, ANNULER pour accéder au panier sans ajouter.";
 
             const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
 
@@ -120,31 +143,14 @@ const insertCard = async () => {
             const confirmMessage = (message) => {
                 if (window.confirm(message)) {
                     location.reload;
+                    // reload ou rester sur la page ? Que faire ?
                 }
                 else {
-                    window.location.href = "cart.html";
+                    window.location.href = "http://127.0.0.1:5500/front/html/cart.html";
                 }
             };
 
-            // **********************************************
-            // Création du panier dans le localStorage
-            // *******************************************
 
-            // Utiliser parse pour rendre le contenu lisible en JS
-            let cart = JSON.parse(localStorage.getItem('product'));
-
-            // ************************************************
-            // Fonction : Ajout au panier
-            // ************************************************
-
-            // Stocker les valeurs dans le panier
-            const addToCart = async () => {
-                // Push le produit dans le panier
-                cart.push(itemDetails);
-
-                // Utiliser stringify avant de mettre dans le localStorage
-                localStorage.setItem("product", JSON.stringify(cart));
-            };
 
             // ****************************************************
             // Validation du formulaire
@@ -198,9 +204,9 @@ const insertCard = async () => {
 
             validateForm();
         };
-
-        processAddition(product);
-});
+        // Appel du processus d'ajout
+        processAddition(data);
+    });
 
 };
 

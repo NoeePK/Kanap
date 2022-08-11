@@ -139,8 +139,8 @@ const insertCard = async () => {
 
             const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
 
+            // Première destination
             const reloadPage = location.reload;
-
             const stayOnPage = window.location.href;
 
             // Message d'erreur ou de confirmation
@@ -160,53 +160,47 @@ const insertCard = async () => {
             // Validation du formulaire
             // ****************************************************
 
-            function validateForm() {
+            // SI : la quantité est =0 ou >100 ou négative, et pas de couleur sélectionnée...
+            if (inputQuantity <= 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
+                // ... envoyer ce message pour forcer la correction
 
-                // SI : la quantité est =0 ou >100 ou négative, et pas de couleur sélectionnée...
-                if (inputQuantity <= 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
-                    // ... envoyer ce message pour forcer la correction
-
-                    confirmMessage(invalidInput);
-                };
-
-                // Comparaison du panier et du nouvel ajout
-                const alreadyInCart = cart.id === productId && cart.color === inputColor;
-                // Somme des deux quantités
-                const newQuantity = cart.quantity += inputQuantity;
-
-                // SI : id et color identiques déjà dans le panier...
-                if (alreadyInCart) {
-                    // ... vérifier si la somme des quantités est sup à 100
-                    if (newQuantity > 100) {
-                        // Si true : forcer la correction ou l'abandon
-                        confirmMessage(maxInput);
-                    }
-                    else {
-                        // Si false : additionner les deux quantités
-                        newQuantity;
-                        confirmMessage(validInput);
-                    }
-                };
-
-                // SI : Client a déjà un panier (sans doublon)...
-                if (cart) {
-                    // ... ajouter le produit au panier
-                    addToCart();
-                    // Confirmer l'ajout
-                    confirmMessage(validInput);
-                }
-                // SI : Client n'a pas de panier...
-                else {
-                    // Créer le panier...
-                    cart = [];
-                    // ... ajouter le produit au panier
-                    addToCart();
-                    // Confirmer l'ajout
-                    confirmMessage(validInput);
-                };
+                confirmMessage(invalidInput, stayOnPage);
             };
 
-            validateForm();
+            // Comparaison du panier et du nouvel ajout
+            const alreadyInCart = cart.id === productId && cart.color === inputColor;
+            // Somme des deux quantités
+            const newQuantity = cart.quantity += inputQuantity;
+
+            // SI : id et color identiques déjà dans le panier...
+            if (alreadyInCart) {
+                // ... vérifier si la somme des quantités est sup à 100
+                if (newQuantity > 100) {
+                    // Si true : forcer la correction ou l'abandon
+                    confirmMessage(maxInput, stayOnPage);
+                }
+                else {
+                    // Si false : additionner les deux quantités
+                    newQuantity;
+                    confirmMessage(validInput, reloadPage);
+                }
+            };
+
+            // SI : Client a déjà un panier (sans doublon)...
+            if (cart) {
+                // ... ajouter le produit au panier
+                addToCart();
+            }
+            // SI : Client n'a pas de panier...
+            else {
+                // Créer le panier...
+                cart = [];
+                // ... ajouter le produit au panier
+                addToCart();
+            };
+
+
+
         };
         // Appel du processus d'ajout
         processAddition(data);

@@ -81,29 +81,6 @@ const insertCard = async () => {
     document.getElementById('colors').required = true;
     document.getElementById('quantity').required = true;
 
-    // **********************************************
-    // Création du panier dans le localStorage
-    // *******************************************
-
-    // Utiliser parse pour rendre le contenu lisible en JS
-    let cart = JSON.parse(localStorage.getItem('product'));
-
-    // ************************************************
-    // Fonction : Ajout au panier
-    // ************************************************
-
-    // Stocker les valeurs dans le panier
-    const addToCart = async () => {
-        // Push le produit dans le panier
-        cart.push(itemDetails);
-
-        // Stringify avant de mettre dans le localStorage
-        localStorage.setItem("product", JSON.stringify(cart));
-
-        // Confirmer ajout et proposer destinations
-        confirmMessage(validInput, reloadPage);
-    };
-
     // **************************************************
     // Messages pour user : Correction des inputs
     // **************************************************
@@ -134,8 +111,11 @@ const insertCard = async () => {
     addToCartBtn.addEventListener("click", (event) => {
         // Empêcher la réactualisation de la page lors du clic
         event.preventDefault();
+
+
+
         // Processus d'ajout du produit dans le panier
-        const processAddition = (cart) => {
+        const processAddition = () => {
 
             // *********************************************
             // Récupérer les inputs
@@ -147,12 +127,36 @@ const insertCard = async () => {
 
             // Stocker les 3 valeurs dans un objet
             const itemDetails = {
-                id: productId,
-                color: inputColor,
-                quantity: inputQuantity
+                itemId: productId,
+                itemColor: inputColor,
+                itemQuantity: inputQuantity
             };
 
             console.log(itemDetails);
+
+            // parse => contenu du panier lisible en JS
+            // Essai avec ou || pour que le cart soit reconnu
+            const cart = JSON.parse(localStorage.getItem('product')) || [];
+
+            // ************************************************
+            // Fonction : Ajout au panier
+            // ************************************************
+
+            // Stocker les valeurs dans le panier
+            const addToCart = () => {
+                // Push le produit dans le panier
+                cart.push(itemDetails);
+
+                console.log('details qui ont été push' + ':' + cart.push(itemDetails));
+                console.log('contenu de cart' + ':' + cart);
+
+                // stringify => contenu du panier accepté par le localStorage
+                localStorage.setItem("product", JSON.stringify(cart));
+
+                // Confirmer ajout et proposer destinations
+                confirmMessage(validInput, reloadPage);
+            };
+
 
             // ****************************************************
             // Validation du formulaire
@@ -162,21 +166,23 @@ const insertCard = async () => {
             if (inputQuantity <= 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
                 // ... envoyer ce message pour forcer la correction
                 confirmMessage(invalidInput, stayOnPage);
-            };
+                // Empêcher l'ajout au panier !!!!
+            }
 
-            // Essai 225 : id n'est pas reconnu. Changer de méthode pour comparer le panier.
+            // Essai 6 : id n'est pas reconnu. Changer de méthode pour comparer le panier.
             // Essai avec .find()
 
             // SI : Client a un panier...
             if (cart) {
                 // Comparaison du panier et du nouvel ajout
                 const alreadyInCart = cart.find(
-                    cart.id === productId &&
-                    cart.color === inputColor
-                )
+                    (product) =>
+                    product.itemId === productId &&
+                    product.itemColor === inputColor
+                );
 
                 // Somme des deux quantités
-                const newQuantity = cart.quantity += inputQuantity;
+                const newQuantity = Number(alreadyInCart.itemQuantity) + Number(inputQuantity);
 
                 // SI : id et color identiques déjà dans le panier...
                 if (alreadyInCart) {
@@ -186,12 +192,15 @@ const insertCard = async () => {
                         confirmMessage(maxInput, stayOnPage);
                     }
                     else {
-                        // Si false : additionner les deux quantités
-                        newQuantity;
+                        // Si false : somme des deux quantités remplace ancienne
+                        alreadyInCart.itemQuantity = newQuantity
+                        // informations sont converti avec stringify
+                        localStorage.setItem("product", JSON.stringify(cart));
+                        // Message de confirmation
                         confirmMessage(validInput, reloadPage);
                     }
                 }
-                // SI : id et color ne sont pas identitques...
+                // SI : id et color ne sont pas identiques...
                 else {
                     // ... ajouter le produit au panier
                     addToCart();
@@ -199,15 +208,15 @@ const insertCard = async () => {
             }
             // SI : Client n'a pas de panier...
             else {
-                    // ... créer le panier...
-                    cart = [];
-                    // ... ajouter le produit au panier
-                    addToCart();
-                };
-            };
-            // Appel du processus d'ajout
-            processAddition();
-        });
+                // ... créer le panier...
+                cart = [];
+                // ... ajouter le produit au panier
+                addToCart();
+            }
+        };
+        // Appel du processus d'ajout
+        processAddition();
+    });
 
 };
 insertCard();

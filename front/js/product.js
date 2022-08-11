@@ -81,6 +81,29 @@ const insertCard = async () => {
     document.getElementById('colors').required = true;
     document.getElementById('quantity').required = true;
 
+    // **********************************************
+    // Création du panier dans le localStorage
+    // *******************************************
+
+    // Utiliser parse pour rendre le contenu lisible en JS
+    let cart = JSON.parse(localStorage.getItem('product'));
+
+    // ************************************************
+    // Fonction : Ajout au panier
+    // ************************************************
+
+    // Stocker les valeurs dans le panier
+    const addToCart = async () => {
+        // Push le produit dans le panier
+        cart.push(itemDetails);
+
+        // Stringify avant de mettre dans le localStorage
+        localStorage.setItem("product", JSON.stringify(cart));
+
+        // Confirmer ajout et proposer destinations
+        confirmMessage(validInput, reloadPage);
+    };
+
     // **************************************************
     // Messages pour user : Correction des inputs
     // **************************************************
@@ -112,30 +135,7 @@ const insertCard = async () => {
         // Empêcher la réactualisation de la page lors du clic
         event.preventDefault();
         // Processus d'ajout du produit dans le panier
-        const processAddition = () => {
-
-            // **********************************************
-            // Création du panier dans le localStorage
-            // *******************************************
-
-            // Utiliser parse pour rendre le contenu lisible en JS
-            let cart = JSON.parse(localStorage.getItem('product'));
-
-            // ************************************************
-            // Fonction : Ajout au panier
-            // ************************************************
-
-            // Stocker les valeurs dans le panier
-            const addToCart = async () => {
-                // Push le produit dans le panier
-                cart.push(itemDetails);
-
-                // Stringify avant de mettre dans le localStorage
-                localStorage.setItem("product", JSON.stringify(cart));
-
-                // Confirmer ajout et proposer destinations
-                confirmMessage(validInput, reloadPage);
-            };
+        const processAddition = (cart) => {
 
             // *********************************************
             // Récupérer les inputs
@@ -154,54 +154,60 @@ const insertCard = async () => {
 
             console.log(itemDetails);
 
-
-
             // ****************************************************
             // Validation du formulaire
             // ****************************************************
 
-            // SI : la quantité est =0 ou >100 ou négative, et pas de couleur sélectionnée...
+            // SI : la quantité est <=0 ou >100 ou négative ou pas de couleur sélectionnée...
             if (inputQuantity <= 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
                 // ... envoyer ce message pour forcer la correction
-
                 confirmMessage(invalidInput, stayOnPage);
             };
 
-            // Comparaison du panier et du nouvel ajout
-            const alreadyInCart = cart.id === productId && cart.color === inputColor;
-            // Somme des deux quantités
-            const newQuantity = cart.quantity += inputQuantity;
+            // Essai 225 : id n'est pas reconnu. Changer de méthode pour comparer le panier.
+            // Essai avec .find()
 
-            // SI : id et color identiques déjà dans le panier...
-            if (alreadyInCart) {
-                // ... vérifier si la somme des quantités est sup à 100
-                if (newQuantity > 100) {
-                    // Si true : forcer la correction ou l'abandon
-                    confirmMessage(maxInput, stayOnPage);
-                }
-                else {
-                    // Si false : additionner les deux quantités
-                    newQuantity;
-                    confirmMessage(validInput, reloadPage);
-                }
-            };
-
-            // SI : Client a déjà un panier (sans doublon)...
+            // SI : Client a un panier...
             if (cart) {
-                // ... ajouter le produit au panier
-                addToCart();
+                // Comparaison du panier et du nouvel ajout
+                const alreadyInCart = cart.find(
+                    cart.id === productId &&
+                    cart.color === inputColor
+                )
+
+                // Somme des deux quantités
+                const newQuantity = cart.quantity += inputQuantity;
+
+                // SI : id et color identiques déjà dans le panier...
+                if (alreadyInCart) {
+                    // ... vérifier si la somme des quantités est sup à 100
+                    if (newQuantity > 100) {
+                        // Si true : forcer la correction ou l'abandon
+                        confirmMessage(maxInput, stayOnPage);
+                    }
+                    else {
+                        // Si false : additionner les deux quantités
+                        newQuantity;
+                        confirmMessage(validInput, reloadPage);
+                    }
+                }
+                // SI : id et color ne sont pas identitques...
+                else {
+                    // ... ajouter le produit au panier
+                    addToCart();
+                }
             }
             // SI : Client n'a pas de panier...
             else {
-                // Créer le panier...
-                cart = [];
-                // ... ajouter le produit au panier
-                addToCart();
+                    // ... créer le panier...
+                    cart = [];
+                    // ... ajouter le produit au panier
+                    addToCart();
+                };
             };
-        };
-        // Appel du processus d'ajout
-        processAddition();
-    });
+            // Appel du processus d'ajout
+            processAddition();
+        });
 
 };
 insertCard();

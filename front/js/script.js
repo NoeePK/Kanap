@@ -2,6 +2,7 @@ const itemSection = document.getElementById("items");
 
 // Récupération des produits de l'API
 const fetchEachProduct = async () => {
+    try {
     // Récupérer l'API
     const response = await fetch('http://localhost:3000/api/products');
     // Récupérer les produits dans .json
@@ -9,9 +10,12 @@ const fetchEachProduct = async () => {
     let product = {};
     // Pour chaque produit dans products...
     for (product in products) {
-        const productLink = insertProductCard(products[product])
+        const productLink = insertCards(products[product])
         // .... créer une carte dans la section
         itemSection.appendChild(productLink)
+    }}
+    catch (err) {
+        console.log('Démarrez le serveur : node server');
     }
 };
 
@@ -22,11 +26,11 @@ fetchEachProduct();
 /*Création et insertion des cartes
 dans la page d'accueil*/
 
-function insertProductCard(product) {
+function insertCards(product) {
 
     let productLink = document.createElement('a');
     // Trouver le bon href
-    productLink.href = `product.html?id=` + product._id;
+    productLink.href = `product.html?id=` + product.id;
     itemSection.appendChild(productLink);
 
     let productArticle = document.createElement('article');
@@ -51,4 +55,5 @@ function insertProductCard(product) {
     return productLink
 };
 
-insertProductCard();
+insertCards();
+console.log(productLink);

@@ -37,7 +37,6 @@ const createCard = async (product) => {
 
     // Insertion de l'image
     const imageDiv = document.getElementsByClassName('item__img');
-    // Préciser que c'est la première (comme c'est pas un id)
     imageDiv[0].appendChild(productImg);
 
     // Insertion nom, prix, description

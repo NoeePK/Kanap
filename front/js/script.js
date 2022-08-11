@@ -1,19 +1,25 @@
-const itemSection = document.getElementById("items");
+// AMELIORATIONS A METTRE EN PLACE :
+// Séparer fetch API et la boucle d'insertion
 
-// Récupération des produits de l'API
+// ************************************************
+// Récupérer les produits dans l'API
+// ************************************************
+
 const fetchEachProduct = async () => {
     try {
-    // Récupérer l'API
-    const response = await fetch('http://localhost:3000/api/products');
-    // Récupérer les produits dans .json
-    const products = await response.json();
-    let product = {};
-    // Pour chaque produit dans products...
-    for (product in products) {
-        const productLink = insertCards(products[product]);
-        // .... créer une carte dans la section
-        itemSection.appendChild(productLink);
-    }}
+        // Récupérer l'API
+        const response = await fetch('http://localhost:3000/api/products');
+        // Récupérer les produits dans .json
+        const products = await response.json();
+        let product = {};
+        // Pour chaque produit dans l'API...
+        for (product in products) {
+            // ... créer une carte...
+            const productLink = createCards(products[product]);
+            // ... et l'insérer dans la section
+            document.getElementById("items").appendChild(productLink);
+        }
+    }
     catch (err) {
         console.log('Démarrez le serveur : node server');
     }
@@ -21,17 +27,15 @@ const fetchEachProduct = async () => {
 
 fetchEachProduct();
 
-// ************************************************************
+// ************************************************
+// Création d'une carte produit
+// ************************************************
 
-/*Création et insertion des cartes
-dans la page d'accueil*/
-
-function insertCards(product) {
+const createCards = (product) => {
 
     let productLink = document.createElement('a');
     // Trouver le bon href
     productLink.href = `./product.html?id=` + product._id;
-    itemSection.appendChild(productLink);
 
     let productArticle = document.createElement('article');
 
@@ -53,6 +57,4 @@ function insertCards(product) {
     productLink.appendChild(productArticle);
 
     return productLink;
-}
-
-insertCards();
+};

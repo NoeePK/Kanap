@@ -108,7 +108,7 @@ const insertCard = async () => {
                 localStorage.setItem("product", JSON.stringify(cart));
 
                 // Confirmer ajout et proposer destinations
-                confirmMessage(validInput);
+                confirmMessage(validInput, reloadPage);
             };
 
             // *********************************************
@@ -139,10 +139,14 @@ const insertCard = async () => {
 
             const validInput = "Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.";
 
+            const reloadPage = location.reload;
+
+            const stayOnPage = window.location.href;
+
             // Message d'erreur ou de confirmation
-            const confirmMessage = (message) => {
+            const confirmMessage = (message, destination) => {
                 if (window.confirm(message)) {
-                    location.reload;
+                    destination;
                     // reload ou rester sur la page ? Que faire ?
                 }
                 else {

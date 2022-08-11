@@ -10,9 +10,9 @@ const fetchEachProduct = async () => {
     let product = {};
     // Pour chaque produit dans products...
     for (product in products) {
-        const productLink = insertCards(products[product])
+        const productLink = insertCards(products[product]);
         // .... créer une carte dans la section
-        itemSection.appendChild(productLink)
+        itemSection.appendChild(productLink);
     }}
     catch (err) {
         console.log('Démarrez le serveur : node server');
@@ -30,7 +30,7 @@ function insertCards(product) {
 
     let productLink = document.createElement('a');
     // Trouver le bon href
-    productLink.href = `product.html?id=` + product.id;
+    productLink.href = `./product.html?id=` + product._id;
     itemSection.appendChild(productLink);
 
     let productArticle = document.createElement('article');
@@ -52,8 +52,7 @@ function insertCards(product) {
 
     productLink.appendChild(productArticle);
 
-    return productLink
-};
+    return productLink;
+}
 
 insertCards();
-console.log(productLink);

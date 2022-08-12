@@ -157,41 +157,41 @@ addToCartBtn.addEventListener("click", (event) => {
             // ... ajouter le produit au panier
             addToCart();
             successMessage();
-
         }
-    }
-
-    // SI : Client a un panier...
-    else if (cart) {
-        // Comparaison du panier et du nouvel ajout
-        const alreadyInCart = cart.find(
-            (product) =>
-                product.itemId === productId &&
-                product.itemColor === inputColor
-        );
-        // SI : vérifier si id et color identiques déjà dans le panier...
-        if (alreadyInCart) {
-            // Somme des deux quantités
-            const newQuantity = Number(itemQuantity) + Number(inputQuantity);
-            // ... vérifier si la somme des quantités est sup à 100
-            if (newQuantity > 100) {
-                // Si true : forcer la correction ou l'abandon
-                alert(maxInput);
-                return;
+        // SINON : Client a déjà un panier...
+        else {
+            // Comparaison du panier et du nouvel ajout
+            const alreadyInCart = cart.find(
+                (product) =>
+                    product.itemId === productId &&
+                    product.itemColor === inputColor
+            );
+            // SI : Id et color identiques déjà dans le panier...
+            if (alreadyInCart) {
+                // Somme des deux quantités
+                const newQuantity = Number(itemQuantity) + Number(inputQuantity);
+                // SI : Somme des quantités est sup à 100...
+                if (newQuantity > 100) {
+                    // Si true : forcer la correction
+                    alert(maxInput);
+                    return;
+                }
+                // SINON : Somme des quantités est inf à 100
+                else {
+                    // Somme des deux quantités remplace ancienne
+                    alreadyInCart.itemQuantity = newQuantity
+                    // Informations sont converties avec stringify
+                    localStorage.setItem("product", JSON.stringify(cart));
+                    // Message de confirmation
+                    successMessage();
+                }
             }
+            // SINON : Id et color ne sont pas identiques...
             else {
-                // Si false : somme des deux quantités remplace ancienne
-                alreadyInCart.itemQuantity = newQuantity
-                // informations sont converti avec stringify
-                localStorage.setItem("product", JSON.stringify(cart));
-                // Message de confirmation
+                // ... ajouter le produit au panier
+                addToCart();
                 successMessage();
             }
         }
-        // SI : id et color ne sont pas identiques...
-        else {
-            // ... ajouter le produit au panier
-            addToCart();
-        }
     }
-});
+})

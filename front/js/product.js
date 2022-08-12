@@ -60,6 +60,10 @@ const createCard = async (product) => {
         // ... et ajouter l'option créée dans l'élément 'select'
         document.getElementById('colors').appendChild(colorOption);
     });
+
+    // Attribut required pour les inputs
+    document.getElementById('colors').required = true;
+    document.getElementById('quantity').required = true;
 };
 
 // ************************************************
@@ -76,17 +80,9 @@ const insertCard = async () => {
 insertCard();
 
 // **************************************************
-// **************************************************
-// **************************************************
-// **************************************************
-// **************************************************
-// Début de la galère à partir d'ici
-
-// **************************************************
-// Messages pour utilisateurs
+// Message pour utilisateurs
 // **************************************************
 
-// Message de confirmation
 const successMessage = () => {
     if (window.confirm("Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.")) {
         location.reload;
@@ -95,27 +91,18 @@ const successMessage = () => {
     }
 };
 
-// Messages d'erreur selon la situation
-const invalidInput = "Veuillez choisir une couleur et/ou une quantité valide.";
-
-const maxInput = "Quantité max du même article : 100.";
-
-
-
 // *************************************************
 // Envoi du formulaire
 // *************************************************
 
 const addToCartBtn = document.getElementById('addToCart');
 
-// Attribut required pour les inputs
-document.getElementById('colors').required = true;
-document.getElementById('quantity').required = true;
-
 // Déclencher l'ajout au clic sur "Ajouter au panier"
 addToCartBtn.addEventListener("click", (event) => {
-    // Empêcher la réactualisation de la page lors du clic
     event.preventDefault();
+
+    // parse => contenu du panier lisible en JS
+    const cart = JSON.parse(localStorage.getItem('product'));
 
     // Récupérer la valeur de la couleur/quantité choisie
     const inputColor = document.getElementById('colors').value;
@@ -128,9 +115,6 @@ addToCartBtn.addEventListener("click", (event) => {
         itemQuantity: inputQuantity
     };
 
-    // parse => contenu du panier lisible en JS
-    const cart = JSON.parse(localStorage.getItem('product'));
-
     // Fonction : Stocker les valeurs dans le panier
     const addToCart = () => {
         // Push le produit dans le panier
@@ -140,58 +124,62 @@ addToCartBtn.addEventListener("click", (event) => {
         localStorage.setItem("product", JSON.stringify(cart));
     };
 
-    // SI : la quantité est <=0 ou >100 ou négative ou pas de couleur sélectionnée...
-    if (inputQuantity == 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
-        // ... envoyer ce message pour forcer la correction
-        alert(invalidInput);
-        return;
+    // *************************************************
+    // Vérifications des inputs
+    // *************************************************
 
-        // séparer les alertes
+    // SI : les inputs sont vides ou incorrects...
+    if (!inputColor) {
+        alert("Veuillez sélectionner une couleur.")
+        return
+    };
+
+    if (!inputQuantity || inputQuantity == 0) {
+        alert("Veuillez sélectionner une quantité.")
+        return
+    };
+
+    if (inputQuantity > 100 || Math.sign(-1)) {
+        alert("Veuillez sélectionner une quantité valide.");
+        return
     }
-    // SINON : les inputs ont un format correct...
-    else if (!inputQuantity == 0 || !inputQuantity > 100 || !Math.sign(-1) || !inputColor == "") {
-        // SI : le client n'a pas de panier...
-        if (!cart) {
-            // ... créer le panier...
-            cart = [];
+    else if (cart) {
+        // Comparaison du panier et du nouvel ajout
+        const alreadyInCart = cart.find(
+            (product) =>
+                product.itemId === productId &&
+                product.itemColor === inputColor
+        );
+        if (!alreadyInCart) {
             // ... ajouter le produit au panier
             addToCart();
             successMessage();
         }
-        // SINON : Client a déjà un panier...
         else {
-            // Comparaison du panier et du nouvel ajout
-            const alreadyInCart = cart.find(
-                (product) =>
-                    product.itemId === productId &&
-                    product.itemColor === inputColor
-            );
-            // SI : Id et color identiques déjà dans le panier...
-            if (alreadyInCart) {
-                // Somme des deux quantités
-                const newQuantity = Number(itemQuantity) + Number(inputQuantity);
-                // SI : Somme des quantités est sup à 100...
-                if (newQuantity > 100) {
-                    // Si true : forcer la correction
-                    alert(maxInput);
-                    return;
-                }
-                // SINON : Somme des quantités est inf à 100
-                else {
-                    // Somme des deux quantités remplace ancienne
-                    alreadyInCart.itemQuantity = newQuantity
-                    // Informations sont converties avec stringify
-                    localStorage.setItem("product", JSON.stringify(cart));
-                    // Message de confirmation
-                    successMessage();
-                }
-            }
-            // SINON : Id et color ne sont pas identiques...
-            else {
-                // ... ajouter le produit au panier
-                addToCart();
+            // Somme des deux quantités
+            const newQuantity = Number(itemQuantity) + Number(inputQuantity);
+            // SINON : Somme des quantités < 100
+            if (newQuantity < 100) {
+                // Somme des deux quantités remplace ancienne
+                alreadyInCart.itemQuantity = newQuantity
+                // stringify et ajout au panier
+                localStorage.setItem("product", JSON.stringify(cart));
                 successMessage();
             }
+            // SINON : Somme des quantités > 100...
+            else {
+                // forcer la correction
+                alert("Quantité max du même article : 100.");
+                return;
+            }
         }
+    }
+    // SI : le client n'a pas de panier...
+    else {
+        // ... créer le panier...
+        cart =[];
+        // ... ajouter le produit au panier
+        addToCart();
+        successMessage();
     }
 })

@@ -129,3 +129,20 @@ insertArticle();
 // Fonction if panier vide
 
 // Fonction : calculer total et l'insérer dans la page
+
+// ************************************************
+// ************************************************
+// ************************************************
+
+// Validation du formulaire
+
+const userDetails = () => {
+    const orderBtn = document.getElementById('order');
+    // Regex pour les noms : pas de chiffres (mais autoriser - pour noms composés)
+    // const nameRegex = /^[a-zA-Z]/i ;
+    // Regex pour l'adresse :
+    // Regex pour l'email
+
+
+    // Messages d'erreur
+}

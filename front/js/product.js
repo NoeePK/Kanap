@@ -179,8 +179,9 @@ const insertCard = async () => {
                         product.itemColor === inputColor
                 );
 
+                
                 // Somme des deux quantités
-                const newQuantity = Number(alreadyInCart.itemQuantity) + Number(inputQuantity);
+                const newQuantity = Number(itemQuantity) + Number(inputQuantity);
 
                 // SI : id et color identiques déjà dans le panier...
                 if (alreadyInCart) {
@@ -194,6 +195,8 @@ const insertCard = async () => {
                         alreadyInCart.itemQuantity = newQuantity
                         // informations sont converti avec stringify
                         localStorage.setItem("product", JSON.stringify(cart));
+
+                        console.log(cart);
                         // Message de confirmation
                         successMessage();
                     }
@@ -202,6 +205,7 @@ const insertCard = async () => {
                 else {
                     // ... ajouter le produit au panier
                     addToCart();
+                    console.log(cart);
                 }
             }
             // SI : Client n'a pas de panier...
@@ -210,6 +214,7 @@ const insertCard = async () => {
                 cart = [];
                 // ... ajouter le produit au panier
                 addToCart();
+                console.log(cart);
             }
         };
         // Appel du processus d'ajout

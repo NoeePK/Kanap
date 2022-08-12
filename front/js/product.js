@@ -102,99 +102,96 @@ const maxInput = "Quantité max du même article : 100.";
 
 
 
-    // *************************************************
-    // Envoi du formulaire
-    // *************************************************
+// *************************************************
+// Envoi du formulaire
+// *************************************************
 
-    const addToCartBtn = document.getElementById('addToCart');
+const addToCartBtn = document.getElementById('addToCart');
 
-    // Attribut required pour les inputs
-    document.getElementById('colors').required = true;
-    document.getElementById('quantity').required = true;
+// Attribut required pour les inputs
+document.getElementById('colors').required = true;
+document.getElementById('quantity').required = true;
 
-    // Déclencher l'ajout au clic sur "Ajouter au panier"
-    addToCartBtn.addEventListener("click", (event) => {
-        // Empêcher la réactualisation de la page lors du clic
-        event.preventDefault();
+// Déclencher l'ajout au clic sur "Ajouter au panier"
+addToCartBtn.addEventListener("click", (event) => {
+    // Empêcher la réactualisation de la page lors du clic
+    event.preventDefault();
 
-        // Récupérer la valeur de la couleur/quantité choisie
-        const inputColor = document.getElementById('colors').value;
-        const inputQuantity = document.getElementById('quantity').value;
+    // Récupérer la valeur de la couleur/quantité choisie
+    const inputColor = document.getElementById('colors').value;
+    const inputQuantity = document.getElementById('quantity').value;
 
+    // Stocker les 3 valeurs dans un objet
+    const itemDetails = {
+        itemId: productId,
+        itemColor: inputColor,
+        itemQuantity: inputQuantity
+    };
 
+    // parse => contenu du panier lisible en JS
+    const cart = JSON.parse(localStorage.getItem('product'));
 
+    // Fonction : Stocker les valeurs dans le panier
+    const addToCart = () => {
+        // Push le produit dans le panier
+        cart.push(itemDetails);
 
-        // Stocker les 3 valeurs dans un objet
-        const itemDetails = {
-            itemId: productId,
-            itemColor: inputColor,
-            itemQuantity: inputQuantity
-        };
+        // stringify => contenu du panier accepté par le localStorage
+        localStorage.setItem("product", JSON.stringify(cart));
+    };
 
-        // parse => contenu du panier lisible en JS
-        const cart = JSON.parse(localStorage.getItem('product'));
+    // SI : la quantité est <=0 ou >100 ou négative ou pas de couleur sélectionnée...
+    if (inputQuantity == 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
+        // ... envoyer ce message pour forcer la correction
+        alert(invalidInput);
+        return;
 
-        // Fonction : Stocker les valeurs dans le panier
-        const addToCart = () => {
-            // Push le produit dans le panier
-            cart.push(itemDetails);
-
-            // stringify => contenu du panier accepté par le localStorage
-            localStorage.setItem("product", JSON.stringify(cart));
-
-            // Confirmer ajout et proposer destinations
-            // A mettre ici ou !!!après addToCart()?!!!!
-            successMessage();
-        };
-
-
-        // SI : la quantité est <=0 ou >100 ou négative ou pas de couleur sélectionnée...
-        if (inputQuantity == 0 || inputQuantity > 100 || Math.sign(-1) || inputColor == "") {
-            // ... envoyer ce message pour forcer la correction
-            alert(invalidInput);
-            return;
-            // mettre !
-            // séparer les alertes
-        }
-        // SI : Client n'a pas de panier...
-        else if (!cart) {
+        // séparer les alertes
+    }
+    // SINON : les inputs ont un format correct...
+    else if (!inputQuantity == 0 || !inputQuantity > 100 || !Math.sign(-1) || !inputColor == "") {
+        // SI : le client n'a pas de panier...
+        if (!cart) {
             // ... créer le panier...
             cart = [];
             // ... ajouter le produit au panier
             addToCart();
+            successMessage();
 
         }
-        // SI : Client a un panier...
-        else if (cart) {
-            // Comparaison du panier et du nouvel ajout
-            const alreadyInCart = cart.find(
-                (product) =>
-                    product.itemId === productId &&
-                    product.itemColor === inputColor
-            );
-            // SI : vérifier si id et color identiques déjà dans le panier...
-            if (alreadyInCart) {
-                // Somme des deux quantités
-                const newQuantity = Number(itemQuantity) + Number(inputQuantity);
-                // ... vérifier si la somme des quantités est sup à 100
-                if (newQuantity > 100) {
-                    // Si true : forcer la correction ou l'abandon
-                    alert(maxInput);
-                    return;
-                }
-                else {
-                    // Si false : somme des deux quantités remplace ancienne
-                    alreadyInCart.itemQuantity = newQuantity
-                    // informations sont converti avec stringify
-                    localStorage.setItem("product", JSON.stringify(cart));
-                    // Message de confirmation
-                    successMessage();
-                }
+    }
+
+    // SI : Client a un panier...
+    else if (cart) {
+        // Comparaison du panier et du nouvel ajout
+        const alreadyInCart = cart.find(
+            (product) =>
+                product.itemId === productId &&
+                product.itemColor === inputColor
+        );
+        // SI : vérifier si id et color identiques déjà dans le panier...
+        if (alreadyInCart) {
+            // Somme des deux quantités
+            const newQuantity = Number(itemQuantity) + Number(inputQuantity);
+            // ... vérifier si la somme des quantités est sup à 100
+            if (newQuantity > 100) {
+                // Si true : forcer la correction ou l'abandon
+                alert(maxInput);
+                return;
             }
-            // SI : id et color ne sont pas identiques...
             else {
-                // ... ajouter le produit au panier
-                addToCart();
+                // Si false : somme des deux quantités remplace ancienne
+                alreadyInCart.itemQuantity = newQuantity
+                // informations sont converti avec stringify
+                localStorage.setItem("product", JSON.stringify(cart));
+                // Message de confirmation
+                successMessage();
             }
         }
-    });
+        // SI : id et color ne sont pas identiques...
+        else {
+            // ... ajouter le produit au panier
+            addToCart();
+        }
+    }
+});

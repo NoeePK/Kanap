@@ -1,6 +1,6 @@
-// CORRECTIONS A METTRE EN PLACE :
-// Message confirm
-// Empêcher ajout inputs invalides
+// Cannot read property of null
+// DOM content n'est pas encore prêt
+// ajouter un DOMContentLoaded avant
 
 
 // ************************************************
@@ -21,14 +21,11 @@ const fetchProduct = async (productId) => {
         // Récupérer les produits dans .json
         const data = await response.json();
         return data;
-    }
-    catch (err) {
+    } catch (err) {
         console.log("Erreur");
         return null;
     }
 };
-
-
 
 // ************************************************
 // Création de la carte produit
@@ -85,7 +82,6 @@ const addToCart = (cart, itemDetails) => {
 };
 
 const addToCartBtn = document.getElementById('addToCart');
-
 
 // ************************************************
 // Vérification et ajout des inputs
@@ -183,9 +179,8 @@ const insertCard = async () => {
     // Déclencher l'ajout au clic sur "Ajouter au panier"
     addToCartBtn.addEventListener("click", (event) => {
         event.preventDefault();
-
         processAdding(data);
-    })
-}
+    });
+};
 
 insertCard();

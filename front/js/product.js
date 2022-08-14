@@ -3,6 +3,7 @@
 // ajouter un DOMContentLoaded avant
 
 
+
 // ************************************************
 // Récupérer l'id dans l'url :
 // ************************************************
@@ -183,4 +184,8 @@ const insertCard = async () => {
     });
 };
 
-insertCard();
+// Attendre le chargement complet du DOM avant de commencer
+document.addEventListener('DOMContentLoaded', async () => {
+    fetchProduct(productId);
+    insertCard();
+})

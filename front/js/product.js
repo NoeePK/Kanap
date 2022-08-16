@@ -131,9 +131,6 @@ addToCartBtn.addEventListener("click", (event) => {
 
 
 
-        // Somme des deux quantités
-        const newQuantity = itemQuantity + Number(inputQuantity);
-
         if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100 || Math.sign(-1))) {
             if (cart) {
                 // Comparaison du panier et du nouvel ajout
@@ -143,6 +140,8 @@ addToCartBtn.addEventListener("click", (event) => {
                         product.itemColor === inputColor
                 );
                 if (alreadyInCart) {
+                    // Somme des deux quantités
+                    const newQuantity = Number(alreadyInCart.itemQuantity) + Number(inputQuantity);
 
                     if (newQuantity < 100) {
                         alreadyInCart.itemQuantity = newQuantity;

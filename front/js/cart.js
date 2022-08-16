@@ -2,22 +2,21 @@
 // Récupérer panier dans le localStorage
 // ************************************************
 
-const cart = JSON.parse(localStorage.getItem('product'));
+let cart = JSON.parse(localStorage.getItem('product'));
 
 // ************************************************
 // Récupérer les produits dans l'API
 // ************************************************
 
-const fetchProducts = async () => {
+const fetchProducts = async (productId) => {
     try {
         // Récupérer le produit dans l'API
         const response = await fetch(`http://localhost:3000/api/products/${productId}`);
         // Récupérer les produits dans .json
         const data = await response.json();
         return data;
-    }
-    catch (err) {
-        console.log(err);
+    } catch (err) {
+        console.log("Problème avec l'API !");
         return null;
     }
 };
@@ -27,93 +26,103 @@ const fetchProducts = async () => {
 // ************************************************
 
 const createArticle = async () => {
-    const section = document.getElementById('cart__items');
 
-    const article = document.createElement('article');
-    article.classList.add('cart__item');
-    article.setAttribute('data-id', productId);
-    article.setAttribute('data-color', productColor);
-    section.appendChild(article);
+    cart.forEach(product => {
+        let productId = product.id;
+        let productColor = product.color;
+        let productQuantity = product.quantity;
 
-    const itemImg = document.createElement('div');
-    divImg.classList.add('cart__item__img');
-    article.appendChild(itemImg);
+        const data = fetchProducts(productId);
 
-    const productImg = document.createElement('img');
-    productImg.src = product.imageUrl;
-    productImg.alt = product.altTxt;
-    itemImg.appendChild(productImg);
+        // Création des cartes
+        const section = document.getElementById('cart__items');
 
-    const itemContent = document.createElement('div');
-    itemContent.classList.add('cart__item__content');
-    article.appendChild(itemContent);
+        const article = document.createElement('article');
+        article.classList.add('cart__item');
+        article.setAttribute('data-id', productId);
+        article.setAttribute('data-color', productColor);
+        section.appendChild(article);
 
-    const description = document.createElement('div');
-    description.classList.add('cart__item__content__description');
-    itemContent.appendChild(description);
+        const itemImg = document.createElement('div');
+        itemImg.classList.add('cart__item__img');
+        article.appendChild(itemImg);
 
-    const productName = document.createElement('h2');
-    productName.innerText = product.name;
-    description.appendChild(productName);
+        const productImg = document.createElement('img');
+        productImg.src = product.imageUrl;
+        productImg.alt = product.altTxt;
+        itemImg.appendChild(productImg);
 
-    const colorOption = document.createElement('p');
-    colorOption.innerText = productColor;
-    description.appendChild(colorOption);
+        const itemContent = document.createElement('div');
+        itemContent.classList.add('cart__item__content');
+        article.appendChild(itemContent);
 
-    const productPrice = document.createElement('p');
-    productPrice.innerText = product.price;
-    description.appendChild(productPrice);
+        const description = document.createElement('div');
+        description.classList.add('cart__item__content__description');
+        itemContent.appendChild(description);
 
-    const settings = document.createElement('div');
-    settings.classList.add('cart__item__content__settings');
-    itemContent.appendChild(settings);
+        const productName = document.createElement('h2');
+        productName.innerText = product.name;
+        description.appendChild(productName);
 
-    const settingsQuantity = document.createElement('div');
-    settingsQuantity.classList.add('cart__item__content__settings__quantity');
-    settings.appendChild(settingsQuantity);
+        const colorOption = document.createElement('p');
+        colorOption.innerText = productColor;
+        description.appendChild(colorOption);
 
-    const quantity = document.createElement('p');
-    quantity.innerText = "Qté : ";
-    settingsQuantity.appendChild(quantity);
+        const productPrice = document.createElement('p');
+        productPrice.innerText = product.price;
+        description.appendChild(productPrice);
 
-    const itemQuantity = document.createElement('input');
-    itemQuantity.classList.add('itemQuantity');
-    itemQuantity.setAttribute('type', 'number');
-    itemQuantity.setAttribute('name', 'itemQuantity');
-    itemQuantity.setAttribute('min', 1);
-    itemQuantity.setAttribute('max', 100);
-    itemQuantity.setAttribute('value', productQuantity);
-    settingsQuantity.appendChild(itemQuantity);
+        const settings = document.createElement('div');
+        settings.classList.add('cart__item__content__settings');
+        itemContent.appendChild(settings);
 
-    const settingsDelete = document.createElement('div');
-    settingsDelete.classList.add('cart__item__content__settings__delete');
-    settings.appendChild(settingsDelete);
+        const settingsQuantity = document.createElement('div');
+        settingsQuantity.classList.add('cart__item__content__settings__quantity');
+        settings.appendChild(settingsQuantity);
 
-    const deleteItem = document.createElement('p');
-    deleteItem.classList.add('deleteItem');
-    deleteItem.innerText = "Supprimer";
-    settingsDelete.appendChild(deleteItem);
+        const quantity = document.createElement('p');
+        quantity.innerText = "Qté : ";
+        settingsQuantity.appendChild(quantity);
 
+        const itemQuantity = document.createElement('input');
+        itemQuantity.classList.add('itemQuantity');
+        itemQuantity.setAttribute('type', 'number');
+        itemQuantity.setAttribute('name', 'itemQuantity');
+        itemQuantity.setAttribute('min', 1);
+        itemQuantity.setAttribute('max', 100);
+        itemQuantity.setAttribute('value', productQuantity);
+        settingsQuantity.appendChild(itemQuantity);
+
+        const settingsDelete = document.createElement('div');
+        settingsDelete.classList.add('cart__item__content__settings__delete');
+        settings.appendChild(settingsDelete);
+
+        const deleteItem = document.createElement('p');
+        deleteItem.classList.add('deleteItem');
+        deleteItem.innerText = "Supprimer";
+        settingsDelete.appendChild(deleteItem);
+    });
 
 };
+
 
 // ************************************************
 // Insertion des cartes produit
 // ************************************************
 
 const insertArticle = async () => {
-    // Récupérer le bon produit dans une Promise
-    let products = await fetchProducts();
 
-    cart.forEach(product => {
-        let productId = products.id;
-        let productColor = products.color;
-        let productQuantity = products.quantity;
-    
+    const data = await fetchProducts(productId);
 
-    // Utiliser la Promise pour insérer la carte
-    return fetchProducts().then(createArticle(product));
-});
+    // SI panier existe
+    if (cart) {
+        // Créer une carte pour chaque produit dans le panier
+        createArticle();
+    } else {
+        // SINON alerter que le panier n'existe pas
+        alert("Votre panier est vide");
+    }
+
 };
 
 insertArticle();

@@ -1,20 +1,22 @@
 // ************************************************
-// Récupérer panier dans le localStorage
+// Panier
 // ************************************************
 
 let cart = JSON.parse(localStorage.getItem('product'));
+const emptyCart = document.querySelector('h1');
+const section = document.getElementById('cart__items');
 
 // ************************************************
 // Récupérer les produits dans l'API
 // ************************************************
 
-const fetchProducts = async (productId) => {
+const fetchProducts = async () => {
     try {
         // Récupérer le produit dans l'API
-        const response = await fetch(`http://localhost:3000/api/products/${productId}`);
+        const response = await fetch(`http://localhost:3000/api/products`);
         // Récupérer les produits dans .json
-        const data = await response.json();
-        return data;
+        const product = await response.json();
+
     } catch (err) {
         console.log("Problème avec l'API !");
         return null;
@@ -32,10 +34,8 @@ const createArticle = async () => {
         let productColor = product.color;
         let productQuantity = product.quantity;
 
-        const data = fetchProducts(productId);
-
         // Création des cartes
-        const section = document.getElementById('cart__items');
+
 
         const article = document.createElement('article');
         article.classList.add('cart__item');
@@ -105,37 +105,26 @@ const createArticle = async () => {
 
 };
 
-
 // ************************************************
-// Insertion des cartes produit
+// Affichage du panier
 // ************************************************
 
-const insertArticle = async () => {
-
-    const data = await fetchProducts(productId);
-
-    // SI panier existe
-    if (cart) {
-        // Créer une carte pour chaque produit dans le panier
-        createArticle();
-    } else {
-        // SINON alerter que le panier n'existe pas
-        alert("Votre panier est vide");
+if (cart === null) {
+    emptyCart.innerText = "Votre panier est vide";
+} else {
+    console.log("Panier garni");
+    let product = {};
+    for (product in cart) {
+        const article = createArticle(cart[product]);
+        section.appendChild(article);
     }
-
-};
-
-insertArticle();
+}
 
 
 
 
-// ************************************************
-// ************************************************
-// ************************************************
 
 
-// Fonction if panier vide
 
 // Fonction : calculer total et l'insérer dans la page
 

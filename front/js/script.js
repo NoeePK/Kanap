@@ -24,7 +24,7 @@ const fetchEachProduct = async () => {
         console.log('Démarrez le serveur : node server');
     }
 };
-
+ 
 fetchEachProduct();
 
 // ************************************************

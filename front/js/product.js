@@ -77,99 +77,114 @@ const insertCard = async () => {
 
 const addToCartBtn = document.getElementById('addToCart');
 
-// Déclencher l'ajout au clic sur "Ajouter au panier"
-addToCartBtn.addEventListener("click", (event) => {
-    event.preventDefault();
+if (addToCartBtn) {
 
-    // ************************************************
-    // Création du Panier
-    // ************************************************
+    // Déclencher l'ajout au clic sur "Ajouter au panier"
+    addToCartBtn.addEventListener("click", (event) => {
+        event.preventDefault();
 
-    // parse => contenu du panier lisible en JS
-    const cart = JSON.parse(localStorage.getItem('product'));
+        // ************************************************
+        // Création du Panier
+        // ************************************************
 
-    // Fonction : Stocker les valeurs dans le panier
-    const addToCart = (cart, itemDetails) => {
-        // Push le produit dans le panier
-        cart.push(itemDetails);
+        // parse => contenu du panier lisible en JS
+        let cart = JSON.parse(localStorage.getItem('product'));
 
-        // stringify => contenu du panier accepté par le localStorage
-        localStorage.setItem("product", JSON.stringify(cart));
-    };
+        // Fonction : Stocker les valeurs dans le panier
+        const addToCart = (cart, itemDetails) => {
+            // Push le produit dans le panier
+            cart.push(itemDetails);
 
-    // ************************************************
-    // Vérification et ajout des inputs
-    // ************************************************
-
-    const processAdding = () => {
-        // Récupérer la valeur de la couleur/quantité choisie
-        const inputColor = document.getElementById('colors').value;
-        const inputQuantity = document.getElementById('quantity').value;
-
-        // Stocker les 3 valeurs dans un objet
-        const itemDetails = {
-            itemId: productId,
-            itemColor: inputColor,
-            itemQuantity: inputQuantity
+            // stringify => contenu du panier accepté par le localStorage
+            localStorage.setItem("product", JSON.stringify(cart));
         };
 
-        // **************************************************
-        // Message pour utilisateurs
-        // **************************************************
+        // ************************************************
+        // Vérification et ajout des inputs
+        // ************************************************
 
-        const successMessage = () => {
-            if (window.confirm("Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.")) {
-                location.reload;
-            } else {
-                window.location.href = "http://127.0.0.1:5500/front/html/cart.html";
-            }
-        };
+        const processAdding = () => {
+            // Récupérer la valeur de la couleur/quantité choisie
+            const inputColor = document.getElementById('colors').value;
+            const inputQuantity = document.getElementById('quantity').value;
 
-        // *************************************************
-        // Vérifications des inputs
-        // *************************************************
+            // Stocker les 3 valeurs dans un objet
+            const itemDetails = {
+                itemId: productId,
+                itemColor: inputColor,
+                itemQuantity: Number(inputQuantity)
+            };
 
+            // **************************************************
+            // Message pour utilisateurs
+            // **************************************************
 
+            const successMessage = () => {
+                if (window.confirm("Article(s) ajouté(s) au panier. \nOK pour rester sur cette page ANNULER pour accéder au panier.")) {
+                    location.reload;
+                } else {
+                    window.location.href = "http://127.0.0.1:5500/front/html/cart.html";
+                }
+            };
 
-        if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100 || Math.sign(-1))) {
-            if (cart) {
-                // Comparaison du panier et du nouvel ajout
-                const alreadyInCart = cart.find(
-                    (product) =>
-                        product.itemId === productId &&
-                        product.itemColor === inputColor
-                );
-                if (alreadyInCart) {
-                    // Somme des deux quantités
-                    const newQuantity = Number(alreadyInCart.itemQuantity) + Number(inputQuantity);
-
-                    if (newQuantity < 100) {
-                        alreadyInCart.itemQuantity = newQuantity;
-                        localStorage.setItem("product", JSON.stringify(cart));
-                        successMessage();
+            // *************************************************
+            // Vérifications des inputs
+            // *************************************************
 
 
+            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100)) {
+                if (cart) {
+                    // Comparaison du panier et du nouvel ajout
+                    const alreadyInCart = cart.find(
+                        (product) =>
+                            product.itemId === productId &&
+                            product.itemColor === inputColor
+                    );
+                    if (alreadyInCart) {
+                        // Somme des deux quantités
+                        const newQuantity = Number(alreadyInCart.itemQuantity) + Number(inputQuantity);
+
+                        if (newQuantity < 100) {
+                            alreadyInCart.itemQuantity = newQuantity;
+                            localStorage.setItem("product", JSON.stringify(cart));
+                            successMessage();
+
+
+                        } else {
+                            alert("100 produits identiques maximum");
+                            return;
+                        }
                     } else {
-                        alert("100 produits identiques maximum");
-                        return;
+                        addToCart(cart, itemDetails);
+                        successMessage();
                     }
                 } else {
+                    cart = [];
                     addToCart(cart, itemDetails);
                     successMessage();
                 }
-            } else {
-                cart = [];
-                addToCart(cart, itemDetails);
-                successMessage();
             }
-        } else {
-            alert("Veuillez remplir les champs avec des valeurs valides");
-            return;
-        }
-    };
 
-    processAdding();
-});
+            if (inputColor == "") {
+                alert("Veuillez choisir une couleur.");
+                return;
+            }
+
+            if (inputQuantity == "" || inputQuantity == 0) {
+                alert("Veuillez choisir une quantité.");
+                return;
+            }
+
+            if (inputQuantity > 100) {
+                alert("Vous ne pouvez pas acheter plus de 100 exemplaires du même produit.");
+                return;
+            }
+
+        };
+
+        processAdding();
+    });
+}
 
 insertCard();
 

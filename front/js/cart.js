@@ -4,18 +4,26 @@
 
 let cart = JSON.parse(localStorage.getItem('product'));
 const emptyCart = document.querySelector('h1');
-const section = document.getElementById('cart__items');
+let products = {};
 
 // ************************************************
 // Récupérer les produits dans l'API
 // ************************************************
 
-const fetchProducts = async (productId) => {
+const fetchProducts = async () => {
     try {
         // Récupérer le produit dans l'API
-        const response = await fetch(`http://localhost:3000/api/products/${productId}`);
-        // Récupérer les produits dans .json
-        const products = await response.json();
+        const response = await fetch(`http://localhost:3000/api/products`);
+        // Récupérer les produits de l'API dans .json
+        const APIProducts = await response.json();
+        const products = {};
+        // parse de tous les produits de l'API
+        const allProducts = await JSON.parse(APIProducts);
+        // Pour chaque produit dans allProducts...
+        allProducts.forEach(product => {
+            // produit = chaque id d'un produit dans tous les produits
+            products[product._id] = product;
+        })
         return products;
 
     } catch (err) {
@@ -29,11 +37,33 @@ console.log(fetchProducts());
 console.log("Panier :");
 console.log(cart);
 
+products = await fetchProducts();
+
+// ************************************************
+// Affichage du panier
+// ************************************************
+
+const insertArticle = async () => {
+    if (cart === null) {
+    emptyCart.innerText = "Votre panier est vide";
+    return;
+} else {
+    console.log("Panier garni");
+    cart.forEach(product => {
+        cart.appendChild(await createArticle(product));
+    })
+}
+
+}
+
+
+
 // ************************************************
 // Création d'une carte produit
 // ************************************************
 
-const createArticle = async () => {
+const createArticle = async (product) => {
+    const section = document.getElementById('cart__items');
 
     cart.forEach(product => {
         let productId = product.id;
@@ -112,19 +142,7 @@ const createArticle = async () => {
     });
 };
 
-// ************************************************
-// Affichage du panier
-// ************************************************
 
-if (cart === null) {
-    emptyCart.innerText = "Votre panier est vide";
-} else {
-    console.log("Panier garni");
-    cart.forEach(product => {
-        const article = createArticle(cart[product]);
-        section.appendChild(article);
-    })
-}
 
 
 

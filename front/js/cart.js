@@ -10,13 +10,13 @@ const section = document.getElementById('cart__items');
 // Récupérer les produits dans l'API
 // ************************************************
 
-const fetchProducts = async () => {
+const fetchProducts = async (id) => {
     try {
         // Récupérer le produit dans l'API
-        const response = await fetch(`http://localhost:3000/api/products`);
+        const response = await fetch(`http://localhost:3000/api/products/${id}`);
         // Récupérer les produits de l'API dans .json
-        const products = await response.json();
-        return products;
+        const itemId = await response.json();
+        return itemId;
     }
     catch (err) {
         console.log("Problème avec l'API !");
@@ -29,86 +29,96 @@ const fetchProducts = async () => {
 
 const createArticle = (product) => {
 
-    cart.forEach(product => {
-        let productId = product.id;
-        let productColor = product.color;
-        let productQuantity = product.quantity;
+    if (cart === null || (!cart)) {
+        emptyCart.innerText = "Votre panier est vide";
+    }
+    else {
+        console.log("Panier garni");
+        const cartTotalPrice = [];
 
-        const data = fetchProducts(productId);
-        data.then((productDetails) => {
-            const price = Number(productDetails.price);
-            const totalPrice = price * productQuantity;
+        cart.forEach(product => {
+            let productId = product.id;
+            let productColor = product.color;
+            let productQuantity = product.quantity;
 
-            console.log(totalPrice);
+            const data = fetchProducts(productId);
+            cartTotalPrice.push(data);
+            data.then((productDetails) => {
+                const price = Number(productDetails.price);
+                const totalPrice = price * productQuantity;
 
-            // Création des cartes
-            const article = document.createElement('article');
-            article.classList.add('cart__item');
-            article.setAttribute('data-id', productId);
-            article.setAttribute('data-color', productColor);
+                console.log(totalPrice);
 
-            const itemImg = document.createElement('div');
-            itemImg.classList.add('cart__item__img');
-            article.appendChild(itemImg);
+                // Création des cartes
+                const article = document.createElement('article');
+                article.classList.add('cart__item');
+                article.setAttribute('data-id', productId);
+                article.setAttribute('data-color', productColor);
 
-            const productImg = document.createElement('img');
-            productImg.src = productDetails.imageUrl;
-            productImg.alt = productDetails.altTxt;
-            itemImg.appendChild(productImg);
+                const itemImg = document.createElement('div');
+                itemImg.classList.add('cart__item__img');
+                article.appendChild(itemImg);
 
-            const itemContent = document.createElement('div');
-            itemContent.classList.add('cart__item__content');
-            article.appendChild(itemContent);
+                const productImg = document.createElement('img');
+                productImg.src = productDetails.imageUrl;
+                productImg.alt = productDetails.altTxt;
+                itemImg.appendChild(productImg);
 
-            const description = document.createElement('div');
-            description.classList.add('cart__item__content__description');
-            itemContent.appendChild(description);
+                const itemContent = document.createElement('div');
+                itemContent.classList.add('cart__item__content');
+                article.appendChild(itemContent);
 
-            const productName = document.createElement('h2');
-            productName.innerText = productDetails.name;
-            description.appendChild(productName);
+                const description = document.createElement('div');
+                description.classList.add('cart__item__content__description');
+                itemContent.appendChild(description);
 
-            const colorOption = document.createElement('p');
-            colorOption.innerText = productColor;
-            description.appendChild(colorOption);
+                const productName = document.createElement('h2');
+                productName.innerText = productDetails.name;
+                description.appendChild(productName);
 
-            const productPrice = document.createElement('p');
-            productPrice.innerText = totalPrice;
-            description.appendChild(productPrice);
+                const colorOption = document.createElement('p');
+                colorOption.innerText = productColor;
+                description.appendChild(colorOption);
 
-            const settings = document.createElement('div');
-            settings.classList.add('cart__item__content__settings');
-            itemContent.appendChild(settings);
+                const productPrice = document.createElement('p');
+                productPrice.innerText = totalPrice;
+                description.appendChild(productPrice);
 
-            const settingsQuantity = document.createElement('div');
-            settingsQuantity.classList.add('cart__item__content__settings__quantity');
-            settings.appendChild(settingsQuantity);
+                const settings = document.createElement('div');
+                settings.classList.add('cart__item__content__settings');
+                itemContent.appendChild(settings);
 
-            const quantity = document.createElement('p');
-            quantity.innerText = "Qté : ";
-            settingsQuantity.appendChild(quantity);
+                const settingsQuantity = document.createElement('div');
+                settingsQuantity.classList.add('cart__item__content__settings__quantity');
+                settings.appendChild(settingsQuantity);
 
-            const itemQuantity = document.createElement('input');
-            itemQuantity.classList.add('itemQuantity');
-            itemQuantity.setAttribute('type', 'number');
-            itemQuantity.setAttribute('name', 'itemQuantity');
-            itemQuantity.setAttribute('min', 1);
-            itemQuantity.setAttribute('max', 100);
-            itemQuantity.setAttribute('value', productQuantity);
-            settingsQuantity.appendChild(itemQuantity);
+                const quantity = document.createElement('p');
+                quantity.innerText = "Qté : ";
+                settingsQuantity.appendChild(quantity);
 
-            const settingsDelete = document.createElement('div');
-            settingsDelete.classList.add('cart__item__content__settings__delete');
-            settings.appendChild(settingsDelete);
+                const itemQuantity = document.createElement('input');
+                itemQuantity.classList.add('itemQuantity');
+                itemQuantity.setAttribute('type', 'number');
+                itemQuantity.setAttribute('name', 'itemQuantity');
+                itemQuantity.setAttribute('min', 1);
+                itemQuantity.setAttribute('max', 100);
+                itemQuantity.setAttribute('value', productQuantity);
+                settingsQuantity.appendChild(itemQuantity);
 
-            const deleteItem = document.createElement('p');
-            deleteItem.classList.add('deleteItem');
-            deleteItem.innerText = "Supprimer";
-            settingsDelete.appendChild(deleteItem);
+                const settingsDelete = document.createElement('div');
+                settingsDelete.classList.add('cart__item__content__settings__delete');
+                settings.appendChild(settingsDelete);
 
-            section.appendChild(article);
+                const deleteItem = document.createElement('p');
+                deleteItem.classList.add('deleteItem');
+                deleteItem.innerText = "Supprimer";
+                settingsDelete.appendChild(deleteItem);
+
+                section.appendChild(article);
+            })
         })
-    })
+    }
+
 };
 
 // ************************************************
@@ -116,19 +126,16 @@ const createArticle = (product) => {
 // ************************************************
 
 const insertArticle = async () => {
-    products = await fetchProducts();
+    cart.forEach(product => {
+        cart.appendChild(createArticle(product))
+    })
 
-    if (cart === null || (!cart)) {
-        emptyCart.innerText = "Votre panier est vide";
-        return;
-    }
-    else {
-        console.log("Panier garni");
-        cart.forEach(product => {
-            cart.appendChild(createArticle(product))
-        })
-    }
 };
+
+
+
+
+
 
 insertArticle();
 

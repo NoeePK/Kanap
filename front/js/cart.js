@@ -1,4 +1,13 @@
 // ************************************************
+
+// Fonction : calculer total prix/nb de produits
+//  et les insérer dans la page
+// Bouton supprimer
+// Vérifier en direct les modifications de l'utilisateur
+
+
+
+// ************************************************
 // Variables
 // ************************************************
 
@@ -26,7 +35,7 @@ const fetchProducts = async (id) => {
 };
 
 // ************************************************
-// Affichage des cartes produit
+// Afficher les cartes produit
 // ************************************************
 
 const createArticle = async () => {
@@ -85,7 +94,7 @@ const createArticle = async () => {
                 description.appendChild(colorOption);
 
                 const productPrice = document.createElement('p');
-                productPrice.innerText = totalPrice;
+                productPrice.innerText = totalPrice + " €";
                 description.appendChild(productPrice);
 
                 const settings = document.createElement('div');
@@ -131,9 +140,7 @@ createArticle();
 
 // ************************************************
 // ************************************************
-// ************************************************
 
-// Fonction : calculer total et l'insérer dans la page
 
 // Validation du formulaire
 

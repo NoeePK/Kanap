@@ -20,6 +20,7 @@ const fetchProducts = async (id) => {
     }
     catch (err) {
         console.log("Problème avec l'API !");
+        return null;
     }
 };
 
@@ -27,7 +28,7 @@ const fetchProducts = async (id) => {
 // Création d'une carte produit
 // ************************************************
 
-const createArticle = (product) => {
+const createArticle = () => {
 
     if (cart === null || (!cart)) {
         emptyCart.innerText = "Votre panier est vide";
@@ -121,29 +122,15 @@ const createArticle = (product) => {
 
 };
 
+createArticle();
+
+
+
 // ************************************************
-// Affichage du panier
 // ************************************************
-
-const insertArticle = async () => {
-    cart.forEach(product => {
-        cart.appendChild(createArticle(product))
-    })
-
-};
-
-
-
-
-
-
-insertArticle();
+// ************************************************
 
 // Fonction : calculer total et l'insérer dans la page
-
-// ************************************************
-// ************************************************
-// ************************************************
 
 // Validation du formulaire
 

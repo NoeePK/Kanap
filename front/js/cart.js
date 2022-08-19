@@ -4,7 +4,9 @@
 //  et les insérer dans la page
 // Bouton supprimer
 // Vérifier en direct les modifications de l'utilisateur
-
+// inputs contraintes page produit (copier coller)
+// total des prix (recalculer !!!)
+// plan de test : faire en même temps !!!
 
 
 // ************************************************
@@ -14,7 +16,7 @@
 let cart = JSON.parse(localStorage.getItem('product'));
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
-const cartTotalPrice = [];
+let cartTotalPrice = [];
 
 // ************************************************
 // Récupérer les produits dans l'API
@@ -39,7 +41,7 @@ const fetchProducts = async (id) => {
 // ************************************************
 
 const createArticle = async () => {
-// SI : panier est vide ou n'existe pas...
+    // SI : panier est vide ou n'existe pas...
     if (cart === null || !cart) {
         // ... afficher ce nouveau titre h1
         emptyCart.innerText = "Votre panier est vide";
@@ -47,7 +49,7 @@ const createArticle = async () => {
     // SINON : afficher les produits
     else {
         console.log("Panier garni");
-        
+
         // Pour chaque produit dans le panier...
         cart.forEach(product => {
             let itemId = product.itemId;
@@ -136,12 +138,26 @@ const createArticle = async () => {
 
 createArticle();
 
+// ************************************************
+// Afficher le total
+// ************************************************
+
+
+
+const cartInfo = () => {
+    const priceSpan = document.getElementById("totalPrice");
+    const quantitySpan = document.getElementById("totalQuantity");
+    
+    for (let i = 0; i < array.lengh; i++) {
+        cartTotalPrice =+ totalPrice;
+    }
+
+    priceSpan.innerText = cartTotalPrice;
+}
+
 
 
 // ************************************************
-// ************************************************
-
-
 // Validation du formulaire
 
 const userDetails = () => {

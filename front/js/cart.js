@@ -1,10 +1,11 @@
 // ************************************************
-// Panier
+// Variables
 // ************************************************
 
 let cart = JSON.parse(localStorage.getItem('product'));
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
+const cartTotalPrice = [];
 
 // ************************************************
 // Récupérer les produits dans l'API
@@ -25,36 +26,38 @@ const fetchProducts = async (id) => {
 };
 
 // ************************************************
-// Création d'une carte produit
+// Affichage des cartes produit
 // ************************************************
 
-const createArticle = () => {
-
-    if (cart === null || (!cart)) {
+const createArticle = async () => {
+// SI : panier est vide ou n'existe pas...
+    if (cart === null || !cart) {
+        // ... afficher ce nouveau titre h1
         emptyCart.innerText = "Votre panier est vide";
     }
+    // SINON : afficher les produits
     else {
         console.log("Panier garni");
-        const cartTotalPrice = [];
-
+        
+        // Pour chaque produit dans le panier...
         cart.forEach(product => {
-            let productId = product.id;
-            let productColor = product.color;
-            let productQuantity = product.quantity;
+            let itemId = product.itemId;
+            let itemColor = product.itemColor;
+            let itemQuantity = product.itemQuantity;
 
-            const data = fetchProducts(productId);
+            const data = fetchProducts(itemId);
             cartTotalPrice.push(data);
             data.then((productDetails) => {
                 const price = Number(productDetails.price);
-                const totalPrice = price * productQuantity;
+                const totalPrice = price * itemQuantity;
 
                 console.log(totalPrice);
 
                 // Création des cartes
                 const article = document.createElement('article');
                 article.classList.add('cart__item');
-                article.setAttribute('data-id', productId);
-                article.setAttribute('data-color', productColor);
+                article.setAttribute('data-id', itemId);
+                article.setAttribute('data-color', itemColor);
 
                 const itemImg = document.createElement('div');
                 itemImg.classList.add('cart__item__img');
@@ -78,7 +81,7 @@ const createArticle = () => {
                 description.appendChild(productName);
 
                 const colorOption = document.createElement('p');
-                colorOption.innerText = productColor;
+                colorOption.innerText = itemColor;
                 description.appendChild(colorOption);
 
                 const productPrice = document.createElement('p');
@@ -97,14 +100,14 @@ const createArticle = () => {
                 quantity.innerText = "Qté : ";
                 settingsQuantity.appendChild(quantity);
 
-                const itemQuantity = document.createElement('input');
-                itemQuantity.classList.add('itemQuantity');
-                itemQuantity.setAttribute('type', 'number');
-                itemQuantity.setAttribute('name', 'itemQuantity');
-                itemQuantity.setAttribute('min', 1);
-                itemQuantity.setAttribute('max', 100);
-                itemQuantity.setAttribute('value', productQuantity);
-                settingsQuantity.appendChild(itemQuantity);
+                const productQuantity = document.createElement('input');
+                productQuantity.classList.add('itemQuantity');
+                productQuantity.setAttribute('type', 'number');
+                productQuantity.setAttribute('name', 'itemQuantity');
+                productQuantity.setAttribute('min', 1);
+                productQuantity.setAttribute('max', 100);
+                productQuantity.setAttribute('value', itemQuantity);
+                settingsQuantity.appendChild(productQuantity);
 
                 const settingsDelete = document.createElement('div');
                 settingsDelete.classList.add('cart__item__content__settings__delete');

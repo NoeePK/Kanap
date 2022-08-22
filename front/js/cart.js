@@ -130,7 +130,14 @@ const createArticle = async () => {
                 settingsDelete.appendChild(deleteItem);
 
                 // Supprimer un produit : essai 1
-                
+                // window.localStorage.deleteItem('product')? Ca supprime tout le panier ?
+                // utiliser shift? op? splice?
+
+                const deleteProduct = (deleteItem, cart) => {
+                    deleteItem.addEventListener("click", () => {
+                        cart.deleteItem("product")
+                    })
+                }
 
 
                 section.appendChild(article);
@@ -141,7 +148,7 @@ const createArticle = async () => {
 };
 
 createArticle();
-
+console.table(cart);
 // ************************************************
 // Afficher le total
 // ************************************************

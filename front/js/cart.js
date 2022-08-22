@@ -129,6 +129,10 @@ const createArticle = async () => {
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
 
+                // Supprimer un produit : essai 1
+                
+
+
                 section.appendChild(article);
             })
         })
@@ -155,10 +159,16 @@ const cartInfo = () => {
     priceSpan.innerText = cartTotalPrice;
 }
 
+const orderBtn = document.getElementById("order");
+const inputNewQty = document.getElementsByClassName("itemQuantity");
+        if (!(inputNewQty == "" || inputNewQty <= 0 || inputNewQty > 100)) {
+            
+        }
 
 
 // ************************************************
 // Validation du formulaire
+// ************************************************
 
 const userDetails = () => {
     const orderBtn = document.getElementById('order');
@@ -169,4 +179,21 @@ const userDetails = () => {
 
 
     // Messages d'erreur
+}
+
+
+// ************************************************
+// Commander
+// ************************************************
+
+
+
+if (orderBtn) {
+    orderBtn.addEventListener("click", () => {
+        // Utiliser fonction userDetails
+        // SI : form valide => post order
+        // Message : succès de l'achat
+        // SINON : form invalide => alert : veuillez remplir le form
+       
+    })
 }

@@ -155,8 +155,9 @@ const deleteProduct = (deleteBtn, id, color) => {
                 // alert("L'article a été supprimé de votre panier.");
                 location.reload();
             }
-        }   
-})}
+        }
+    })
+}
 
 // ************************************************
 // Afficher les totaux
@@ -185,11 +186,19 @@ if (!(inputNewQty == "" || inputNewQty <= 0 || inputNewQty > 100)) {
 // Validation du formulaire
 // ************************************************
 
-    // Regex pour les noms : pas de chiffres (mais autoriser - pour noms composés)
-    
-    const nameRegex = /^[a-zA-Z '-,]{1,31}/i;
-    const mailRegex = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
+// Regex pour les noms : 
+// pas de chiffres (mais autoriser - pour noms composés)
 
+// Regex
+const nameRegex = /^[a-zA-Z '-,]{1,31}/i;
+const mailRegex = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
+
+// Messages d'erreur
+const firstNameErr = document.getElementById('firstNameErrorMsg')
+const lastNameErr = document.getElementById('lastNameErrorMsg')
+const addressErr = document.getElementById('addressErrorMsg')
+const cityErr = document.getElementById('cityErrorMsg')
+const emailErr = document.getElementById('emailErrorMsg')
 
 // ************************************************
 // Commander
@@ -199,32 +208,35 @@ const order = async () => {
     orderBtn.addEventListener("click", (event) => {
         // Récupérer la fiche contact :
         let userDetails = {
-            firstName : document.getElementById("firstName").value,
-            lastName : document.getElementById("lastName").value,
-            address : document.getElementById("address").value,
-            city : document.getElementById("city").value,
-            email : document.getElementById("email").value
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+            address: document.getElementById("address").value,
+            city: document.getElementById("city").value,
+            email: document.getElementById("email").value
         };
         // Vérifier la fiche contact : 
         // Demander Delphine : critères regex pour address ?
+        // SI : regex sont respectés...
         if (
             (nameRegex.test(userDetails.firstName) == true) &
             (nameRegex.test(userDetails.lastName) == true) &
             (nameRegex.test(userDetails.city) == true) &
             (mailRegex.test(userDetails.email) == true)
         ) {
+            // ...  créer un tableau pour y mettre les produits...
+            let products = [];
+            //Pour chaque produit dans le panier...
+            cart.forEach(item => {
+                // ... mettre son id dans le tableau
+                products.push(item.id)  
+            });
+
 
         }
     })
-    }
+}
 
 
-if (orderBtn) {
-    orderBtn.addEventListener("click", () => {
-        // Utiliser fonction userDetails
         // SI : form valide => post order
         // Message : succès de l'achat
         // SINON : form invalide => alert : veuillez remplir le form
-
-    })
-}

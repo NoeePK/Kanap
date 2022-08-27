@@ -118,6 +118,7 @@ const createArticle = async () => {
                 productQuantity.setAttribute('min', 1);
                 productQuantity.setAttribute('max', 100);
                 productQuantity.setAttribute('value', itemQuantity);
+                productQuantity.addEventListener("click", newQuantity)
                 settingsQuantity.appendChild(productQuantity);
 
                 const settingsDelete = document.createElement('div');
@@ -126,19 +127,9 @@ const createArticle = async () => {
 
                 const deleteItem = document.createElement('p');
                 deleteItem.classList.add('deleteItem');
+                deleteItem.addEventListener("click", deleteProduct);
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
-
-                // Supprimer un produit : essai 1
-                // window.localStorage.deleteItem('product')? Ca supprime tout le panier ?
-                // utiliser shift? op? splice?
-
-                const deleteProduct = (deleteItem, cart) => {
-                    deleteItem.addEventListener("click", () => {
-                        cart.deleteItem("product")
-                    })
-                }
-
 
                 section.appendChild(article);
             })
@@ -149,18 +140,34 @@ const createArticle = async () => {
 
 createArticle();
 console.table(cart);
+
+// ************************************************
+// Supprimer un produit
+// ************************************************
+
+// window.localStorage.deleteItem('product')? Ca supprime tout le panier ?
+// utiliser shift? op? splice?
+
+const deleteProduct = (deleteItem) => {
+    deleteItem.addEventListener("click", () => {
+
+    })
+}
+
 // ************************************************
 // Afficher le total
 // ************************************************
+
+// Supprimer un produit : essai 1
 
 
 
 const cartInfo = () => {
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
-    
+
     for (let i = 0; i < array.lengh; i++) {
-        cartTotalPrice =+ totalPrice;
+        cartTotalPrice = + totalPrice;
     }
 
     priceSpan.innerText = cartTotalPrice;
@@ -168,9 +175,9 @@ const cartInfo = () => {
 
 const orderBtn = document.getElementById("order");
 const inputNewQty = document.getElementsByClassName("itemQuantity");
-        if (!(inputNewQty == "" || inputNewQty <= 0 || inputNewQty > 100)) {
-            
-        }
+if (!(inputNewQty == "" || inputNewQty <= 0 || inputNewQty > 100)) {
+
+}
 
 
 // ************************************************
@@ -201,6 +208,6 @@ if (orderBtn) {
         // SI : form valide => post order
         // Message : succès de l'achat
         // SINON : form invalide => alert : veuillez remplir le form
-       
+
     })
 }

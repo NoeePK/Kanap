@@ -160,6 +160,23 @@ const deleteProduct = (deleteBtn, id, color) => {
 }
 
 // ************************************************
+// Modifier un produit
+// ************************************************
+
+const ChangeQuantity = (id, color, quantity) => {
+    for (let i = 0; i < cart.length; i++) {
+        if (id === cart[i][0] && color === cart[i][1]) {
+            cart[i][2] = quantity;
+        }
+        localStorage.setItem("product", JSON.stringify(cart));
+        location.reload();
+    }
+}
+
+
+
+
+// ************************************************
 // Afficher les totaux
 // ************************************************
 
@@ -228,7 +245,7 @@ const order = async () => {
             //Pour chaque produit dans le panier...
             cart.forEach(item => {
                 // ... mettre son id dans le tableau
-                products.push(item.id)  
+                products.push(item.id)
             });
 
 

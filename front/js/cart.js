@@ -118,7 +118,7 @@ const createArticle = async () => {
                 productQuantity.setAttribute('min', 1);
                 productQuantity.setAttribute('max', 100);
                 productQuantity.setAttribute('value', itemQuantity);
-                productQuantity.addEventListener("click", newQuantity)
+                // productQuantity.addEventListener("click", newQuantity)
                 settingsQuantity.appendChild(productQuantity);
 
                 const settingsDelete = document.createElement('div');
@@ -127,7 +127,7 @@ const createArticle = async () => {
 
                 const deleteItem = document.createElement('p');
                 deleteItem.classList.add('deleteItem');
-                deleteItem.addEventListener("click", deleteProduct);
+                deleteItem.addEventListener("click", deleteProduct(deleteItem, itemId, itemColor));
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
 
@@ -145,14 +145,19 @@ console.table(cart);
 // Supprimer un produit
 // ************************************************
 
-// window.localStorage.deleteItem('product')? Ca supprime tout le panier ?
-// utiliser shift? op? splice?
+const deleteProduct = (deleteBtn, id, color) => {
+    deleteBtn.addEventListener("click", () => {
+        for (i = 0; i < cart.length; i++) {
+            if (id === cart[i][0] && color === cart[i][1]) {
+                cart.splice(i, 1);
+                localStorage.setItem("product", JSON.stringify(cart));
+                alert("L'article a été supprimé de votre panier.");
+                location.reload();
+            }
+        }   
+})}
 
-const deleteProduct = (deleteItem) => {
-    deleteItem.addEventListener("click", () => {
 
-    })
-}
 
 // ************************************************
 // Afficher le total

@@ -17,6 +17,7 @@ let cart = JSON.parse(localStorage.getItem('product'));
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
 let cartTotalPrice = [];
+const orderBtn = document.getElementById("order");
 
 // ************************************************
 // Récupérer les produits dans l'API
@@ -151,22 +152,17 @@ const deleteProduct = (deleteBtn, id, color) => {
             if (id === cart[i][0] && color === cart[i][1]) {
                 cart.splice(i, 1);
                 localStorage.setItem("product", JSON.stringify(cart));
-                alert("L'article a été supprimé de votre panier.");
+                // alert("L'article a été supprimé de votre panier.");
                 location.reload();
             }
         }   
 })}
 
-
-
 // ************************************************
-// Afficher le total
+// Afficher les totaux
 // ************************************************
 
-// Supprimer un produit : essai 1
-
-
-
+// Total pour chaque article selon la quantité :
 const cartInfo = () => {
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
@@ -178,7 +174,7 @@ const cartInfo = () => {
     priceSpan.innerText = cartTotalPrice;
 }
 
-const orderBtn = document.getElementById("order");
+
 const inputNewQty = document.getElementsByClassName("itemQuantity");
 if (!(inputNewQty == "" || inputNewQty <= 0 || inputNewQty > 100)) {
 
@@ -189,22 +185,38 @@ if (!(inputNewQty == "" || inputNewQty <= 0 || inputNewQty > 100)) {
 // Validation du formulaire
 // ************************************************
 
-const userDetails = () => {
-    const orderBtn = document.getElementById('order');
     // Regex pour les noms : pas de chiffres (mais autoriser - pour noms composés)
-    // const nameRegex = /^[a-zA-Z]/i ;
-    // Regex pour l'adresse :
-    // Regex pour l'email
-
-
-    // Messages d'erreur
-}
+    
+    const nameRegex = /^[a-zA-Z '-,]{1,31}/i;
+    const mailRegex = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
 
 
 // ************************************************
 // Commander
 // ************************************************
 
+const order = async () => {
+    orderBtn.addEventListener("click", (event) => {
+        // Récupérer la fiche contact :
+        let userDetails = {
+            firstName : document.getElementById("firstName").value,
+            lastName : document.getElementById("lastName").value,
+            address : document.getElementById("address").value,
+            city : document.getElementById("city").value,
+            email : document.getElementById("email").value
+        };
+        // Vérifier la fiche contact : 
+        // Demander Delphine : critères regex pour address ?
+        if (
+            (nameRegex.test(userDetails.firstName) == true) &
+            (nameRegex.test(userDetails.lastName) == true) &
+            (nameRegex.test(userDetails.city) == true) &
+            (mailRegex.test(userDetails.email) == true)
+        ) {
+
+        }
+    })
+    }
 
 
 if (orderBtn) {

@@ -132,13 +132,16 @@ const createArticle = async () => {
 
                 section.appendChild(article);
 
+                totalCart(totalPrice, itemQuantity);
                 deleteProduct();
                 changeQuantity();
             })
         })
     }
-
 };
+
+createArticle();
+console.table(cart);
 
 // ************************************************
 // Supprimer un produit
@@ -178,26 +181,26 @@ const deleteProduct = () => {
 // ************************************************
 
 const changeQuantity = () => {
-    let newInput = document.querySelectorAll(".cart__item");
+    let card = document.querySelectorAll(".cart__item");
     // Pour chaque input de quantité...
-    newInput.forEach((newInput) => {
+    card.forEach((card) => {
         // ... ajouter un événement "change"
-        newInput.addEventListener("change", () => {
+        card.addEventListener("change", () => {
             // Créer nouveau tableau pour remplacement
             let newCart = cart;
             // Parcourir le nouveau panier
             for (item of newCart)
                 // Sélectionner le bon produit à modifier
                 if (
-                    item.itemId === newInput.dataset.id &&
-                    item.itemColor === newInput.dataset.color
+                    item.itemId === card.dataset.id &&
+                    item.itemColor === card.dataset.color
                 ) {
                     // Nouvelle quantité remplace l'ancienne
                     item.itemQuantity = target.value;
                     // Ecraser l'ancien panier avec le nouveau
                     localStorage.cart = JSON.stringify(newCart);
                     // Changer la value dans le DOM
-                    newInput.setAttribute("value", target.value);
+                    card.setAttribute("value", target.value);
                     // Actualiser les totaux SANS reload
 
                 }
@@ -205,28 +208,30 @@ const changeQuantity = () => {
     })
 };
 
-
-
-
-createArticle();
-console.table(cart);
-
-
-
 // ************************************************
 // Afficher les totaux
 // ************************************************
 
 // Total pour chaque article selon la quantité :
-const cartInfo = () => {
+const totalCart = (price, quantity) => {
+    const cards = document.querySelectorAll(".cart__item");
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
 
-    for (let i = 0; i < array.lengh; i++) {
-        cartTotalPrice = + totalPrice;
-    }
+    let totalPrice = 0;
+    let totalQuantity = 0;
 
-    priceSpan.innerText = cartTotalPrice;
+    // Pour chaque carte produit...
+    cards.forEach((cards) => {
+        // Son prix total est ajouté à totalPrice
+        totalPrice += cards.price;
+        // Sa quantité totale est ajoutée à totalQuantity
+        totalQuantity += cards.quantity;
+    });
+
+    // Ces deux totaux sont affichés
+    priceSpan.innerText = totalPrice;
+    quantitySpan.innerText = totalQuantity;
 }
 
 
@@ -241,8 +246,8 @@ if (!(inputNewQty == "" || inputNewQty <= 0 || inputNewQty > 100)) {
 // ************************************************
 
 // Regex
-const nameRegex = /^[a-zA-Z '-,]{1,31}/i;
-const mailRegex = /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/;
+const nameRegex = /^[a-zA-Z '-,]{1,31}$/i;
+const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 
 // Messages d'erreur
 const firstNameErr = document.getElementById('firstNameErrorMsg');
@@ -287,6 +292,6 @@ const order = async () => {
 }
 
 
-        // SI : form valide => post order
-        // Message : succès de l'achat
-        // SINON : form invalide => alert : veuillez remplir le form
+// SI : form valide => post order
+// Message : succès de l'achat
+// SINON : form invalide => alert : veuillez remplir le form

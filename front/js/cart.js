@@ -119,7 +119,6 @@ const createArticle = async () => {
                 productQuantity.setAttribute('min', 1);
                 productQuantity.setAttribute('max', 100);
                 productQuantity.setAttribute('value', itemQuantity);
-                productQuantity.addEventListener("change", changeQuantity());
                 settingsQuantity.appendChild(productQuantity);
 
                 const settingsDelete = document.createElement('div');
@@ -128,7 +127,6 @@ const createArticle = async () => {
 
                 const deleteItem = document.createElement('p');
                 deleteItem.classList.add('deleteItem');
-                deleteItem.addEventListener("click", deleteProduct(deleteItem, itemId, itemColor));
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
 
@@ -139,24 +137,20 @@ const createArticle = async () => {
 
 };
 
-createArticle();
-console.table(cart);
-
 // ************************************************
 // Supprimer un produit
 // ************************************************
 
-const deleteProduct = (deleteBtn, id, color) => {
-    deleteBtn.addEventListener("click", () => {
-        for (i = 0; i < cart.length; i++) {
-            if (id === cart[i][0] && color === cart[i][1]) {
-                cart.splice(i, 1);
-                localStorage.setItem("product", JSON.stringify(cart));
-                // alert("L'article a été supprimé de votre panier.");
-                location.reload();
-            }
+const deleteProduct = () => {
+    const deleteBtn = document.querySelectorAll(".cart__item .deleteItem");
+    const el = document.getElementsByClassName("cart_items");
+    const cardToRemove = el.closest('article');
+    delete cardToRemove;
+    localStorage.setItem("product", JSON.stringify(cart));
+            // alert("L'article a été supprimé de votre panier.");
+            window.location.reload();
         }
-    })
+    
 };
 
 // ************************************************
@@ -165,8 +159,19 @@ const deleteProduct = (deleteBtn, id, color) => {
 
 const changeQuantity = () => {
     let newInput = document.getElementsByClassName("itemQuantity");
-    newInput.textContent = this.value;
+    
 };
+
+
+
+
+
+
+
+createArticle();
+console.table(cart);
+
+
 
 // ************************************************
 // Afficher les totaux

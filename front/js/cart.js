@@ -178,12 +178,32 @@ const deleteProduct = () => {
 // ************************************************
 
 const changeQuantity = () => {
-    let newInput = document.getElementsByClassName("itemQuantity");
+    let newInput = document.querySelectorAll(".cart__item");
+    // Pour chaque input de quantité...
+    newInput.forEach((newInput) => {
+        // ... ajouter un événement "change"
+        newInput.addEventListener("change", () => {
+            // Créer nouveau tableau pour remplacement
+            let newCart = cart;
+            // Parcourir le nouveau panier
+            for (item of newCart)
+                // Sélectionner le bon produit à modifier
+                if (
+                    item.itemId === newInput.dataset.id &&
+                    item.itemColor === newInput.dataset.color
+                ) {
+                    // Nouvelle quantité remplace l'ancienne
+                    item.itemQuantity = target.value;
+                    // Ecraser l'ancien panier avec le nouveau
+                    localStorage.cart = JSON.stringify(newCart);
+                    // Changer la value dans le DOM
+                    newInput.setAttribute("value", target.value);
+                    // Actualiser les totaux SANS reload
 
+                }
+        })
+    })
 };
-
-
-
 
 
 

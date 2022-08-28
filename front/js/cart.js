@@ -131,6 +131,9 @@ const createArticle = async () => {
                 settingsDelete.appendChild(deleteItem);
 
                 section.appendChild(article);
+
+                deleteProduct();
+                changeQuantity();
             })
         })
     }
@@ -149,22 +152,26 @@ const deleteProduct = () => {
         // ... ajouter un événement au clic
         deleteBtn.addEventListener("click", () => {
             // Parcourir le panier
-            for (let i = 0; i < cart.length; i ++)
-            // Sélectionner le bon produit à supprimer
+            for (let i = 0; i < cart.length; i++)
+                // Sélectionner le bon produit à supprimer
                 if (
                     cart[i].itemId === deleteBtn.dataset.id &&
                     cart[i].itemColor === deleteBtn.dataset.color
                 ) {
-
+                    // Créer nouveau tableau pour remplacement
+                    let newCart = cart;
+                    // Supprimer l'élément sélectionné
+                    newCart.splice(i, 1);
                 }
+            // :!!!Ajouter un if le panier est devenu vide:!!!
+
+            // Ecraser l'ancien panier avec le nouveau
+            localStorage.cart = JSON.stringify(newCart);
+            // Actualiser la page pour mettre les infos à jour
+            return location.reload();
         })
     })
-    localStorage.setItem("product", JSON.stringify(cart));
-            // alert("L'article a été supprimé de votre panier.");
-            window.location.reload();
-        }
-    
-
+};
 
 // ************************************************
 // Modifier la quantité d'un produit
@@ -172,7 +179,7 @@ const deleteProduct = () => {
 
 const changeQuantity = () => {
     let newInput = document.getElementsByClassName("itemQuantity");
-    
+
 };
 
 

@@ -142,16 +142,29 @@ const createArticle = async () => {
 // ************************************************
 
 const deleteProduct = () => {
+    // Sélectionner le bouton "supprimer"
     const deleteBtn = document.querySelectorAll(".cart__item .deleteItem");
-    const el = document.getElementsByClassName("cart_items");
-    const cardToRemove = el.closest('article');
-    delete cardToRemove;
+    // Pour chaque bouton supprimer...
+    deleteBtn.forEach((deleteBtn) => {
+        // ... ajouter un événement au clic
+        deleteBtn.addEventListener("click", () => {
+            // Parcourir le panier
+            for (let i = 0; i < cart.length; i ++)
+            // Sélectionner le bon produit à supprimer
+                if (
+                    cart[i].itemId === deleteBtn.dataset.id &&
+                    cart[i].itemColor === deleteBtn.dataset.color
+                ) {
+
+                }
+        })
+    })
     localStorage.setItem("product", JSON.stringify(cart));
             // alert("L'article a été supprimé de votre panier.");
             window.location.reload();
         }
     
-};
+
 
 // ************************************************
 // Modifier la quantité d'un produit

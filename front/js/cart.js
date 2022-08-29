@@ -1,12 +1,9 @@
-// ************************************************
-
 // Fonction : calculer total prix/nb de produits
 //  et les insérer dans la page
 // Bouton supprimer
 // Vérifier en direct les modifications de l'utilisateur
 // inputs contraintes page produit (copier coller)
-// total des prix (recalculer !!!)
-// plan de test : faire en même temps !!!
+// total des prix (recalculer manuellement!!!)
 
 
 // ************************************************

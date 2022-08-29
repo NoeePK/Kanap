@@ -1,11 +1,3 @@
-// Fonction : calculer total prix/nb de produits
-//  et les insérer dans la page
-// Bouton supprimer
-// Vérifier en direct les modifications de l'utilisateur
-// inputs contraintes page produit (copier coller)
-// total des prix (recalculer manuellement!!!)
-
-
 // ************************************************
 // Variables
 // ************************************************
@@ -46,8 +38,6 @@ const createArticle = async () => {
     }
     // SINON : afficher les produits
     else {
-        console.log("Panier garni");
-
         // Pour chaque produit dans le panier...
         cart.forEach(product => {
             let itemId = product.itemId;

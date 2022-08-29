@@ -132,7 +132,7 @@ const createArticle = async () => {
 
                 section.appendChild(article);
 
-                totalCart(totalPrice, itemQuantity);
+                totalCart();
                 deleteProduct();
                 changeQuantity();
             })
@@ -154,6 +154,7 @@ const deleteProduct = () => {
     deleteBtn.forEach((deleteBtn) => {
         // ... ajouter un événement au clic
         deleteBtn.addEventListener("click", () => {
+
             // Parcourir le panier
             for (let i = 0; i < cart.length; i++)
                 // Sélectionner le bon produit à supprimer
@@ -162,16 +163,16 @@ const deleteProduct = () => {
                     cart[i].itemColor === deleteBtn.dataset.color
                 ) {
                     // Créer nouveau tableau pour remplacement
-                    let newCart = cart;
+                    let newCart = JSON.parse(localStorage.getItem('product'));
                     // Supprimer l'élément sélectionné
                     newCart.splice(i, 1);
+                    // Ecraser l'ancien panier avec le nouveau
+                    localStorage.cart = JSON.stringify(newCart);
+                    // Actualiser la page pour mettre les infos à jour
+                    location.reload();
+
                 }
             // :!!!Ajouter un if le panier est devenu vide:!!!
-
-            // Ecraser l'ancien panier avec le nouveau
-            localStorage.cart = JSON.stringify(newCart);
-            // Actualiser la page pour mettre les infos à jour
-            return location.reload();
         })
     })
 };
@@ -183,9 +184,9 @@ const deleteProduct = () => {
 const changeQuantity = () => {
     let card = document.querySelectorAll(".cart__item");
     // Pour chaque input de quantité...
-    card.forEach((card) => {
+    
         // ... ajouter un événement "change"
-        card.addEventListener("change", () => {
+        document.body.addEventListener("change", (e) => {
             // Créer nouveau tableau pour remplacement
             let newCart = cart;
             // Parcourir le nouveau panier
@@ -195,17 +196,17 @@ const changeQuantity = () => {
                     item.itemId === card.dataset.id &&
                     item.itemColor === card.dataset.color
                 ) {
-                    // Nouvelle quantité remplace l'ancienne
-                    item.itemQuantity = target.value;
+                    // Ancienne quantité remplacée par la nouvelle
+                    item.itemQuantity = e.target.value;
                     // Ecraser l'ancien panier avec le nouveau
                     localStorage.cart = JSON.stringify(newCart);
                     // Changer la value dans le DOM
-                    card.setAttribute("value", target.value);
-                    // Actualiser les totaux SANS reload
+                    card.value = e.target.value;
+                    // Actualiser les totaux SANS reload ou AVEC reload ?
 
                 }
         })
-    })
+    
 };
 
 // ************************************************
@@ -213,7 +214,7 @@ const changeQuantity = () => {
 // ************************************************
 
 // Total pour chaque article selon la quantité :
-const totalCart = (price, quantity) => {
+const totalCart = () => {
     const cards = document.querySelectorAll(".cart__item");
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
@@ -223,10 +224,11 @@ const totalCart = (price, quantity) => {
 
     // Pour chaque carte produit...
     cards.forEach((cards) => {
-        // Son prix total est ajouté à totalPrice
-        totalPrice += cards.price;
+        
         // Sa quantité totale est ajoutée à totalQuantity
         totalQuantity += cards.quantity;
+        // Son prix total est ajouté à totalPrice
+        totalPrice += cards.price;
     });
 
     // Ces deux totaux sont affichés

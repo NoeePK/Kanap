@@ -171,29 +171,29 @@ const deleteProduct = () => {
 const changeQuantity = () => {
     let card = document.querySelectorAll(".cart__item");
     // Pour chaque input de quantité...
-    
-        // ... ajouter un événement "change"
-        document.body.addEventListener("change", (e) => {
-            // Créer nouveau tableau pour remplacement
-            let newCart = cart;
-            // Parcourir le nouveau panier
-            for (item of newCart)
-                // Sélectionner le bon produit à modifier
-                if (
-                    item.itemId === card.dataset.id &&
-                    item.itemColor === card.dataset.color
-                ) {
-                    // Ancienne quantité remplacée par la nouvelle
-                    item.itemQuantity = e.target.value;
-                    // Ecraser l'ancien panier avec le nouveau
-                    localStorage.cart = JSON.stringify(newCart);
-                    // Changer la value dans le DOM
-                    card.value = e.target.value;
-                    // Actualiser les totaux SANS reload ou AVEC reload ?
 
-                }
-        })
-    
+    // ... ajouter un événement "change"
+    document.body.addEventListener("change", (e) => {
+        // Créer nouveau tableau pour remplacement
+        let newCart = cart;
+        // Parcourir le nouveau panier
+        for (item of newCart)
+            // Sélectionner le bon produit à modifier
+            if (
+                item.itemId === card.dataset.id &&
+                item.itemColor === card.dataset.color
+            ) {
+                // Ancienne quantité remplacée par la nouvelle
+                item.itemQuantity = e.target.value;
+                // Ecraser l'ancien panier avec le nouveau
+                localStorage.cart = JSON.stringify(newCart);
+                // Changer la value dans le DOM
+                card.value = e.target.value;
+                // Actualiser les totaux SANS reload ou AVEC reload ?
+
+            }
+    })
+
 };
 
 // ************************************************
@@ -201,25 +201,21 @@ const changeQuantity = () => {
 // ************************************************
 
 // Total pour chaque article selon la quantité :
-const totalCart = (price, quantity) => {
-    const cards = document.querySelectorAll(".cart__item");
+const totalCart = () => {
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
-
-    let unitPrice = price;
-    let unitQuantity = quantity;
 
     let totalPrice = 0;
     let totalQuantity = 0;
 
     // Pour chaque carte produit...
-    cards.forEach((cards) => {
-        
+    for (card of cart) {
+
         // Sa quantité totale est ajoutée à totalQuantity
-        totalQuantity += Number(cards.unitQuantity);
+        totalQuantity += Number(card.quantity);
         // Son prix total est ajouté à totalPrice
-        totalPrice += Number(cards.unitPrice);
-    });
+        totalPrice += Number(card.price);
+    };
 
     // Ces deux totaux sont affichés
     priceSpan.innerText = totalPrice;

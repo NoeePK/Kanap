@@ -119,7 +119,7 @@ const createArticle = async () => {
 
                 section.appendChild(article);
 
-                totalCart();
+                totalCart(totalPrice, itemQuantity);
                 deleteProduct();
                 changeQuantity();
             })
@@ -154,7 +154,7 @@ const deleteProduct = () => {
                     // Supprimer l'élément sélectionné
                     newCart.splice(i, 1);
                     // Ecraser l'ancien panier avec le nouveau
-                    localStorage.cart = JSON.stringify(newCart);
+                    localStorage.setItem("product", JSON.stringify(newCart));
                     // Actualiser la page pour mettre les infos à jour
                     location.reload();
 
@@ -201,10 +201,13 @@ const changeQuantity = () => {
 // ************************************************
 
 // Total pour chaque article selon la quantité :
-const totalCart = () => {
+const totalCart = (price, quantity) => {
     const cards = document.querySelectorAll(".cart__item");
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
+
+    let unitPrice = price;
+    let unitQuantity = quantity;
 
     let totalPrice = 0;
     let totalQuantity = 0;
@@ -213,9 +216,9 @@ const totalCart = () => {
     cards.forEach((cards) => {
         
         // Sa quantité totale est ajoutée à totalQuantity
-        totalQuantity += cards.quantity;
+        totalQuantity += Number(cards.unitQuantity);
         // Son prix total est ajouté à totalPrice
-        totalPrice += cards.price;
+        totalPrice += Number(cards.unitPrice);
     });
 
     // Ces deux totaux sont affichés

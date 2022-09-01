@@ -143,23 +143,24 @@ const deleteProduct = () => {
         deleteBtn.addEventListener("click", () => {
 
             // Parcourir le panier
-            for (let i = 0; i < cart.length; i++)
+            for (let i = 0; i < cart.length; i++) {
                 // Sélectionner le bon produit à supprimer
                 if (
-                    cart[i].itemId === deleteBtn.dataset.id &&
-                    cart[i].itemColor === deleteBtn.dataset.color
+                    cart[i].itemId !== deleteBtn.dataset.id &&
+                    cart[i].itemColor !== deleteBtn.dataset.color
                 ) {
                     // Créer nouveau tableau pour remplacement
-                    let newCart = JSON.parse(localStorage.getItem('product'));
+                    let newCart = [];
                     // Supprimer l'élément sélectionné
-                    newCart.splice(i, 1);
+                    newCart.push(cart[i]);
                     // Ecraser l'ancien panier avec le nouveau
                     localStorage.setItem("product", JSON.stringify(newCart));
                     // Actualiser la page pour mettre les infos à jour
                     location.reload();
 
                 }
-            // :!!!Ajouter un if le panier est devenu vide:!!!
+                // :!!!Ajouter un if le panier est devenu vide:!!!
+            }
         })
     })
 };

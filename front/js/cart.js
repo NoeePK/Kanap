@@ -45,12 +45,11 @@ const createArticle = async () => {
             let itemQuantity = product.itemQuantity;
 
             const data = fetchProducts(itemId);
-            cartTotalPrice.push(data);
             data.then((productDetails) => {
                 const price = Number(productDetails.price);
                 const totalPrice = price * itemQuantity;
 
-                console.log(totalPrice);
+                cartTotalPrice.push(totalPrice);
 
                 // Création des cartes
                 const article = document.createElement('article');
@@ -119,7 +118,7 @@ const createArticle = async () => {
 
                 section.appendChild(article);
 
-                totalCart(totalPrice, itemQuantity);
+                totalCart(cartTotalPrice);
                 deleteProduct();
                 changeQuantity();
             })
@@ -141,17 +140,16 @@ const deleteProduct = () => {
     deleteBtn.forEach((deleteBtn) => {
         // ... ajouter un événement au clic
         deleteBtn.addEventListener("click", () => {
-
             // Parcourir le panier
             for (let i = 0; i < cart.length; i++) {
-                // Sélectionner le bon produit à supprimer
+                // Sélectionner les produits qu'il ne faut pas supprimer
                 if (
                     cart[i].itemId !== deleteBtn.dataset.id &&
                     cart[i].itemColor !== deleteBtn.dataset.color
                 ) {
-                    // Créer nouveau tableau pour remplacement
+                    // Créer nouvel array
                     let newCart = [];
-                    // Supprimer l'élément sélectionné
+                    // Push les produits dans le nouvel array
                     newCart.push(cart[i]);
                     // Ecraser l'ancien panier avec le nouveau
                     localStorage.setItem("product", JSON.stringify(newCart));
@@ -177,7 +175,7 @@ const changeQuantity = () => {
         // ... ajouter un événement "change"
         element.addEventListener("change", (e) => {
             // Créer nouveau tableau pour remplacement
-            let newCart = cart;
+            let newCart = JSON.parse(localStorage.getItem('product'));
             // Parcourir le nouveau panier
             for (item of newCart)
                 // Sélectionner le bon produit à modifier
@@ -209,26 +207,21 @@ const changeQuantity = () => {
 // ************************************************
 
 // Total pour chaque article selon la quantité :
-const totalCart = () => {
+const totalCart = (cartTotalPrice) => {
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
 
     let totalPrice = 0;
-    let totalQuantity = 0;
 
-    // Pour chaque carte produit...
-    for (card of cart) {
-
-        // Sa quantité totale est ajoutée à totalQuantity
-        totalQuantity += Number(card.quantity);
-        // Son prix total est ajouté à totalPrice
-        totalPrice += Number(card.price);
-    };
+    for (price of cartTotalPrice) {
+        totalPrice += price;
+    }
 
     // Ces deux totaux sont affichés
     priceSpan.innerText = totalPrice;
     quantitySpan.innerText = totalQuantity;
 };
+
 
 // ************************************************
 // Validation du formulaire

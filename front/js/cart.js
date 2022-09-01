@@ -5,8 +5,11 @@
 let cart = JSON.parse(localStorage.getItem('product'));
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
-let cartTotalPrice = [];
 const orderBtn = document.getElementById("order");
+const quantityInput = document.querySelectorAll(".itemQuantity");
+
+let cartTotalPrice = [];
+let cartTotalQuantity = [];
 
 // ************************************************
 // Récupérer les produits dans l'API
@@ -50,6 +53,7 @@ const createArticle = async () => {
                 const totalPrice = price * itemQuantity;
 
                 cartTotalPrice.push(totalPrice);
+                cartTotalQuantity.push(itemQuantity);
 
                 // Création des cartes
                 const article = document.createElement('article');
@@ -118,7 +122,7 @@ const createArticle = async () => {
 
                 section.appendChild(article);
 
-                totalCart(cartTotalPrice);
+                totalCart(cartTotalPrice, cartTotalQuantity);
                 deleteProduct();
                 changeQuantity();
             })
@@ -168,8 +172,7 @@ const deleteProduct = () => {
 // ************************************************
 
 const changeQuantity = () => {
-    let quantityInput = document.querySelectorAll(".itemQuantity");
-    console.log(quantityInput);
+    
     // Pour chaque input de quantité...
     quantityInput.forEach(function (element) {
         // ... ajouter un événement "change"
@@ -207,21 +210,25 @@ const changeQuantity = () => {
 // ************************************************
 
 // Total pour chaque article selon la quantité :
-const totalCart = (cartTotalPrice) => {
+const totalCart = (cartTotalPrice, cartTotalQuantity) => {
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
 
     let totalPrice = 0;
+    let totalQuantity = 0;
 
     for (price of cartTotalPrice) {
         totalPrice += price;
+    }
+
+    for (quantity of cartTotalQuantity) {
+        totalQuantity += quantity;
     }
 
     // Ces deux totaux sont affichés
     priceSpan.innerText = totalPrice;
     quantitySpan.innerText = totalQuantity;
 };
-
 
 // ************************************************
 // Validation du formulaire

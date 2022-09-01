@@ -3,11 +3,17 @@
 // ************************************************
 
 let cart = JSON.parse(localStorage.getItem('product'));
+
+// Sélection des parties du DOM
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
-const orderBtn = document.getElementById("order");
-const quantityInput = document.querySelectorAll(".itemQuantity");
 
+// Les boutons
+const quantityInput = document.querySelectorAll(".itemQuantity");
+const deleteBtn = document.querySelectorAll(".deleteItem");
+const orderBtn = document.getElementById("order");
+
+// Variables pour les totaux
 let cartTotalPrice = [];
 let cartTotalQuantity = [];
 
@@ -109,6 +115,7 @@ const createArticle = async () => {
                 productQuantity.setAttribute('min', 1);
                 productQuantity.setAttribute('max', 100);
                 productQuantity.setAttribute('value', itemQuantity);
+                productQuantity.addEventListener("change", changeQuantity());
                 settingsQuantity.appendChild(productQuantity);
 
                 const settingsDelete = document.createElement('div');
@@ -117,6 +124,7 @@ const createArticle = async () => {
 
                 const deleteItem = document.createElement('p');
                 deleteItem.classList.add('deleteItem');
+                deleteItem.addEventListener('click', deleteProduct());
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
 
@@ -134,45 +142,61 @@ createArticle();
 console.table(cart);
 
 // ************************************************
+// Afficher les totaux
+// ************************************************
+
+// Total pour chaque article selon la quantité :
+const totalCart = (cartTotalPrice, cartTotalQuantity) => {
+    const priceSpan = document.getElementById("totalPrice");
+    const quantitySpan = document.getElementById("totalQuantity");
+
+    let totalPrice = 0;
+    let totalQuantity = 0;
+
+    for (price of cartTotalPrice) {
+        totalPrice += price;
+    }
+
+    for (quantity of cartTotalQuantity) {
+        totalQuantity += quantity;
+    }
+
+    // Ces deux totaux sont affichés
+    priceSpan.innerText = totalPrice;
+    quantitySpan.innerText = totalQuantity;
+};
+
+// ************************************************
 // Supprimer un produit
 // ************************************************
 
 const deleteProduct = () => {
-    // Sélectionner le bouton "supprimer"
-    const deleteBtn = document.querySelectorAll(".cart__item .deleteItem");
-    // Pour chaque bouton supprimer...
-    deleteBtn.forEach((deleteBtn) => {
-        // ... ajouter un événement au clic
-        deleteBtn.addEventListener("click", () => {
-            // Parcourir le panier
-            for (let i = 0; i < cart.length; i++) {
-                // Sélectionner les produits qu'il ne faut pas supprimer
-                if (
-                    cart[i].itemId !== deleteBtn.dataset.id &&
-                    cart[i].itemColor !== deleteBtn.dataset.color
-                ) {
-                    // Créer nouvel array
-                    let newCart = [];
-                    // Push les produits dans le nouvel array
-                    newCart.push(cart[i]);
-                    // Ecraser l'ancien panier avec le nouveau
-                    localStorage.setItem("product", JSON.stringify(newCart));
-                    // Actualiser la page pour mettre les infos à jour
-                    location.reload();
+    // Créer nouvel array
+    let newCart = [];
+    // Parcourir le panier
+    for (let i = 0; i < cart.length; i++) {
+        // Sélectionner les produits qu'il ne faut pas supprimer 
+        if (!(cart[i].itemId === deleteBtn.itemId &&
+            cart[i].itemColor === deleteBtn.itemColor)) {
+            // Push les produits dans le nouvel array
+            newCart.push(cart[i]);
+            // Ecraser l'ancien panier avec le nouveau
+            localStorage.setItem("product", JSON.stringify(newCart));
+            // Actualiser la page pour mettre les infos à jour
+            // location.reload();
+        }
+    }
+}
 
-                }
-                // :!!!Ajouter un if le panier est devenu vide:!!!
-            }
-        })
-    })
-};
+
+
 
 // ************************************************
 // Modifier la quantité d'un produit
 // ************************************************
 
 const changeQuantity = () => {
-    
+
     // Pour chaque input de quantité...
     quantityInput.forEach(function (element) {
         // ... ajouter un événement "change"
@@ -205,30 +229,6 @@ const changeQuantity = () => {
     })
 };
 
-// ************************************************
-// Afficher les totaux
-// ************************************************
-
-// Total pour chaque article selon la quantité :
-const totalCart = (cartTotalPrice, cartTotalQuantity) => {
-    const priceSpan = document.getElementById("totalPrice");
-    const quantitySpan = document.getElementById("totalQuantity");
-
-    let totalPrice = 0;
-    let totalQuantity = 0;
-
-    for (price of cartTotalPrice) {
-        totalPrice += price;
-    }
-
-    for (quantity of cartTotalQuantity) {
-        totalQuantity += quantity;
-    }
-
-    // Ces deux totaux sont affichés
-    priceSpan.innerText = totalPrice;
-    quantitySpan.innerText = totalQuantity;
-};
 
 // ************************************************
 // Validation du formulaire

@@ -118,7 +118,6 @@ const createArticle = async () => {
                 productQuantity.setAttribute('min', 1);
                 productQuantity.setAttribute('max', 100);
                 productQuantity.setAttribute('value', itemQuantity);
-                productQuantity.addEventListener("change", changeQuantity());
                 settingsQuantity.appendChild(productQuantity);
 
                 const settingsDelete = document.createElement('div');
@@ -201,60 +200,78 @@ const deleteProduct = (e) => {
 // ************************************************
 
 const changeQuantity = () => {
-
-    
+    let newCart = JSON.parse(localStorage.getItem('product'));
+    if (quantityInput) {
+        quantityInput.addEventListener("change", (e) => {
+            let newQuantity = e.target.value;
+            if (!(newQuantity == "" || newQuantity <= 0 || newQuantity > 100)) {
+                // Ancienne quantité remplacée par la nouvelle
+                newQuantity = parseInt(e.target.value);
+                newCart.itemQuantity = newQuantity;
+                // Ecraser l'ancien panier avec le nouveau
+                localStorage.cart = JSON.stringify(newCart);
+                alert("Quantité modifiée avec succès");
+                window.location.reload();
+            }
+            else {
+                alert("Cette quantité n'est pas valide");
+                return
+            }
+        })
+    }
 };
 
 
-// ************************************************
-// Validation du formulaire
-// ************************************************
 
-// Regex
-const nameRegex = /^[a-zA-Z '-,]{1,31}$/i;
-const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
+    // ************************************************
+    // Validation du formulaire
+    // ************************************************
 
-// Messages d'erreur
-const firstNameErr = document.getElementById('firstNameErrorMsg');
-const lastNameErr = document.getElementById('lastNameErrorMsg');
-const addressErr = document.getElementById('addressErrorMsg');
-const cityErr = document.getElementById('cityErrorMsg');
-const emailErr = document.getElementById('emailErrorMsg');
+    // Regex
+    const nameRegex = /^[a-zA-Z '-,]{1,31}$/i;
+    const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 
-// ************************************************
-// Commander
-// ************************************************
+    // Messages d'erreur
+    const firstNameErr = document.getElementById('firstNameErrorMsg');
+    const lastNameErr = document.getElementById('lastNameErrorMsg');
+    const addressErr = document.getElementById('addressErrorMsg');
+    const cityErr = document.getElementById('cityErrorMsg');
+    const emailErr = document.getElementById('emailErrorMsg');
 
-const order = async () => {
-    orderBtn.addEventListener("click", () => {
-        // Récupérer la fiche contact :
-        let contact = {
-            firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value,
-            address: document.getElementById("address").value,
-            city: document.getElementById("city").value,
-            email: document.getElementById("email").value
-        };
-        // Vérifier la fiche contact : 
-        // Demander Delphine : critères regex pour address ?
-        // SI : regex sont respectés...
-        if (
-            (nameRegex.test(contact.firstName) == true) &
-            (nameRegex.test(contact.lastName) == true) &
-            (nameRegex.test(contact.city) == true) &
-            (mailRegex.test(contact.email) == true)
-        ) {
-            // ...  créer un tableau pour y mettre les produits...
-            let productID = [];
-            //Pour chaque produit dans le panier...
-            cart.forEach(item => {
-                // ... mettre son id dans le tableau
-                productID.push(item.id)
-            });
+    // ************************************************
+    // Commander
+    // ************************************************
 
-        }
-    })
-}
+    const order = async () => {
+        orderBtn.addEventListener("click", () => {
+            // Récupérer la fiche contact :
+            let contact = {
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value,
+                address: document.getElementById("address").value,
+                city: document.getElementById("city").value,
+                email: document.getElementById("email").value
+            };
+            // Vérifier la fiche contact : 
+            // Demander Delphine : critères regex pour address ?
+            // SI : regex sont respectés...
+            if (
+                (nameRegex.test(contact.firstName) == true) &
+                (nameRegex.test(contact.lastName) == true) &
+                (nameRegex.test(contact.city) == true) &
+                (mailRegex.test(contact.email) == true)
+            ) {
+                // ...  créer un tableau pour y mettre les produits...
+                let productID = [];
+                //Pour chaque produit dans le panier...
+                cart.forEach(item => {
+                    // ... mettre son id dans le tableau
+                    productID.push(item.id)
+                });
+
+            }
+        })
+    }
 
 
 // SI : form valide => post order

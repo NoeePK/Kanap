@@ -9,7 +9,8 @@ const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
 
 // Les boutons
-const quantityInput = document.querySelectorAll(".cart__item");
+const deleteBtn = document.querySelectorAll(".deleteItem");
+const quantityInput = document.querySelectorAll(".itemQuantity");
 const orderBtn = document.getElementById("order");
 
 // Variables pour les totaux
@@ -118,6 +119,7 @@ const createArticle = async () => {
                 productQuantity.setAttribute('min', 1);
                 productQuantity.setAttribute('max', 100);
                 productQuantity.setAttribute('value', itemQuantity);
+                productQuantity.addEventListener("change", changeQuantity());
                 settingsQuantity.appendChild(productQuantity);
 
                 const settingsDelete = document.createElement('div');
@@ -134,7 +136,7 @@ const createArticle = async () => {
 
                 totalCart(cartTotalPrice, cartTotalQuantity);
                 changeQuantity();
-                deleteProduct(itemId, itemColor);
+                deleteProduct();
             })
         })
     }
@@ -172,52 +174,66 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Supprimer un produit
 // ************************************************
 
-const deleteProduct = (id, color) => {
-    // Créer nouvel array
-    let newCart = JSON.parse(localStorage.getItem('product'));
+const deleteProduct = () => {
+    // Créer un nouveau tableau pour remplacement
+    let newCart = [];
+    // Sélectionner l'item le plus proche du bouton supprimer
+    let targetItem = deleteBtn.closest(".cart__item");
     // Parcourir le panier
-    for (let i = 0; i < newCart.length; i++) {
-        // Sélectionner le produit qu'il faut supprimer 
-        if (id === newCart[i][0] && color === newCart[i][1]) {
-            // Supprimer le produit sélectionné
-            newCart.splice(i, 1);
+    for (let i = 0; i < cart.length; i++) {
+        // Sélectionner les produits à garder
+        if (!(
+            cart[i].itemId === targetItem.dataset.id &&
+            cart[i].itemColor === targetItem.dataset.color
+        )) {
+            // Push les produits à garder dans le nouveau panier
+            newCart.push(cart[i]);
             // Ecraser l'ancien panier avec le nouveau
             localStorage.setItem("product", JSON.stringify(newCart));
-            // Actualiser la page pour mettre les infos à jour
-            window.location.reload();
+            // Actualiser les totaux sans reload de la page
         }
     }
 }
-
 
 // ************************************************
 // Modifier la quantité d'un produit
 // ************************************************
 
 const changeQuantity = () => {
-    let newCart = JSON.parse(localStorage.getItem('product'));
-    if (quantityInput) {
-        quantityInput.addEventListener("change", (e) => {
-            let newQuantity = e.target.value;
-            if (!(newQuantity == "" || newQuantity <= 0 || newQuantity > 100)) {
-                // Ancienne quantité remplacée par la nouvelle
-                newQuantity = parseInt(e.target.value);
-                newCart.itemQuantity = newQuantity;
-                // Ecraser l'ancien panier avec le nouveau
-                localStorage.cart = JSON.stringify(newCart);
-                alert("Quantité modifiée avec succès");
-                window.location.reload();
-            }
-            else {
-                alert("Cette quantité n'est pas valide");
-                return
+
+    // Pour chaque input de quantité...
+    quantityInput.forEach(function (element) {
+        // ... ajouter un événement "change"
+        element.addEventListener("change", (e) => {
+            // Créer nouveau tableau pour remplacement
+            let newCart = cart;
+            // Parcourir le nouveau panier
+            for (item of newCart) {
+                // Sélectionner le bon produit à modifier
+                if (
+                    item.itemId === quantityInput.dataset.id &&
+                    item.itemColor === quantityInput.dataset.color
+                ) {
+                    if (!(quantityInput == "" || quantityInput <= 0 || quantityInput > 100)) {
+                        // Ancienne quantité remplacée par la nouvelle
+                        item.itemQuantity = e.target.value;
+                        // Ecraser l'ancien panier avec le nouveau
+                        localStorage.cart = JSON.stringify(newCart);
+                        // Changer la value dans le DOM
+                        quantityInput.value = e.target.value;
+                        // Actualiser les totaux SANS reload ou AVEC reload ?
+                        alert("Quantité modifiée avec succès");
+                    }
+                    else {
+                        alert("Cette quantité n'est pas valide");
+                        return
+                    }
+                }
             }
         })
-    }
-    else {
-        console.log("Le DOM n'est pas encore entièrement chargé.")
-    }
-};
+    })
+}
+
 
 // ************************************************
 // Validation du formulaire

@@ -7,9 +7,10 @@ let cart = JSON.parse(localStorage.getItem('product'));
 // Sélection des parties du DOM
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
+const article = document.getElementsByClassName('.cart__item');
 
 // Les boutons
-const deleteBtn = document.querySelectorAll(".deleteItem");
+// const deleteBtn = document.querySelectorAll(".deleteItem");
 const quantityInput = document.querySelectorAll(".itemQuantity");
 const orderBtn = document.getElementById("order");
 
@@ -128,15 +129,13 @@ const createArticle = async () => {
 
                 const deleteItem = document.createElement('p');
                 deleteItem.classList.add('deleteItem');
-                deleteItem.addEventListener('click', deleteProduct());
+                deleteItem.addEventListener('click', deleteProduct(e));
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
 
                 section.appendChild(article);
 
                 totalCart(cartTotalPrice, cartTotalQuantity);
-                changeQuantity();
-                deleteProduct();
             })
         })
     }
@@ -174,25 +173,36 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Supprimer un produit
 // ************************************************
 
-const deleteProduct = () => {
-    // Créer un nouveau tableau pour remplacement
-    let newCart = [];
+function deleteProduct(e) {
+    let deleteBtn = e.target;
     // Sélectionner l'item le plus proche du bouton supprimer
-    let targetItem = deleteBtn.closest(".cart__item");
-    // Parcourir le panier
-    for (let i = 0; i < cart.length; i++) {
-        // Sélectionner les produits à garder
-        if (!(
-            cart[i].itemId === targetItem.dataset.id &&
-            cart[i].itemColor === targetItem.dataset.color
-        )) {
-            // Push les produits à garder dans le nouveau panier
-            newCart.push(cart[i]);
-            // Ecraser l'ancien panier avec le nouveau
-            localStorage.setItem("product", JSON.stringify(newCart));
-            // Actualiser les totaux sans reload de la page
+    let targetItem = deleteBtn.closest(article);
+    console.log(targetItem);
+    // // Créer un nouveau tableau pour remplacement
+    // let newCart = [];
+
+    if (targetItem) {
+        // Parcourir le panier
+        for (let i = 0; i < cart.length; i++) {
+            // Sélectionner le produit à supprimer
+            if (
+                cart[i].itemId === targetItem.dataset.id &&
+                cart[i].itemColor === targetItem.dataset.color
+            ) {
+                // // Push les produits à garder dans le nouveau panier
+                // newCart.push(cart[i]);
+                // Splice pour retirer le produit choisi
+                cart.splice(i, 1);
+                // Ecraser l'ancien panier avec le nouveau
+                localStorage.setItem("product", JSON.stringify(newCart));
+                // Actualiser les totaux sans reload de la page
+            }
         }
     }
+    else {
+        console.log("Le produit n'est pas encore chargé.");
+    }
+
 }
 
 // ************************************************

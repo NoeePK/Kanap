@@ -249,53 +249,53 @@ const changeQuantity = () => {
 // Validation du formulaire
 // ************************************************
 
-// Regex
-const nameRegex = /^[a-zA-Z '-,]{1,31}$/i;
-const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
+// // Regex
+// const nameRegex = /^[a-zA-Z '-,]{1,31}$/i;
+// const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 
-// Messages d'erreur
-const firstNameErr = document.getElementById('firstNameErrorMsg');
-const lastNameErr = document.getElementById('lastNameErrorMsg');
-const addressErr = document.getElementById('addressErrorMsg');
-const cityErr = document.getElementById('cityErrorMsg');
-const emailErr = document.getElementById('emailErrorMsg');
+// // Messages d'erreur
+// const firstNameErr = document.getElementById('firstNameErrorMsg');
+// const lastNameErr = document.getElementById('lastNameErrorMsg');
+// const addressErr = document.getElementById('addressErrorMsg');
+// const cityErr = document.getElementById('cityErrorMsg');
+// const emailErr = document.getElementById('emailErrorMsg');
 
-// ************************************************
-// Commander
-// ************************************************
+// // ************************************************
+// // Commander
+// // ************************************************
 
-const order = async () => {
-    orderBtn.addEventListener("click", () => {
-        // Récupérer la fiche contact :
-        let contact = {
-            firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value,
-            address: document.getElementById("address").value,
-            city: document.getElementById("city").value,
-            email: document.getElementById("email").value
-        };
-        // Vérifier la fiche contact : 
-        // Demander Delphine : critères regex pour address ?
-        // SI : regex sont respectés...
-        if (
-            (nameRegex.test(contact.firstName) == true) &
-            (nameRegex.test(contact.lastName) == true) &
-            (nameRegex.test(contact.city) == true) &
-            (mailRegex.test(contact.email) == true)
-        ) {
-            // ...  créer un tableau pour y mettre les produits...
-            let productID = [];
-            //Pour chaque produit dans le panier...
-            cart.forEach(item => {
-                // ... mettre son id dans le tableau
-                productID.push(item.id)
-            });
+// const order = async () => {
+//     orderBtn.addEventListener("click", () => {
+//         // Récupérer la fiche contact :
+//         let contact = {
+//             firstName: document.getElementById("firstName").value,
+//             lastName: document.getElementById("lastName").value,
+//             address: document.getElementById("address").value,
+//             city: document.getElementById("city").value,
+//             email: document.getElementById("email").value
+//         };
+//         // Vérifier la fiche contact : 
+//         // Demander Delphine : critères regex pour address ?
+//         // SI : regex sont respectés...
+//         if (
+//             (nameRegex.test(contact.firstName) == true) &
+//             (nameRegex.test(contact.lastName) == true) &
+//             (nameRegex.test(contact.city) == true) &
+//             (mailRegex.test(contact.email) == true)
+//         ) {
+//             // ...  créer un tableau pour y mettre les produits...
+//             let productID = [];
+//             //Pour chaque produit dans le panier...
+//             cart.forEach(item => {
+//                 // ... mettre son id dans le tableau
+//                 productID.push(item.id)
+//             });
 
-        }
-    })
-}
+//         }
+//     })
+// }
 
 
-// SI : form valide => post order
-// Message : succès de l'achat
-// SINON : form invalide => alert : veuillez remplir le form
+// // SI : form valide => post order
+// // Message : succès de l'achat
+// // SINON : form invalide => alert : veuillez remplir le form

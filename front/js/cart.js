@@ -10,7 +10,7 @@ const section = document.getElementById('cart__items');
 const article = document.querySelectorAll('.cart__item');
 
 // Les boutons
-// const deleteBtn = document.querySelectorAll(".deleteItem");
+const deleteBtn = document.querySelectorAll(".deleteItem");
 const quantityInput = document.querySelectorAll(".itemQuantity");
 const orderBtn = document.getElementById("order");
 
@@ -125,7 +125,6 @@ const createArticle = async () => {
                 productQuantity.setAttribute('min', 1);
                 productQuantity.setAttribute('max', 100);
                 productQuantity.setAttribute('value', itemQuantity);
-                productQuantity.addEventListener("change", changeQuantity());
                 settingsQuantity.appendChild(productQuantity);
 
                 const settingsDelete = document.createElement('div');
@@ -140,9 +139,6 @@ const createArticle = async () => {
                 section.appendChild(article);
 
                 totalCart(cartTotalPrice, cartTotalQuantity);
-
-                // Essai 8 : appeler les deux fonctions ici
-                changeQuantity(productQuantity, price, totalPrice);
             })
         })
     }
@@ -185,40 +181,27 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Supprimer un produit
 // ************************************************
 
-const deleteProduct = () => {
-    let deleteBtn = document.querySelectorAll(".deleteItem");
-    // Pour chaque bouton "supprimer"
-    for (let btn of deleteBtn) {
-        // Ajouter un eventListener au clic
-        btn.addEventListener("click", function () {
-            // Récupérer l'id et couleur les plus proches du btn
-            let selectedItemId = this.closest(".cart__item").dataset.id;
-            let selectedItemColor = this.closest(".cart__item").dataset.color;
+// Essai 9 : let
 
-            // Sélectionner le produit à supprimer dans le localStorage :
-            //  Récupérer l'id avec filter
-            let idToDelete = cart.filter((product) => product.itemId === selectedItemId);
-            // Récupérer la couleur avec l'id trouvé précédemment
-            let colorToDelete = idToDelete.find((product) => product.itemColor === selectedItemColor);
-            // Définir l'index du produit qu'il faudra supprimer
-            let index = cart.indexOf(colorToDelete);
-            // Supprimer le produit du panier
-            cart.splice(index, 1);
-            // Ecraser l'ancien panier
-            localStorage.setItem("product", JSON.stringify(cart));
-            
-            // Utiliser "selectedItem" pour sélectionner le bon article du DOM
-            let removeFromDOM = document.querySelector(`article[data-id="${itemId}"][daya-color="${itemColor}"]`);
-            console.log(removeFromDOM);
-            // Suppression du DOM
-            section.removeChild(removeFromDOM);
-
-
-
-
-        })
-    }
+// Pour chaque bouton "supprimer"...
+for(let selectedBtn = 0; selectedBtn < deleteBtn.length; selectedBtn++) {
+    // ... écouter le clic sur le bouton
+    deleteBtn[selectedBtn].addEventListener("click", function(){
+        console.log("Clic effectué");
+        // Récupérer les bons id et couleur
+        let itemIdToDelete = cart[selectedBtn].itemId;
+        console.log(itemIdToDelete);
+        let itemColorToDelete = cart[selectedBtn].itemColor;
+        // Créer un nouveau panier avec les produits à garder
+        const newCart = cart.filter(el => el.itemId !== itemIdToDelete && el.itemColor !== itemColorToDelete);
+        // Ecraser l'ancien panier avec le nouveau
+        localStorage.setItem("product", JSON.stringify(newCart));
+        // Prévenir l'utilisateur et actualiser la page
+        alert("Suppression effectuée.");
+        location.reload();
+    })
 }
+
 
 // ************************************************
 // Modifier la quantité d'un produit
@@ -226,37 +209,6 @@ const deleteProduct = () => {
 
 const changeQuantity = () => {
 
-    // // Pour chaque input de quantité...
-    // quantityInput.forEach(function (element) {
-    //     // ... ajouter un événement "change"
-    //     element.addEventListener("change", (e) => {
-    //         // Créer nouveau tableau pour remplacement
-    //         let newCart = cart;
-    //         // Parcourir le nouveau panier
-    //         for (item of newCart) {
-    //             // Sélectionner le bon produit à modifier
-    //             if (
-    //                 item.itemId === quantityInput.dataset.id &&
-    //                 item.itemColor === quantityInput.dataset.color
-    //             ) {
-    //                 if (!(quantityInput == "" || quantityInput <= 0 || quantityInput > 100)) {
-    //                     // Ancienne quantité remplacée par la nouvelle
-    //                     item.itemQuantity = e.target.value;
-    //                     // Ecraser l'ancien panier avec le nouveau
-    //                     localStorage.cart = JSON.stringify(newCart);
-    //                     // Changer la value dans le DOM
-    //                     quantityInput.value = e.target.value;
-    //                     // Actualiser les totaux SANS reload ou AVEC reload ?
-    //                     alert("Quantité modifiée avec succès");
-    //                 }
-    //                 else {
-    //                     alert("Cette quantité n'est pas valide");
-    //                     return
-    //                 }
-    //             }
-    //         }
-    //     })
-    // })
 }
 
 

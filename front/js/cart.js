@@ -7,7 +7,7 @@ let cart = JSON.parse(localStorage.getItem('product'));
 // Sélection des parties du DOM
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
-const article = document.getElementsByClassName('.cart__item');
+const article = document.querySelectorAll('.cart__item');
 
 // Les boutons
 // const deleteBtn = document.querySelectorAll(".deleteItem");
@@ -129,7 +129,7 @@ const createArticle = async () => {
 
                 const deleteItem = document.createElement('p');
                 deleteItem.classList.add('deleteItem');
-                deleteItem.addEventListener('click', deleteProduct(e));
+                // deleteItem.addEventListener('click', deleteProduct());
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
 
@@ -173,36 +173,28 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Supprimer un produit
 // ************************************************
 
-function deleteProduct(e) {
-    let deleteBtn = e.target;
+function deleteProduct() {
+    let deleteBtn = document.querySelectorAll(".cart__item .deleteItem");
     // Sélectionner l'item le plus proche du bouton supprimer
-    let targetItem = deleteBtn.closest(article);
-    console.log(targetItem);
-    // // Créer un nouveau tableau pour remplacement
-    // let newCart = [];
+    deleteBtn.forEach((deleteBtn) => {
+        deleteBtn.addEventListener("click", () => {
+            for (let i = 0; i < cart.length; i++)
+                if (
+                    cart[i].itemId === deleteBtn.dataset.id &&
+                    cart[i].itemColor === deleteBtn.dataset.color
+                ) {
+                    // Créer un nouveau tableau pour remplacement
+                    let newCart = JSON.parse(localStorage.getItem("product"));
+                    // Splice pour retirer le produit choisi
+                    newCart.splice(i, 1);
+                    // Ecraser l'ancien panier avec le nouveau
+                    localStorage.cart = JSON.stringify(newCart);
+                    // Actualiser les totaux sans reload de la page
+                    totalCart(cartTotalPrice, cartTotalQuantity);
 
-    if (targetItem) {
-        // Parcourir le panier
-        for (let i = 0; i < cart.length; i++) {
-            // Sélectionner le produit à supprimer
-            if (
-                cart[i].itemId === targetItem.dataset.id &&
-                cart[i].itemColor === targetItem.dataset.color
-            ) {
-                // // Push les produits à garder dans le nouveau panier
-                // newCart.push(cart[i]);
-                // Splice pour retirer le produit choisi
-                cart.splice(i, 1);
-                // Ecraser l'ancien panier avec le nouveau
-                localStorage.setItem("product", JSON.stringify(newCart));
-                // Actualiser les totaux sans reload de la page
-            }
-        }
-    }
-    else {
-        console.log("Le produit n'est pas encore chargé.");
-    }
-
+                }
+        })
+    })
 }
 
 // ************************************************
@@ -274,7 +266,7 @@ const changeQuantity = () => {
 //             city: document.getElementById("city").value,
 //             email: document.getElementById("email").value
 //         };
-//         // Vérifier la fiche contact : 
+//         // Vérifier la fiche contact :
 //         // Demander Delphine : critères regex pour address ?
 //         // SI : regex sont respectés...
 //         if (

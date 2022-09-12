@@ -184,9 +184,9 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Essai 9 : let
 
 // Pour chaque bouton "supprimer"...
-for(let selectedBtn = 0; selectedBtn < deleteBtn.length; selectedBtn++) {
+for (let selectedBtn = 0; selectedBtn < deleteBtn.length; selectedBtn++) {
     // ... écouter le clic sur le bouton
-    deleteBtn[selectedBtn].addEventListener("click", function(){
+    deleteBtn[selectedBtn].addEventListener("click", function () {
         console.log("Clic effectué");
         // Récupérer les bons id et couleur
         let itemIdToDelete = cart[selectedBtn].itemId;
@@ -208,9 +208,33 @@ for(let selectedBtn = 0; selectedBtn < deleteBtn.length; selectedBtn++) {
 // ************************************************
 
 const changeQuantity = () => {
+    // Pour chaque élément input du DOM...
+    for (let i = 0; i < quantityInput.length; i++) {
+        // ... ajouter un eventListener "change"
+        quantityInput[i].addEventListener("change", function () {
+            // Récupérer l'ancienne quantité
+            const pastQuantity = cart[i].itemQuantity;
+            console.log(pastQuantity);
+            // Récupérer la nouvelle quantité sous forme de nombre
+            const newQuantity = Number(quantityInput[i]);
+            console.log(newQuantity);
 
+            // Vérifier que la nouvelle quantité est valide :
+            if (!(newQuantity < 0 || newQuantity > 100 || newQuantity == "")) {
+                cart[i].itemQuantity = newQuantity;
+                localStorage.setItem("product", JSON.stringify(cart));
+                totalCart(cartTotalPrice, cartTotalQuantity);
+                location.reload();
+            }
+            else {
+                alert("Veuillez choisir une quantité valide (entre 1 et 100");
+                return;
+            }
+        })
+    }
 }
 
+changeQuantity();
 
 // ************************************************
 // Validation du formulaire

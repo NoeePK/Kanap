@@ -24,11 +24,11 @@ let cartTotalQuantity = [];
 
 const fetchProducts = async (id) => {
     try {
-        // Récupérer le produit dans l'API
+        // Récupérer le contenu de l'API
         const response = await fetch(`http://localhost:3000/api/products/${id}`);
-        // Récupérer les produits de l'API dans .json
-        const itemId = await response.json();
-        return itemId;
+        // Récupérer les id des produits
+        const data = await response.json();
+        return data;
     }
     catch (err) {
         console.log("Problème avec l'API !");
@@ -50,19 +50,24 @@ const createArticle = async () => {
         let cartTotalQuantity = 0;
         totalCart(cartTotalPrice, cartTotalQuantity);
     }
-    // SINON : afficher les produits
+    // SINON : afficher les produits présents dans le panier
     else {
         // Pour chaque produit dans le panier...
         cart.forEach(product => {
+            // Récupérer id, couleur et quantité
             let itemId = product.itemId;
             let itemColor = product.itemColor;
             let itemQuantity = product.itemQuantity;
 
+            // Promesse : initialisation (avec chaque id)
             const data = fetchProducts(itemId);
+            // Promesse : résolution (avec .then)
             data.then((productDetails) => {
+                // Prix unitaire de chaque produit
                 const price = Number(productDetails.price);
+                // Prix total de chaque produit
                 const totalPrice = price * itemQuantity;
-
+                // Push des totaux pour calculer totalCart()
                 cartTotalPrice.push(totalPrice);
                 cartTotalQuantity.push(itemQuantity);
 
@@ -129,13 +134,17 @@ const createArticle = async () => {
 
                 const deleteItem = document.createElement('p');
                 deleteItem.classList.add('deleteItem');
-                // deleteItem.addEventListener('click', deleteProduct());
+                deleteItem.addEventListener('click', deleteProduct());
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
 
                 section.appendChild(article);
 
                 totalCart(cartTotalPrice, cartTotalQuantity);
+
+                // Essai 8 : appeler les deux fonctions ici
+                changeQuantity(productQuantity)
+                deleteProduct(itemId, itemColor, itemQuantity);
             })
         })
     }

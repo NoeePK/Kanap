@@ -242,8 +242,8 @@ const changeQuantity = () => {
 // ************************************************
 
 // // Regex
-// const nameRegex = /^[a-zA-Z '-,]{1,31}$/i;
-// const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
+const noNumberRegex = /^[a-zA-Z '-,]{1,31}$/i;
+const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 
 // Emplacement des messages d'erreur
 const firstNameErr = document.getElementById('firstNameErrorMsg');
@@ -268,13 +268,11 @@ const order = async () => {
             city: document.getElementById("city").value,
             email: document.getElementById("email").value
         };
-        // Vérifier la fiche contact :
-
         // SI : regex sont respectés...
         if (
-            (nameRegex.test(contact.firstName) == true) &
-            (nameRegex.test(contact.lastName) == true) &
-            (nameRegex.test(contact.city) == true) &
+            (noNumberRegex.test(contact.firstName) == true) &
+            (noNumberRegex.test(contact.lastName) == true) &
+            (noNumberRegex.test(contact.city) == true) &
             (mailRegex.test(contact.email) == true)
         ) {
             // ...  créer un tableau pour y mettre les produits...
@@ -295,13 +293,13 @@ const order = async () => {
 
         }
         // SINON : regex ne sont pas respectés
-        else if (nameRegex.test(contact.firstName) == false) {
+        else if (noNumberRegex.test(contact.firstName) == false) {
             firstNameErr.innerText = "Veuillez indiquer un nom valide.";
         }
-        else if (nameRegex.test(contact.lastName) == false) {
+        else if (noNumberRegex.test(contact.lastName) == false) {
             lastNameErr.innerText = "Veuillez indiquer un nom valide.";
         }
-        else if (nameRegex.test(contact.city) == false) {
+        else if (noNumberRegex.test(contact.city) == false) {
             cityErr.innerText = "Veuillez indiquer une ville valide.";
         }
         else if (mailRegex.test(contact.email) == false) {
@@ -314,6 +312,4 @@ const order = async () => {
 }
 
 
-// // SI : form valide => post order
-// // Message : succès de l'achat
-// // SINON : form invalide => alert : veuillez remplir le form
+// SI : form valide => post order

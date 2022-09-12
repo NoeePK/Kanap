@@ -245,47 +245,73 @@ const changeQuantity = () => {
 // const nameRegex = /^[a-zA-Z '-,]{1,31}$/i;
 // const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 
-// // Messages d'erreur
-// const firstNameErr = document.getElementById('firstNameErrorMsg');
-// const lastNameErr = document.getElementById('lastNameErrorMsg');
-// const addressErr = document.getElementById('addressErrorMsg');
-// const cityErr = document.getElementById('cityErrorMsg');
-// const emailErr = document.getElementById('emailErrorMsg');
+// Emplacement des messages d'erreur
+const firstNameErr = document.getElementById('firstNameErrorMsg');
+const lastNameErr = document.getElementById('lastNameErrorMsg');
+const addressErr = document.getElementById('addressErrorMsg');
+const cityErr = document.getElementById('cityErrorMsg');
+const emailErr = document.getElementById('emailErrorMsg');
+
+
 
 // // ************************************************
 // // Commander
 // // ************************************************
 
-// const order = async () => {
-//     orderBtn.addEventListener("click", () => {
-//         // Récupérer la fiche contact :
-//         let contact = {
-//             firstName: document.getElementById("firstName").value,
-//             lastName: document.getElementById("lastName").value,
-//             address: document.getElementById("address").value,
-//             city: document.getElementById("city").value,
-//             email: document.getElementById("email").value
-//         };
-//         // Vérifier la fiche contact :
-//         // Demander Delphine : critères regex pour address ?
-//         // SI : regex sont respectés...
-//         if (
-//             (nameRegex.test(contact.firstName) == true) &
-//             (nameRegex.test(contact.lastName) == true) &
-//             (nameRegex.test(contact.city) == true) &
-//             (mailRegex.test(contact.email) == true)
-//         ) {
-//             // ...  créer un tableau pour y mettre les produits...
-//             let productID = [];
-//             //Pour chaque produit dans le panier...
-//             cart.forEach(item => {
-//                 // ... mettre son id dans le tableau
-//                 productID.push(item.id)
-//             });
+const order = async () => {
+    orderBtn.addEventListener("click", () => {
+        // Récupérer la fiche contact :
+        let contact = {
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+            address: document.getElementById("address").value,
+            city: document.getElementById("city").value,
+            email: document.getElementById("email").value
+        };
+        // Vérifier la fiche contact :
 
-//         }
-//     })
-// }
+        // SI : regex sont respectés...
+        if (
+            (nameRegex.test(contact.firstName) == true) &
+            (nameRegex.test(contact.lastName) == true) &
+            (nameRegex.test(contact.city) == true) &
+            (mailRegex.test(contact.email) == true)
+        ) {
+            // ...  créer un tableau pour y mettre les produits...
+            let productID = [];
+            //Pour chaque produit dans le panier...
+            cart.forEach(item => {
+                // ... mettre son id dans le tableau
+                productID.push(item.itemId);
+            });
+            // Voir si ça fonctionne :
+            console.log(productID);
+            console.log(contact);
+
+            // Afficher un message de succès :
+            alert("Commande effectuée avec succès");
+            // Envoyer la fiche contact et le tableau de la commande
+
+
+        }
+        // SINON : regex ne sont pas respectés
+        else if (nameRegex.test(contact.firstName) == false) {
+            firstNameErr.innerText = "Veuillez indiquer un nom valide.";
+        }
+        else if (nameRegex.test(contact.lastName) == false) {
+            lastNameErr.innerText = "Veuillez indiquer un nom valide.";
+        }
+        else if (nameRegex.test(contact.city) == false) {
+            cityErr.innerText = "Veuillez indiquer une ville valide.";
+        }
+        else if (mailRegex.test(contact.email) == false) {
+            emailErr.innerText = "Veuillez indiquer une adresse mail valide.";
+        }
+        else if (!(contact.address)) {
+            addressErr.innerText = "Veuillez remplir ce champ.";
+        }
+    })
+}
 
 
 // // SI : form valide => post order

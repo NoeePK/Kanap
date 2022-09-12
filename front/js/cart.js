@@ -134,7 +134,6 @@ const createArticle = async () => {
 
                 const deleteItem = document.createElement('p');
                 deleteItem.classList.add('deleteItem');
-                deleteItem.addEventListener('click', deleteProduct());
                 deleteItem.innerText = "Supprimer";
                 settingsDelete.appendChild(deleteItem);
 
@@ -143,8 +142,7 @@ const createArticle = async () => {
                 totalCart(cartTotalPrice, cartTotalQuantity);
 
                 // Essai 8 : appeler les deux fonctions ici
-                changeQuantity(productQuantity)
-                deleteProduct(itemId, itemColor, itemQuantity);
+                changeQuantity(productQuantity, price, totalPrice);
             })
         })
     }
@@ -162,18 +160,23 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
     const priceSpan = document.getElementById("totalPrice");
     const quantitySpan = document.getElementById("totalQuantity");
 
+    // Initialisation des variables
     let totalPrice = 0;
     let totalQuantity = 0;
 
+    // Pour chaque prix dans l'array 
     for (price of cartTotalPrice) {
+        // Additionner
         totalPrice += price;
     }
 
+    // Pour chaque quantité dans l'array
     for (quantity of cartTotalQuantity) {
+        // Additionner
         totalQuantity += quantity;
     }
 
-    // Ces deux totaux sont affichés
+    // Afficher les totaux à leur place
     priceSpan.innerText = totalPrice;
     quantitySpan.innerText = totalQuantity;
 };
@@ -182,28 +185,39 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Supprimer un produit
 // ************************************************
 
-function deleteProduct() {
-    let deleteBtn = document.querySelectorAll(".cart__item .deleteItem");
-    // Sélectionner l'item le plus proche du bouton supprimer
-    deleteBtn.forEach((deleteBtn) => {
-        deleteBtn.addEventListener("click", () => {
-            for (let i = 0; i < cart.length; i++)
-                if (
-                    cart[i].itemId === deleteBtn.dataset.id &&
-                    cart[i].itemColor === deleteBtn.dataset.color
-                ) {
-                    // Créer un nouveau tableau pour remplacement
-                    let newCart = JSON.parse(localStorage.getItem("product"));
-                    // Splice pour retirer le produit choisi
-                    newCart.splice(i, 1);
-                    // Ecraser l'ancien panier avec le nouveau
-                    localStorage.cart = JSON.stringify(newCart);
-                    // Actualiser les totaux sans reload de la page
-                    totalCart(cartTotalPrice, cartTotalQuantity);
+const deleteProduct = () => {
+    let deleteBtn = document.querySelectorAll(".deleteItem");
+    // Pour chaque bouton "supprimer"
+    for (let btn of deleteBtn) {
+        // Ajouter un eventListener au clic
+        btn.addEventListener("click", function () {
+            // Récupérer l'id et couleur les plus proches du btn
+            let selectedItemId = this.closest(".cart__item").dataset.id;
+            let selectedItemColor = this.closest(".cart__item").dataset.color;
 
-                }
+            // Sélectionner le produit à supprimer dans le localStorage :
+            //  Récupérer l'id avec filter
+            let idToDelete = cart.filter((product) => product.itemId === selectedItemId);
+            // Récupérer la couleur avec l'id trouvé précédemment
+            let colorToDelete = idToDelete.find((product) => product.itemColor === selectedItemColor);
+            // Définir l'index du produit qu'il faudra supprimer
+            let index = cart.indexOf(colorToDelete);
+            // Supprimer le produit du panier
+            cart.splice(index, 1);
+            // Ecraser l'ancien panier
+            localStorage.setItem("product", JSON.stringify(cart));
+            
+            // Utiliser "selectedItem" pour sélectionner le bon article du DOM
+            let removeFromDOM = document.querySelector(`article[data-id="${itemId}"][daya-color="${itemColor}"]`);
+            console.log(removeFromDOM);
+            // Suppression du DOM
+            section.removeChild(removeFromDOM);
+
+
+
+
         })
-    })
+    }
 }
 
 // ************************************************

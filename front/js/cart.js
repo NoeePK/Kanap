@@ -203,37 +203,37 @@ function deleteProduct() {
 
 const changeQuantity = () => {
 
-    // Pour chaque input de quantité...
-    quantityInput.forEach(function (element) {
-        // ... ajouter un événement "change"
-        element.addEventListener("change", (e) => {
-            // Créer nouveau tableau pour remplacement
-            let newCart = cart;
-            // Parcourir le nouveau panier
-            for (item of newCart) {
-                // Sélectionner le bon produit à modifier
-                if (
-                    item.itemId === quantityInput.dataset.id &&
-                    item.itemColor === quantityInput.dataset.color
-                ) {
-                    if (!(quantityInput == "" || quantityInput <= 0 || quantityInput > 100)) {
-                        // Ancienne quantité remplacée par la nouvelle
-                        item.itemQuantity = e.target.value;
-                        // Ecraser l'ancien panier avec le nouveau
-                        localStorage.cart = JSON.stringify(newCart);
-                        // Changer la value dans le DOM
-                        quantityInput.value = e.target.value;
-                        // Actualiser les totaux SANS reload ou AVEC reload ?
-                        alert("Quantité modifiée avec succès");
-                    }
-                    else {
-                        alert("Cette quantité n'est pas valide");
-                        return
-                    }
-                }
-            }
-        })
-    })
+    // // Pour chaque input de quantité...
+    // quantityInput.forEach(function (element) {
+    //     // ... ajouter un événement "change"
+    //     element.addEventListener("change", (e) => {
+    //         // Créer nouveau tableau pour remplacement
+    //         let newCart = cart;
+    //         // Parcourir le nouveau panier
+    //         for (item of newCart) {
+    //             // Sélectionner le bon produit à modifier
+    //             if (
+    //                 item.itemId === quantityInput.dataset.id &&
+    //                 item.itemColor === quantityInput.dataset.color
+    //             ) {
+    //                 if (!(quantityInput == "" || quantityInput <= 0 || quantityInput > 100)) {
+    //                     // Ancienne quantité remplacée par la nouvelle
+    //                     item.itemQuantity = e.target.value;
+    //                     // Ecraser l'ancien panier avec le nouveau
+    //                     localStorage.cart = JSON.stringify(newCart);
+    //                     // Changer la value dans le DOM
+    //                     quantityInput.value = e.target.value;
+    //                     // Actualiser les totaux SANS reload ou AVEC reload ?
+    //                     alert("Quantité modifiée avec succès");
+    //                 }
+    //                 else {
+    //                     alert("Cette quantité n'est pas valide");
+    //                     return
+    //                 }
+    //             }
+    //         }
+    //     })
+    // })
 }
 
 

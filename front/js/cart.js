@@ -140,6 +140,7 @@ const createArticle = async () => {
 
                 totalCart(cartTotalPrice, cartTotalQuantity);
                 changeQuantity();
+                
             })
         })
     }
@@ -189,7 +190,7 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Modifier la quantité d'un produit
 // ************************************************
 
-function changeQuantity() {
+const changeQuantity = () => {
     // Sélectionner les inputs
     const quantityInput = document.querySelectorAll(".itemQuantity");
     // Pour chaque input...
@@ -205,7 +206,7 @@ function changeQuantity() {
             let selectedProduct = cart.find(item => item.itemId === targetArticle.dataset.id && item.itemColor === targetArticle.dataset.color);
             // SI : input est une quantité valide (même conditions que product.js)
             if (newQuantity > 0 && newQuantity <= 100 && Number.isInteger(newQuantity)) {
-                // Convertir la string 
+                // Convertir la string de l'input
                 parseNewQuantity = parseInt(newQuantity);
                 // Ecraser l'ancienne quantité avec la nouvelle
                 selectedProduct.itemQuantity = parseNewQuantity;
@@ -214,10 +215,13 @@ function changeQuantity() {
                 // FAIRE SANS REACTUALISER LA PAGE !!!
                 location.reload()
             }
+            else {
+                alert("Veuillez indiquer une quantité valide (entre 0 et 100).")
+                return;
+            }
         })
     })
 }
-
 
 // ************************************************
 // Validation du formulaire

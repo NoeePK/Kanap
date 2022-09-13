@@ -11,7 +11,7 @@ const article = document.querySelectorAll('.cart__item');
 
 // Les boutons
 const deleteBtn = document.querySelectorAll(".deleteItem");
-const quantityInput = document.querySelectorAll(".itemQuantity");
+
 const orderBtn = document.getElementById("order");
 
 // Variables pour les totaux
@@ -139,6 +139,7 @@ const createArticle = async () => {
                 section.appendChild(article);
 
                 totalCart(cartTotalPrice, cartTotalQuantity);
+                changeQuantity();
             })
         })
     }
@@ -181,60 +182,42 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Supprimer un produit
 // ************************************************
 
-// Essai 9 : let
-
-// Pour chaque bouton "supprimer"...
-for (let selectedBtn = 0; selectedBtn < deleteBtn.length; selectedBtn++) {
-    // ... écouter le clic sur le bouton
-    deleteBtn[selectedBtn].addEventListener("click", function () {
-        console.log("Clic effectué");
-        // Récupérer les bons id et couleur
-        let itemIdToDelete = cart[selectedBtn].itemId;
-        console.log(itemIdToDelete);
-        let itemColorToDelete = cart[selectedBtn].itemColor;
-        // Créer un nouveau panier avec les produits à garder
-        const newCart = cart.filter(el => el.itemId !== itemIdToDelete && el.itemColor !== itemColorToDelete);
-        // Ecraser l'ancien panier avec le nouveau
-        localStorage.setItem("product", JSON.stringify(newCart));
-        // Prévenir l'utilisateur et actualiser la page
-        alert("Suppression effectuée.");
-        location.reload();
-    })
-}
+// Essai 11 : 
 
 
 // ************************************************
 // Modifier la quantité d'un produit
 // ************************************************
 
-const changeQuantity = () => {
-    // Pour chaque élément input du DOM...
-    for (let i = 0; i < quantityInput.length; i++) {
-        // ... ajouter un eventListener "change"
-        quantityInput[i].addEventListener("change", function () {
-            // Récupérer l'ancienne quantité
-            const pastQuantity = cart[i].itemQuantity;
-            console.log(pastQuantity);
-            // Récupérer la nouvelle quantité sous forme de nombre
-            const newQuantity = Number(quantityInput[i]);
-            console.log(newQuantity);
-
-            // Vérifier que la nouvelle quantité est valide :
-            if (!(newQuantity < 0 || newQuantity > 100 || newQuantity == "")) {
-                cart[i].itemQuantity = newQuantity;
+function changeQuantity() {
+    // Sélectionner les inputs
+    const quantityInput = document.querySelectorAll(".itemQuantity");
+    // Pour chaque input...
+    quantityInput.forEach((element) => {
+        // ... ajouter l'eventListener "change"
+        element.addEventListener("change", (event) => {
+            event.preventDefault();
+            // Nouvelle quantité = quantité entrée dans l'input
+            newQuantity = Number(element.value);
+            // Sélectionner l'article du DOM à modifier
+            let targetArticle = element.closest('article');
+            // Sélectionner le produit à modifier (id et couleur identiques)
+            let selectedProduct = cart.find(item => item.itemId === targetArticle.dataset.id && item.itemColor === targetArticle.dataset.color);
+            // SI : input est une quantité valide (même conditions que product.js)
+            if (newQuantity > 0 && newQuantity <= 100 && Number.isInteger(newQuantity)) {
+                // Convertir la string 
+                parseNewQuantity = parseInt(newQuantity);
+                // Ecraser l'ancienne quantité avec la nouvelle
+                selectedProduct.itemQuantity = parseNewQuantity;
+                // Enregistrer les modifications dans le localStorage
                 localStorage.setItem("product", JSON.stringify(cart));
-                totalCart(cartTotalPrice, cartTotalQuantity);
-                location.reload();
-            }
-            else {
-                alert("Veuillez choisir une quantité valide (entre 1 et 100");
-                return;
+                // FAIRE SANS REACTUALISER LA PAGE !!!
+                location.reload()
             }
         })
-    }
+    })
 }
 
-changeQuantity();
 
 // ************************************************
 // Validation du formulaire

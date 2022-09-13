@@ -8,9 +8,11 @@ let cart = JSON.parse(localStorage.getItem('product'));
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
 const article = document.querySelectorAll('.cart__item');
+const priceSpan = document.getElementById("totalPrice");
+const quantitySpan = document.getElementById("totalQuantity");
 
 // Les boutons
-const deleteBtn = document.querySelectorAll(".deleteItem");
+
 
 const orderBtn = document.getElementById("order");
 
@@ -140,7 +142,7 @@ const createArticle = async () => {
 
                 totalCart(cartTotalPrice, cartTotalQuantity);
                 changeQuantity();
-                
+                deleteProduct();
             })
         })
     }
@@ -153,11 +155,8 @@ console.table(cart);
 // Afficher les totaux
 // ************************************************
 
-// Total pour chaque article selon la quantité :
+// Totaux prix et quantité initiaux
 const totalCart = (cartTotalPrice, cartTotalQuantity) => {
-    const priceSpan = document.getElementById("totalPrice");
-    const quantitySpan = document.getElementById("totalQuantity");
-
     // Initialisation des variables
     let totalPrice = 0;
     let totalQuantity = 0;
@@ -179,11 +178,79 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
     quantitySpan.innerText = totalQuantity;
 };
 
+// Totaux prix et quantité modifiés
+const updateTotalCart = () => {
+    // Initialisation des variables
+let newCartTotalQuantity = 0;
+let newCartTotalPrice = 0;
+
+// Pour chaque produit dans l'array
+for (const item of cart) {
+    // Additionner l'ancienne quantité et la nouvelle
+    newCartTotalQuantity += parseInt(item.itemQuantity);
+}
+
+// Pour chaque produit dans le panier
+for(const item of cart) {
+    // Raccourcis
+    const targetId = item.itemId;
+    const targetQuantity = item.itemQuantity;
+    // Sélectionner le bon produit
+    const findTarget = cart.find((product) => product._id === targetId);
+    // SI : c'est le bon produit
+    if(targetId) {
+        // Nouveau total = prix unitaire * quantité sélectionnée
+        const newTotalPrice = targetId.price * targetQuantity;
+        // Additionner chaque total de produit
+        newCartTotalPrice += newTotalPrice;
+    }
+}
+
+// Afficher les totaux à leur place
+quantitySpan.innerText = newCartTotalQuantity;
+priceSpan.innerText = newCartTotalPrice;
+
+}
+
+
+
 // ************************************************
 // Supprimer un produit
 // ************************************************
 
 // Essai 11 : 
+
+const deleteProduct = () => {
+    const deleteBtn = document.querySelectorAll(".deleteItem");
+    deleteBtn.forEach((element) => {
+        element.addEventListener("click", (event) => {
+            event.preventDefault();
+            // Sélectionner l'article du DOM à modifier
+            let targetArticle = element.closest('article');
+            cart = cart.filter(item => item.itemId !== targetArticle.dataset.id || item.itemColor !== targetArticle.dataset.itemColor);
+            // Ecraser l'ancien panier avec le panier modifié
+            localStorage.setItem("product", JSON.stringify(cart));
+
+            // Supprimer "article" de "section" dans le DOM
+            section.removeChild(targetArticle);
+
+            // // SI : panier est vide ou n'existe pas...
+            // if (cart === null || !cart) {
+            //     // ... afficher ce nouveau titre h1
+            //     emptyCart.innerText = "Votre panier est vide";
+            //     // Afficher 0 pour tous les totaux
+            //     let cartTotalPrice = 0;
+            //     let cartTotalQuantity = 0;
+            //     totalCart(cartTotalPrice, cartTotalQuantity);
+            // }
+            // else {
+            //     cartTotalPrice = cartTotalPrice 
+            //     totalCart()
+            // }
+
+        })
+    })
+}
 
 
 // ************************************************

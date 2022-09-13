@@ -7,13 +7,10 @@ let cart = JSON.parse(localStorage.getItem('product'));
 // Sélection des parties du DOM
 const emptyCart = document.querySelector('h1');
 const section = document.getElementById('cart__items');
-const article = document.querySelectorAll('.cart__item');
 const priceSpan = document.getElementById("totalPrice");
 const quantitySpan = document.getElementById("totalQuantity");
 
 // Les boutons
-
-
 const orderBtn = document.getElementById("order");
 
 // Variables pour les totaux
@@ -162,13 +159,13 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
     let totalQuantity = 0;
 
     // Pour chaque prix dans l'array 
-    for (price of cartTotalPrice) {
+    for (const price of cartTotalPrice) {
         // Additionner
         totalPrice += price;
     }
 
     // Pour chaque quantité dans l'array
-    for (quantity of cartTotalQuantity) {
+    for (const quantity of cartTotalQuantity) {
         // Additionner
         totalQuantity += quantity;
     }
@@ -181,35 +178,29 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Totaux prix et quantité modifiés
 const updateTotalCart = () => {
     // Initialisation des variables
-let newCartTotalQuantity = 0;
-let newCartTotalPrice = 0;
+    let newCartTotalQuantity = 0;
+    let newCartTotalPrice = 0;
 
-// Pour chaque produit dans l'array
-for (const item of cart) {
-    // Additionner l'ancienne quantité et la nouvelle
-    newCartTotalQuantity += parseInt(item.itemQuantity);
-}
-
-// Pour chaque produit dans le panier
-for(const item of cart) {
-    // Raccourcis
-    const targetId = item.itemId;
-    const targetQuantity = item.itemQuantity;
-    // Sélectionner le bon produit
-    const findTarget = cart.find((product) => product._id === targetId);
-    // SI : c'est le bon produit
-    if(targetId) {
-        // Nouveau total = prix unitaire * quantité sélectionnée
-        const newTotalPrice = targetId.price * targetQuantity;
-        // Additionner chaque total de produit
-        newCartTotalPrice += newTotalPrice;
+    // Pour chaque produit dans le panier
+    for (const item of cart) {
+        // Additionner l'ancienne quantité et la nouvelle
+        newCartTotalQuantity += parseInt(item.itemQuantity);
+        // Raccourcis
+        const targetId = item.itemId;
+        const targetQuantity = item.itemQuantity;
+        // Sélectionner le bon produit
+        const findTarget = cart.find((product) => product._id === targetId);
+        // SI : c'est le bon produit
+        if (findTarget) {
+            // Nouveau total = prix unitaire * quantité sélectionnée
+            const newTotalPrice = findTarget.price * targetQuantity;
+            // Additionner chaque total de produit
+            newCartTotalPrice += newTotalPrice;
+        }
+        // Afficher les totaux à leur place
+        quantitySpan.innerText = newCartTotalQuantity;
+        priceSpan.innerText = newCartTotalPrice;
     }
-}
-
-// Afficher les totaux à leur place
-quantitySpan.innerText = newCartTotalQuantity;
-priceSpan.innerText = newCartTotalPrice;
-
 }
 
 
@@ -233,6 +224,7 @@ const deleteProduct = () => {
 
             // Supprimer "article" de "section" dans le DOM
             section.removeChild(targetArticle);
+            updateTotalCart();
 
             // // SI : panier est vide ou n'existe pas...
             // if (cart === null || !cart) {
@@ -266,7 +258,7 @@ const changeQuantity = () => {
         element.addEventListener("change", (event) => {
             event.preventDefault();
             // Nouvelle quantité = quantité entrée dans l'input
-            newQuantity = Number(element.value);
+            const newQuantity = Number(element.value);
             // Sélectionner l'article du DOM à modifier
             let targetArticle = element.closest('article');
             // Sélectionner le produit à modifier (id et couleur identiques)
@@ -274,13 +266,13 @@ const changeQuantity = () => {
             // SI : input est une quantité valide (même conditions que product.js)
             if (newQuantity > 0 && newQuantity <= 100 && Number.isInteger(newQuantity)) {
                 // Convertir la string de l'input
-                parseNewQuantity = parseInt(newQuantity);
+                const parseNewQuantity = parseInt(newQuantity);
                 // Ecraser l'ancienne quantité avec la nouvelle
                 selectedProduct.itemQuantity = parseNewQuantity;
                 // Enregistrer les modifications dans le localStorage
                 localStorage.setItem("product", JSON.stringify(cart));
-                // FAIRE SANS REACTUALISER LA PAGE !!!
-                location.reload()
+                updateTotalCart();
+            
             }
             else {
                 alert("Veuillez indiquer une quantité valide (entre 0 et 100).")
@@ -364,5 +356,6 @@ const order = async () => {
     })
 }
 
+order();
 
 // SI : form valide => post order

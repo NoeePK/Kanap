@@ -141,6 +141,7 @@ const createArticle = async () => {
                 changeQuantity();
                 deleteProduct();
             })
+            
         })
     }
 };
@@ -183,19 +184,20 @@ const updateTotalCart = () => {
 
     // Pour chaque produit dans le panier
     for (const item of cart) {
-        // Additionner l'ancienne quantité et la nouvelle
-        newCartTotalQuantity += parseInt(item.itemQuantity);
-        // Raccourcis
+        // Viser l'id et la quantité
         const targetId = item.itemId;
-        const targetQuantity = item.itemQuantity;
-        // Sélectionner le bon produit
+        const targetQuantity = parseInt(item.itemQuantity);
         const findTarget = cart.find((product) => product._id === targetId);
+
+        // Additionner l'ancienne quantité et la nouvelle
+        newCartTotalQuantity += targetQuantity;
+
         // SI : c'est le bon produit
         if (findTarget) {
             // Nouveau total = prix unitaire * quantité sélectionnée
             const newTotalPrice = findTarget.price * targetQuantity;
             // Additionner chaque total de produit
-            newCartTotalPrice += newTotalPrice;
+            newCartTotalPrice += parseInt(newTotalPrice);
         }
         // Afficher les totaux à leur place
         quantitySpan.innerText = newCartTotalQuantity;
@@ -271,8 +273,9 @@ const changeQuantity = () => {
                 selectedProduct.itemQuantity = parseNewQuantity;
                 // Enregistrer les modifications dans le localStorage
                 localStorage.setItem("product", JSON.stringify(cart));
+                // Comment update les totaux sans reload ?
                 updateTotalCart();
-            
+
             }
             else {
                 alert("Veuillez indiquer une quantité valide (entre 0 et 100).")

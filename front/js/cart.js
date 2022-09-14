@@ -47,7 +47,7 @@ const emptyCart = () => {
     emptyCartMessage.innerText = "Votre panier est vide";
     priceSpan.innerText = 0;
     quantitySpan.innerText = 0;
-}
+};
 
 // Totaux prix et quantité initiaux
 const totalCart = (cartTotalPrice, cartTotalQuantity) => {
@@ -125,7 +125,7 @@ const updateTotalCart = () => {
             priceSpan.innerText = totalPrice;
         })
     }
-}
+};
 
 // ************************************************
 // Afficher les cartes produit
@@ -314,10 +314,6 @@ const changeQuantity = () => {
 // Validation du formulaire
 // ************************************************
 
-// Regex
-const noNumberRegex = /^[a-zA-Z '-,]{1,31}$/i;
-const emailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
-
 // Récupérer la valeur des inputs
 const firstNameInput = document.getElementById('firstName').value;
 const lastNameInput = document.getElementById('lastName').value;
@@ -325,17 +321,9 @@ const addressInput = document.getElementById('address').value;
 const cityInput = document.getElementById('city').value;
 const emailInput = document.getElementById('email').value;
 
-// Emplacement des messages d'erreur (messageSpot)
-const firstNameErr = document.getElementById('firstNameErrorMsg');
-const lastNameErr = document.getElementById('lastNameErrorMsg');
-// const addressErr = document.getElementById('addressErrorMsg');
-const cityErr = document.getElementById('cityErrorMsg');
-const emailErr = document.getElementById('emailErrorMsg');
-
-// Messages d'erreur
-const nameErrorMessage = "Veuillez indiquer un nom valide";
-// const addressErrorMessage = "Veuillez indiquer une adresse valide";
-const emailErrorMessage = "Veuillez indiquer une adresse email valide";
+// Regex
+const noNumberRegex = /^[a-zA-Z '-,]{1,31}$/i;
+const emailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 
 // Type d'erreur
 let firstNameNotValid;
@@ -344,7 +332,20 @@ let addressNotValid;
 let cityNotValid;
 let emailNotValid;
 
-// Vérification des inputs
+// Messages d'erreur
+const nameErrorMessage = "Veuillez indiquer un nom valide";
+// const addressErrorMessage = "Veuillez indiquer une adresse valide";
+const emailErrorMessage = "Veuillez indiquer une adresse email valide";
+
+// Emplacement des messages d'erreur (messageSpot)
+const firstNameErr = document.getElementById('firstNameErrorMsg');
+const lastNameErr = document.getElementById('lastNameErrorMsg');
+// const addressErr = document.getElementById('addressErrorMsg');
+const cityErr = document.getElementById('cityErrorMsg');
+const emailErr = document.getElementById('emailErrorMsg');
+
+
+// Fonction pour vérifier les inputs (refactoring)
 const checkForm = (input, regex, error, message, messageSpot) => {
     input.addEventListener("change", function () {
         let checkInput = regex.test(input);
@@ -358,6 +359,7 @@ const checkForm = (input, regex, error, message, messageSpot) => {
     })
 };
 
+// Vérification de tous les inputs
 checkForm(firstNameInput, noNumberRegex, firstNameNotValid, nameErrorMessage, firstNameErr);
 checkForm(lastNameInput, noNumberRegex, lastNameNotValid, nameErrorMessage, lastNameErr);
 // checkForm(addressInput, regex, addressNotValid, addressErrorMessage, addressErr);

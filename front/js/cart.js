@@ -1,5 +1,5 @@
 // updateTotalCart :comment sortir l'addition de la boucle ?
-
+// Quel regex pour adresse ?
 
 // ************************************************
 // Variables
@@ -308,7 +308,7 @@ const changeQuantity = () => {
             }
         })
     })
-}
+};
 
 // ************************************************
 // Validation du formulaire
@@ -317,29 +317,34 @@ const changeQuantity = () => {
 // Regex
 const noNumberRegex = /^[a-zA-Z '-,]{1,31}$/i;
 const emailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
-// DELPHINE : est-ce qu'il faut un regex pour l'adresse ?
 
-// Récupérer les inputs
+// Récupérer la valeur des inputs
 const firstNameInput = document.getElementById('firstName').value;
 const lastNameInput = document.getElementById('lastName').value;
 const addressInput = document.getElementById('address').value;
 const cityInput = document.getElementById('city').value;
 const emailInput = document.getElementById('email').value;
 
-// Emplacement des messages d'erreur
+// Emplacement des messages d'erreur (messageSpot)
 const firstNameErr = document.getElementById('firstNameErrorMsg');
 const lastNameErr = document.getElementById('lastNameErrorMsg');
-const addressErr = document.getElementById('addressErrorMsg');
+// const addressErr = document.getElementById('addressErrorMsg');
 const cityErr = document.getElementById('cityErrorMsg');
 const emailErr = document.getElementById('emailErrorMsg');
 
 // Messages d'erreur
 const nameErrorMessage = "Veuillez indiquer un nom valide";
+// const addressErrorMessage = "Veuillez indiquer une adresse valide";
 const emailErrorMessage = "Veuillez indiquer une adresse email valide";
 
+// Type d'erreur
+let firstNameNotValid;
+let lastNameNotValid;
+let addressNotValid;
+let cityNotValid;
+let emailNotValid;
 
 // Vérification des inputs
-
 const checkForm = (input, regex, error, message, messageSpot) => {
     input.addEventListener("change", function () {
         let checkInput = regex.test(input);
@@ -351,20 +356,17 @@ const checkForm = (input, regex, error, message, messageSpot) => {
             messageSpot.innerText = message;
         }
     })
-}
+};
 
 checkForm(firstNameInput, noNumberRegex, firstNameNotValid, nameErrorMessage, firstNameErr);
 checkForm(lastNameInput, noNumberRegex, lastNameNotValid, nameErrorMessage, lastNameErr);
-checkForm(addressInput, regex, addressNotValid, message, addressErr);
+// checkForm(addressInput, regex, addressNotValid, addressErrorMessage, addressErr);
 checkForm(cityInput, noNumberRegex, cityNotValid, nameErrorMessage, cityErr);
 checkForm(emailInput, emailRegex, emailNotValid, emailErrorMessage, emailErr);
 
-
-
-
-// // ************************************************
-// // Commander
-// // ************************************************
+// ************************************************
+// Commander
+// ************************************************
 
 const order = async () => {
     orderBtn.addEventListener("click", (event) => {
@@ -396,6 +398,7 @@ const order = async () => {
                 // ... mettre son id dans le tableau
                 productID.push(item.itemId);
             });
+
             // Voir si ça fonctionne :
             console.log(productID);
             console.log(contact);
@@ -413,19 +416,10 @@ const order = async () => {
             alert("Commande effectuée avec succès");
             // Envoyer la fiche contact et le tableau de la commande
 
-
-
         }
 
-
-
-
-
-    }
-        
-    })
+    }) 
 }
-
 order();
 
 // SI : form valide => post order

@@ -1,3 +1,6 @@
+// updateTotalCart :comment sortir l'addition de la boucle ?
+
+
 // ************************************************
 // Variables
 // ************************************************
@@ -63,7 +66,7 @@ const createArticle = async () => {
             // Promesse : résolution (avec .then)
             data.then((productDetails) => {
                 // Prix unitaire de chaque produit
-                const price = Number(productDetails.price);
+                const price = parseInt(productDetails.price);
                 // Prix total de chaque produit
                 const totalPrice = price * itemQuantity;
                 // Push des totaux pour calculer totalCart()
@@ -141,7 +144,7 @@ const createArticle = async () => {
                 changeQuantity();
                 deleteProduct();
             })
-            
+
         })
     }
 };
@@ -179,29 +182,57 @@ const totalCart = (cartTotalPrice, cartTotalQuantity) => {
 // Totaux prix et quantité modifiés
 const updateTotalCart = () => {
     // Initialisation des variables
-    let newCartTotalQuantity = 0;
-    let newCartTotalPrice = 0;
+    let cartTotalQuantity = [];
+    let cartTotalPrice = [];
+    let totalQuantity = 0;
+    let totalPrice = 0;
 
     // Pour chaque produit dans le panier
     for (const item of cart) {
         // Viser l'id et la quantité
         const targetId = item.itemId;
         const targetQuantity = parseInt(item.itemQuantity);
-        const findTarget = cart.find((product) => product._id === targetId);
 
-        // Additionner l'ancienne quantité et la nouvelle
-        newCartTotalQuantity += targetQuantity;
+        // Promesse : initialisation (avec l'id sélectionné)
+        const data = fetchProducts(targetId);
+        // Promesse : résolution (avec .then)
+        data.then((productDetails) => {
+            // Prix unitaire de chaque produit
+            const targetPrice = parseInt(productDetails.price);
+            // Prix total de chaque produit selon leur quantité
+            const newTotalPrice = targetPrice * targetQuantity;
+            // Push des totaux dans les array des totaux
+            cartTotalQuantity.push(targetQuantity);
+            cartTotalPrice.push(newTotalPrice);
 
-        // SI : c'est le bon produit
-        if (findTarget) {
-            // Nouveau total = prix unitaire * quantité sélectionnée
-            const newTotalPrice = findTarget.price * targetQuantity;
-            // Additionner chaque total de produit
-            newCartTotalPrice += parseInt(newTotalPrice);
-        }
-        // Afficher les totaux à leur place
-        quantitySpan.innerText = newCartTotalQuantity;
-        priceSpan.innerText = newCartTotalPrice;
+            console.log(targetId);
+            console.log("Quantité du produit : " + targetQuantity);
+            console.log("Prix unitaire du produit : " + targetPrice);
+            console.log("Total pour ce produit : " + newTotalPrice);
+
+            // Pour chaque quantité dans l'array
+            for (const quantity of cartTotalQuantity) {
+                // Additionner
+                totalQuantity += quantity;
+            }
+
+            // Pour chaque prix dans l'array 
+            for (const price of cartTotalPrice) {
+                // Additionner
+                totalPrice += price;
+            }
+
+            console.log("Array de toutes les quantité à additionner : " + cartTotalQuantity);
+            console.log("Array de tous les prix à additionner : " + cartTotalPrice);
+            console.log("Prix total : " + totalPrice);
+            console.log("Quantité totale : " + totalQuantity);
+
+            // Afficher les totaux à leur place
+            quantitySpan.innerText = totalQuantity;
+            priceSpan.innerText = totalPrice;
+
+
+        })
     }
 }
 

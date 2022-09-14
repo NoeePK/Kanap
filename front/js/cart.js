@@ -314,9 +314,17 @@ const changeQuantity = () => {
 // Validation du formulaire
 // ************************************************
 
-// // Regex
+// Regex
 const noNumberRegex = /^[a-zA-Z '-,]{1,31}$/i;
 const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
+// DELPHINE : est-ce qu'il faut un regex pour l'adresse ?
+
+// Emplacement des inputs
+const firstNameInput = document.getElementById('firstName');
+const lastNameInput = document.getElementById('lastName');
+const addressInput = document.getElementById('address');
+const cityInput = document.getElementById('city');
+const emailInput = document.getElementById('email');
 
 // Emplacement des messages d'erreur
 const firstNameErr = document.getElementById('firstNameErrorMsg');
@@ -324,6 +332,13 @@ const lastNameErr = document.getElementById('lastNameErrorMsg');
 const addressErr = document.getElementById('addressErrorMsg');
 const cityErr = document.getElementById('cityErrorMsg');
 const emailErr = document.getElementById('emailErrorMsg');
+
+// Vérification des inputs
+ 
+firstNameInput.addEventListener('change', function() {
+    
+})
+
 
 
 

@@ -8,15 +8,13 @@
 let cart = JSON.parse(localStorage.getItem('product'));
 
 // Sélection des parties du DOM
-const emptyCart = document.querySelector('h1');
+
 const section = document.getElementById('cart__items');
 const priceSpan = document.getElementById("totalPrice");
 const quantitySpan = document.getElementById("totalQuantity");
-
-// Les boutons
 const orderBtn = document.getElementById("order");
 
-// Variables pour les totaux
+// Array pour les totaux
 let cartTotalPrice = [];
 let cartTotalQuantity = [];
 
@@ -42,15 +40,18 @@ const fetchProducts = async (id) => {
 // Afficher les cartes produit
 // ************************************************
 
+const emptyCart = () => {
+    const emptyCartMessage = document.querySelector('h1');
+    // ... afficher ce nouveau titre h1
+        emptyCartMessage.innerText = "Votre panier est vide";
+        priceSpan.innerText = 0;
+        quantitySpan.innerText = 0;
+}
+
 const createArticle = async () => {
     // SI : panier est vide ou n'existe pas...
-    if (cart === null || !cart) {
-        // ... afficher ce nouveau titre h1
-        emptyCart.innerText = "Votre panier est vide";
-        // Afficher 0 pour tous les totaux
-        let cartTotalPrice = 0;
-        let cartTotalQuantity = 0;
-        totalCart(cartTotalPrice, cartTotalQuantity);
+    if (cart === null || !cart || cart.length === 0) {
+        emptyCart();
     }
     // SINON : afficher les produits présents dans le panier
     else {
@@ -230,13 +231,9 @@ const updateTotalCart = () => {
             // Afficher les totaux à leur place
             quantitySpan.innerText = totalQuantity;
             priceSpan.innerText = totalPrice;
-
-
         })
     }
 }
-
-
 
 // ************************************************
 // Supprimer un produit
@@ -246,33 +243,33 @@ const updateTotalCart = () => {
 
 const deleteProduct = () => {
     const deleteBtn = document.querySelectorAll(".deleteItem");
+    // Pour chaque bouton "supprimer"
     deleteBtn.forEach((element) => {
+        // Ecouter l'événement "clic"
         element.addEventListener("click", (event) => {
             event.preventDefault();
             // Sélectionner l'article du DOM à modifier
             let targetArticle = element.closest('article');
-            cart = cart.filter(item => item.itemId !== targetArticle.dataset.id || item.itemColor !== targetArticle.dataset.itemColor);
+            // Récupérer uniquement les produits à garder
+            cart = cart.filter(item => item.itemId !== targetArticle.dataset.id && item.itemColor !== targetArticle.dataset.color);
             // Ecraser l'ancien panier avec le panier modifié
             localStorage.setItem("product", JSON.stringify(cart));
 
             // Supprimer "article" de "section" dans le DOM
             section.removeChild(targetArticle);
             updateTotalCart();
+            console.table(cart);
 
-            // // SI : panier est vide ou n'existe pas...
-            // if (cart === null || !cart) {
-            //     // ... afficher ce nouveau titre h1
-            //     emptyCart.innerText = "Votre panier est vide";
-            //     // Afficher 0 pour tous les totaux
-            //     let cartTotalPrice = 0;
-            //     let cartTotalQuantity = 0;
-            //     totalCart(cartTotalPrice, cartTotalQuantity);
-            // }
-            // else {
-            //     cartTotalPrice = cartTotalPrice 
-            //     totalCart()
-            // }
-
+            // SI : panier contient encore des produits...
+            if (!(cart === null || !cart || cart.length === 0)) {
+                // Mettre les totaux à jour
+                updateTotalCart();
+            }
+            // SI : panier est vide...
+            else {
+                // Afficher le message et mettre les totaux à 0
+                emptyCart();
+            }
         })
     })
 }

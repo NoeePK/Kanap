@@ -44,9 +44,9 @@ const fetchProducts = async (id) => {
 const emptyCart = () => {
     const emptyCartMessage = document.querySelector('h1');
     // ... afficher ce nouveau titre h1
-        emptyCartMessage.innerText = "Votre panier est vide";
-        priceSpan.innerText = 0;
-        quantitySpan.innerText = 0;
+    emptyCartMessage.innerText = "Votre panier est vide";
+    priceSpan.innerText = 0;
+    quantitySpan.innerText = 0;
 }
 
 // Totaux prix et quantité initiaux
@@ -319,12 +319,12 @@ const noNumberRegex = /^[a-zA-Z '-,]{1,31}$/i;
 const emailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 // DELPHINE : est-ce qu'il faut un regex pour l'adresse ?
 
-// Emplacement des inputs
-const firstNameInput = document.getElementById('firstName');
-const lastNameInput = document.getElementById('lastName');
-const addressInput = document.getElementById('address');
-const cityInput = document.getElementById('city');
-const emailInput = document.getElementById('email');
+// Récupérer les inputs
+const firstNameInput = document.getElementById('firstName').value;
+const lastNameInput = document.getElementById('lastName').value;
+const addressInput = document.getElementById('address').value;
+const cityInput = document.getElementById('city').value;
+const emailInput = document.getElementById('email').value;
 
 // Emplacement des messages d'erreur
 const firstNameErr = document.getElementById('firstNameErrorMsg');
@@ -341,17 +341,16 @@ const emailErrorMessage = "Veuillez indiquer une adresse email valide";
 // Vérification des inputs
 
 const checkForm = (input, regex, error, message, messageSpot) => {
-   input.addEventListener("change", function() {
-    let checkInput = regex.test(input.value);
-    if(checkInput) {
-        error = false;
-    }
-    else {
-        error = true;
-        messageSpot.innerText = message;
-    }
-
-   }) 
+    input.addEventListener("change", function () {
+        let checkInput = regex.test(input);
+        if (checkInput) {
+            error = false;
+        }
+        else {
+            error = true;
+            messageSpot.innerText = message;
+        }
+    })
 }
 
 checkForm(firstNameInput, noNumberRegex, firstNameNotValid, nameErrorMessage, firstNameErr);
@@ -368,22 +367,28 @@ checkForm(emailInput, emailRegex, emailNotValid, emailErrorMessage, emailErr);
 // // ************************************************
 
 const order = async () => {
-    orderBtn.addEventListener("click", () => {
-        // Récupérer la fiche contact :
-        let contact = {
-            firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value,
-            address: document.getElementById("address").value,
-            city: document.getElementById("city").value,
-            email: document.getElementById("email").value
-        };
-        // SI : regex sont respectés...
-        if (
-            (noNumberRegex.test(contact.firstName) == true) &
-            (noNumberRegex.test(contact.lastName) == true) &
-            (noNumberRegex.test(contact.city) == true) &
-            (mailRegex.test(contact.email) == true)
-        ) {
+    orderBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        // SI : panier est vide
+        if (cart === null || !cart || cart.length === 0) {
+            alert("Veuillez remplir votre panier avant de passer commande.");
+        }
+        // SINON : panier est rempli
+        // SI : les inputs sont vides
+        else if (!firstNameInput || !lastNameInput || !addressInput || !cityInput || !emailInput) {
+            // Avertir l'utilisateur de son oubli
+            alert("Veuillez remplir tous les champs du formulaire.");
+            // Empêcher l'envoi du formulaire
+            event.preventDefault();
+        }
+        // SINON : les inputs sont remplis
+        // SI : les regex ne sont pas respectés
+        else if (firstNameNotValid === true || lastNameNotValid === true || addressNotValid === true || cityNotValid === true || emailNotValid === true) {
+            alert("Veuillez remplir tous les champs du formulaire.");
+            event.preventDefault();
+        }
+        // SINON : les regex sont respectés
+        else {
             // ...  créer un tableau pour y mettre les produits...
             let productID = [];
             //Pour chaque produit dans le panier...
@@ -395,28 +400,29 @@ const order = async () => {
             console.log(productID);
             console.log(contact);
 
+            // Récupérer la fiche contact :
+            let contact = {
+                firstName: firstNameInput,
+                lastName: lastNameInput,
+                address: addressInput,
+                city: cityInput,
+                email: emailInput
+            };
+
             // Afficher un message de succès :
             alert("Commande effectuée avec succès");
             // Envoyer la fiche contact et le tableau de la commande
 
 
+
         }
-        // SINON : regex ne sont pas respectés
-        else if (noNumberRegex.test(contact.firstName) == false) {
-            firstNameErr.innerText = "Veuillez indiquer un nom valide.";
-        }
-        else if (noNumberRegex.test(contact.lastName) == false) {
-            lastNameErr.innerText = "Veuillez indiquer un nom valide.";
-        }
-        else if (noNumberRegex.test(contact.city) == false) {
-            cityErr.innerText = "Veuillez indiquer une ville valide.";
-        }
-        else if (mailRegex.test(contact.email) == false) {
-            emailErr.innerText = "Veuillez indiquer une adresse mail valide.";
-        }
-        else if (!(contact.address)) {
-            addressErr.innerText = "Veuillez remplir ce champ.";
-        }
+
+
+
+
+
+    }
+        
     })
 }
 

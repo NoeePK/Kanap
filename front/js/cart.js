@@ -316,7 +316,7 @@ const changeQuantity = () => {
 
 // Regex
 const noNumberRegex = /^[a-zA-Z '-,]{1,31}$/i;
-const mailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
+const emailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 // DELPHINE : est-ce qu'il faut un regex pour l'adresse ?
 
 // Emplacement des inputs
@@ -333,11 +333,32 @@ const addressErr = document.getElementById('addressErrorMsg');
 const cityErr = document.getElementById('cityErrorMsg');
 const emailErr = document.getElementById('emailErrorMsg');
 
+// Messages d'erreur
+const nameErrorMessage = "Veuillez indiquer un nom valide";
+const emailErrorMessage = "Veuillez indiquer une adresse email valide";
+
+
 // Vérification des inputs
- 
-firstNameInput.addEventListener('change', function() {
-    
-})
+
+const checkForm = (input, regex, error, message, messageSpot) => {
+   input.addEventListener("change", function() {
+    let checkInput = regex.test(input.value);
+    if(checkInput) {
+        error = false;
+    }
+    else {
+        error = true;
+        messageSpot.innerText = message;
+    }
+
+   }) 
+}
+
+checkForm(firstNameInput, noNumberRegex, firstNameNotValid, nameErrorMessage, firstNameErr);
+checkForm(lastNameInput, noNumberRegex, lastNameNotValid, nameErrorMessage, lastNameErr);
+checkForm(addressInput, regex, addressNotValid, message, addressErr);
+checkForm(cityInput, noNumberRegex, cityNotValid, nameErrorMessage, cityErr);
+checkForm(emailInput, emailRegex, emailNotValid, emailErrorMessage, emailErr);
 
 
 

@@ -37,9 +37,10 @@ const fetchProducts = async (id) => {
 };
 
 // ************************************************
-// Afficher les cartes produit
+// Afficher les totaux
 // ************************************************
 
+// Totaux panier vide + message
 const emptyCart = () => {
     const emptyCartMessage = document.querySelector('h1');
     // ... afficher ce nouveau titre h1
@@ -47,6 +48,88 @@ const emptyCart = () => {
         priceSpan.innerText = 0;
         quantitySpan.innerText = 0;
 }
+
+// Totaux prix et quantité initiaux
+const totalCart = (cartTotalPrice, cartTotalQuantity) => {
+    // Initialisation des variables
+    let totalPrice = 0;
+    let totalQuantity = 0;
+
+    // Pour chaque prix dans l'array 
+    for (const price of cartTotalPrice) {
+        // Additionner
+        totalPrice += price;
+    }
+
+    // Pour chaque quantité dans l'array
+    for (const quantity of cartTotalQuantity) {
+        // Additionner
+        totalQuantity += quantity;
+    }
+
+    // Afficher les totaux à leur place
+    priceSpan.innerText = totalPrice;
+    quantitySpan.innerText = totalQuantity;
+};
+
+// Totaux prix et quantité modifiés
+const updateTotalCart = () => {
+    // Initialisation des variables
+    let cartTotalQuantity = [];
+    let cartTotalPrice = [];
+    let totalQuantity = 0;
+    let totalPrice = 0;
+
+    // Pour chaque produit dans le panier
+    for (const item of cart) {
+        // Viser l'id et la quantité
+        const targetId = item.itemId;
+        const targetQuantity = parseInt(item.itemQuantity);
+
+        // Promesse : initialisation (avec l'id sélectionné)
+        const data = fetchProducts(targetId);
+        // Promesse : résolution (avec .then)
+        data.then((productDetails) => {
+            // Prix unitaire de chaque produit
+            const targetPrice = parseInt(productDetails.price);
+            // Prix total de chaque produit selon leur quantité
+            const newTotalPrice = targetPrice * targetQuantity;
+            // Push des totaux dans les array des totaux
+            cartTotalQuantity.push(targetQuantity);
+            cartTotalPrice.push(newTotalPrice);
+
+            console.log(targetId);
+            console.log("Quantité du produit : " + targetQuantity);
+            console.log("Prix unitaire du produit : " + targetPrice);
+            console.log("Total pour ce produit : " + newTotalPrice);
+
+            // Pour chaque quantité dans l'array
+            for (const quantity of cartTotalQuantity) {
+                // Additionner
+                totalQuantity += quantity;
+            }
+
+            // Pour chaque prix dans l'array 
+            for (const price of cartTotalPrice) {
+                // Additionner
+                totalPrice += price;
+            }
+
+            console.log("Array de toutes les quantité à additionner : " + cartTotalQuantity);
+            console.log("Array de tous les prix à additionner : " + cartTotalPrice);
+            console.log("Prix total : " + totalPrice);
+            console.log("Quantité totale : " + totalQuantity);
+
+            // Afficher les totaux à leur place
+            quantitySpan.innerText = totalQuantity;
+            priceSpan.innerText = totalPrice;
+        })
+    }
+}
+
+// ************************************************
+// Afficher les cartes produit
+// ************************************************
 
 const createArticle = async () => {
     // SI : panier est vide ou n'existe pas...
@@ -154,92 +237,8 @@ createArticle();
 console.table(cart);
 
 // ************************************************
-// Afficher les totaux
-// ************************************************
-
-// Totaux prix et quantité initiaux
-const totalCart = (cartTotalPrice, cartTotalQuantity) => {
-    // Initialisation des variables
-    let totalPrice = 0;
-    let totalQuantity = 0;
-
-    // Pour chaque prix dans l'array 
-    for (const price of cartTotalPrice) {
-        // Additionner
-        totalPrice += price;
-    }
-
-    // Pour chaque quantité dans l'array
-    for (const quantity of cartTotalQuantity) {
-        // Additionner
-        totalQuantity += quantity;
-    }
-
-    // Afficher les totaux à leur place
-    priceSpan.innerText = totalPrice;
-    quantitySpan.innerText = totalQuantity;
-};
-
-// Totaux prix et quantité modifiés
-const updateTotalCart = () => {
-    // Initialisation des variables
-    let cartTotalQuantity = [];
-    let cartTotalPrice = [];
-    let totalQuantity = 0;
-    let totalPrice = 0;
-
-    // Pour chaque produit dans le panier
-    for (const item of cart) {
-        // Viser l'id et la quantité
-        const targetId = item.itemId;
-        const targetQuantity = parseInt(item.itemQuantity);
-
-        // Promesse : initialisation (avec l'id sélectionné)
-        const data = fetchProducts(targetId);
-        // Promesse : résolution (avec .then)
-        data.then((productDetails) => {
-            // Prix unitaire de chaque produit
-            const targetPrice = parseInt(productDetails.price);
-            // Prix total de chaque produit selon leur quantité
-            const newTotalPrice = targetPrice * targetQuantity;
-            // Push des totaux dans les array des totaux
-            cartTotalQuantity.push(targetQuantity);
-            cartTotalPrice.push(newTotalPrice);
-
-            console.log(targetId);
-            console.log("Quantité du produit : " + targetQuantity);
-            console.log("Prix unitaire du produit : " + targetPrice);
-            console.log("Total pour ce produit : " + newTotalPrice);
-
-            // Pour chaque quantité dans l'array
-            for (const quantity of cartTotalQuantity) {
-                // Additionner
-                totalQuantity += quantity;
-            }
-
-            // Pour chaque prix dans l'array 
-            for (const price of cartTotalPrice) {
-                // Additionner
-                totalPrice += price;
-            }
-
-            console.log("Array de toutes les quantité à additionner : " + cartTotalQuantity);
-            console.log("Array de tous les prix à additionner : " + cartTotalPrice);
-            console.log("Prix total : " + totalPrice);
-            console.log("Quantité totale : " + totalQuantity);
-
-            // Afficher les totaux à leur place
-            quantitySpan.innerText = totalQuantity;
-            priceSpan.innerText = totalPrice;
-        })
-    }
-}
-
-// ************************************************
 // Supprimer un produit
 // ************************************************
-
-// Essai 11 : 
 
 const deleteProduct = () => {
     const deleteBtn = document.querySelectorAll(".deleteItem");
@@ -258,22 +257,20 @@ const deleteProduct = () => {
             // Supprimer "article" de "section" dans le DOM
             section.removeChild(targetArticle);
             updateTotalCart();
-            console.table(cart);
 
-            // SI : panier contient encore des produits...
+            // SI : panier contient encore des produits
             if (!(cart === null || !cart || cart.length === 0)) {
                 // Mettre les totaux à jour
                 updateTotalCart();
             }
-            // SI : panier est vide...
+            // SINON : panier est vide
             else {
                 // Afficher le message et mettre les totaux à 0
                 emptyCart();
             }
         })
     })
-}
-
+};
 
 // ************************************************
 // Modifier la quantité d'un produit

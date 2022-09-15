@@ -1,4 +1,4 @@
-// updateTotalCart :comment sortir l'addition de la boucle ?
+// totalCart :comment sortir l'addition de la boucle ?
 // Quel regex pour adresse ?
 
 // ************************************************
@@ -8,7 +8,6 @@
 let cart = JSON.parse(localStorage.getItem('product'));
 
 // Sélection des parties du DOM
-
 const section = document.getElementById('cart__items');
 const priceSpan = document.getElementById("totalPrice");
 const quantitySpan = document.getElementById("totalQuantity");
@@ -49,83 +48,70 @@ const emptyCart = () => {
     quantitySpan.innerText = 0;
 };
 
-// Totaux prix et quantité initiaux
-const totalCart = (cartTotalPrice, cartTotalQuantity) => {
-    // Initialisation des variables
-    let totalPrice = 0;
-    let totalQuantity = 0;
+// Totaux calculés en direct
+const totalCart = () => {
+    // Calculer les totaux
+    const computeTotalCart = (arrayTotal) => {
+        // Initialisation des variables
+        let cartTotalQuantity = [];
+        let cartTotalPrice = [];
 
-    // Pour chaque prix dans l'array 
-    for (const price of cartTotalPrice) {
-        // Additionner
-        totalPrice += price;
-    }
+        // Pour chaque produit dans le panier
+        for (const item of cart) {
+            // Viser l'id et la quantité
+            const targetId = item.itemId;
+            const targetQuantity = parseInt(item.itemQuantity);
 
-    // Pour chaque quantité dans l'array
-    for (const quantity of cartTotalQuantity) {
-        // Additionner
-        totalQuantity += quantity;
-    }
+            // Promesse : initialisation (avec l'id sélectionné)
+            const data = fetchProducts(targetId);
+            // Promesse : résolution (avec .then)
+            data.then((productDetails) => {
+                // Prix unitaire de chaque produit
+                const targetPrice = parseInt(productDetails.price);
+                // Prix total de chaque produit selon leur quantité
+                const newTotalPrice = targetPrice * targetQuantity;
+                // Push des totaux dans les array des totaux
+                cartTotalQuantity.push(targetQuantity);
+                cartTotalPrice.push(newTotalPrice);
 
-    // Afficher les totaux à leur place
-    priceSpan.innerText = totalPrice;
-    quantitySpan.innerText = totalQuantity;
-};
+                return arrayTotal;
+            })
+        }
+    };
 
-// Totaux prix et quantité modifiés
-const updateTotalCart = () => {
-    // Initialisation des variables
-    let cartTotalQuantity = [];
-    let cartTotalPrice = [];
-    let totalQuantity = 0;
-    let totalPrice = 0;
+    // Récupérer les totaux dans deux array
+    computeTotalCart(cartTotalPrice);
+    computeTotalCart(cartTotalQuantity);
 
-    // Pour chaque produit dans le panier
-    for (const item of cart) {
-        // Viser l'id et la quantité
-        const targetId = item.itemId;
-        const targetQuantity = parseInt(item.itemQuantity);
+    console.log("Array de tous les prix à additionner : " + cartTotalPrice);
+    console.log("Array de toutes les quantité à additionner : " + cartTotalQuantity);
 
-        // Promesse : initialisation (avec l'id sélectionné)
-        const data = fetchProducts(targetId);
-        // Promesse : résolution (avec .then)
-        data.then((productDetails) => {
-            // Prix unitaire de chaque produit
-            const targetPrice = parseInt(productDetails.price);
-            // Prix total de chaque produit selon leur quantité
-            const newTotalPrice = targetPrice * targetQuantity;
-            // Push des totaux dans les array des totaux
-            cartTotalQuantity.push(targetQuantity);
-            cartTotalPrice.push(newTotalPrice);
+    // Additionner et afficher les totaux
+    const displayTotalCart = (cartTotalPrice, cartTotalQuantity) => {
+        // Initialisation des variables
+        let totalPrice = 0;
+        let totalQuantity = 0;
 
-            console.log(targetId);
-            console.log("Quantité du produit : " + targetQuantity);
-            console.log("Prix unitaire du produit : " + targetPrice);
-            console.log("Total pour ce produit : " + newTotalPrice);
+        // Pour chaque prix dans l'array 
+        for (const price of cartTotalPrice) {
+            // Additionner
+            totalPrice += price;
+        }
 
-            // Pour chaque quantité dans l'array
-            for (const quantity of cartTotalQuantity) {
-                // Additionner
-                totalQuantity += quantity;
-            }
+        // Pour chaque quantité dans l'array
+        for (const quantity of cartTotalQuantity) {
+            // Additionner
+            totalQuantity += quantity;
+        }
 
-            // Pour chaque prix dans l'array 
-            for (const price of cartTotalPrice) {
-                // Additionner
-                totalPrice += price;
-            }
+        // Afficher les totaux à leur place
+        priceSpan.innerText = totalPrice;
+        quantitySpan.innerText = totalQuantity;
+    };
 
-            console.log("Array de toutes les quantité à additionner : " + cartTotalQuantity);
-            console.log("Array de tous les prix à additionner : " + cartTotalPrice);
-            console.log("Prix total : " + totalPrice);
-            console.log("Quantité totale : " + totalQuantity);
+    displayTotalCart(cartTotalPrice, cartTotalQuantity)
+}
 
-            // Afficher les totaux à leur place
-            quantitySpan.innerText = totalQuantity;
-            priceSpan.innerText = totalPrice;
-        })
-    }
-};
 
 // ************************************************
 // Afficher les cartes produit
@@ -153,6 +139,7 @@ const createArticle = async () => {
                 const price = parseInt(productDetails.price);
                 // Prix total de chaque produit
                 const totalPrice = price * itemQuantity;
+
                 // Push des totaux pour calculer totalCart()
                 cartTotalPrice.push(totalPrice);
                 cartTotalQuantity.push(itemQuantity);
@@ -224,7 +211,7 @@ const createArticle = async () => {
 
                 section.appendChild(article);
 
-                totalCart(cartTotalPrice, cartTotalQuantity);
+                totalCart();
                 changeQuantity();
                 deleteProduct();
             })
@@ -256,18 +243,21 @@ const deleteProduct = () => {
 
             // Supprimer "article" de "section" dans le DOM
             section.removeChild(targetArticle);
-            updateTotalCart();
+
+            // Mettre les totaux à jour
+            totalCart();
 
             // SI : panier contient encore des produits
             if (!(cart === null || !cart || cart.length === 0)) {
                 // Mettre les totaux à jour
-                updateTotalCart();
+                totalCart();
             }
             // SINON : panier est vide
             else {
                 // Afficher le message et mettre les totaux à 0
                 emptyCart();
             }
+
         })
     })
 };
@@ -299,8 +289,7 @@ const changeQuantity = () => {
                 // Enregistrer les modifications dans le localStorage
                 localStorage.setItem("product", JSON.stringify(cart));
                 // Comment update les totaux sans reload ?
-                updateTotalCart();
-
+                totalCart();
             }
             else {
                 alert("Veuillez indiquer une quantité valide (entre 0 et 100).")
@@ -314,18 +303,18 @@ const changeQuantity = () => {
 // Validation du formulaire
 // ************************************************
 
-// Récupérer la valeur des inputs
-const firstNameInput = document.getElementById('firstName').value;
-const lastNameInput = document.getElementById('lastName').value;
-const addressInput = document.getElementById('address').value;
-const cityInput = document.getElementById('city').value;
-const emailInput = document.getElementById('email').value;
+// Inputs
+const firstNameInput = document.getElementById('firstName');
+const lastNameInput = document.getElementById('lastName');
+const addressInput = document.getElementById('address');
+const cityInput = document.getElementById('city');
+const emailInput = document.getElementById('email');
 
 // Regex
-const noNumberRegex = /^[a-zA-Z '-,]{1,31}$/i;
-const emailRegex = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
+const noNumberRegex = /[a-zA-Z '-,]{1,31}$/i;
+const emailRegex = /[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,40}$/i;
 
-// Type d'erreur
+// Types d'erreur
 let firstNameNotValid;
 let lastNameNotValid;
 let addressNotValid;
@@ -333,8 +322,8 @@ let cityNotValid;
 let emailNotValid;
 
 // Messages d'erreur
-const nameErrorMessage = "Veuillez indiquer un nom valide";
 // const addressErrorMessage = "Veuillez indiquer une adresse valide";
+const nameErrorMessage = "Veuillez indiquer un nom valide";
 const emailErrorMessage = "Veuillez indiquer une adresse email valide";
 
 // Emplacement des messages d'erreur (messageSpot)
@@ -344,11 +333,10 @@ const lastNameErr = document.getElementById('lastNameErrorMsg');
 const cityErr = document.getElementById('cityErrorMsg');
 const emailErr = document.getElementById('emailErrorMsg');
 
-
 // Fonction pour vérifier les inputs (refactoring)
 const checkForm = (input, regex, error, message, messageSpot) => {
     input.addEventListener("change", function () {
-        let checkInput = regex.test(input);
+        let checkInput = regex.test(input.value);
         if (checkInput) {
             error = false;
         }
@@ -379,7 +367,7 @@ const order = async () => {
         }
         // SINON : panier est rempli
         // SI : les inputs sont vides
-        else if (!firstNameInput || !lastNameInput || !addressInput || !cityInput || !emailInput) {
+        else if (!firstNameInput.value || !lastNameInput.value || !addressInput.value || !cityInput.value || !emailInput.value) {
             // Avertir l'utilisateur de son oubli
             alert("Veuillez remplir tous les champs du formulaire.");
             // Empêcher l'envoi du formulaire
@@ -401,27 +389,48 @@ const order = async () => {
                 productID.push(item.itemId);
             });
 
-            // Voir si ça fonctionne :
             console.log(productID);
-            console.log(contact);
 
             // Récupérer la fiche contact :
             let contact = {
-                firstName: firstNameInput,
-                lastName: lastNameInput,
-                address: addressInput,
-                city: cityInput,
-                email: emailInput
+                firstName: firstNameInput.value,
+                lastName: lastNameInput.value,
+                address: addressInput.value,
+                city: cityInput.value,
+                email: emailInput.value
             };
+
+            console.log(contact);
 
             // Afficher un message de succès :
             alert("Commande effectuée avec succès");
+
+            postOrder(contact, productID);
+            // NE PAS OUBLIER de stringifier productID et contact
             // Envoyer la fiche contact et le tableau de la commande
+            // ICI mettre fonction postOrder
 
         }
 
-    }) 
+    })
 }
-order();
 
-// SI : form valide => post order
+const postOrder = async (contact, productID) => {
+    // Promesse initialisée : envoyer objet contact et tableau produits
+    let response = await fetch('http://localhost:3000/api/products/order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(contact, productID)
+    });
+    // Promesse résolue
+    let result = await response.json();
+    // Stringifier les informations de la commande et les mettre dans le localStorage
+    localStorage.setItem("order", JSON.stringify(result));
+    // Aller à la page de confirmation
+    location.href = "confirmation.html";
+
+}
+
+order();

@@ -416,14 +416,14 @@ const postOrder = async (contact, productID) => {
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },
-        body: JSON.stringify(contact, productID)
+        body: JSON.stringify({contact, productID})
     })
     // Récupérer la réponse de l'API en format JSON
     .then((response) => response.json())
     // Envoyer la réponse dans l'URL et rediriger vers page de confirmation
     .then((result) => document.location.href = `confirmation.html?orderId=${result.orderId}`)
     // IMPORTANT : vider le localStorage
-    localStorage.clear();
+    // localStorage.clear();
 };
 
 order();

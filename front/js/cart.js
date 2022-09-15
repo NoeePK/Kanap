@@ -411,20 +411,19 @@ const order = async () => {
 };
 
 const postOrder = async (contact, productID) => {
-    // Promesse initialisée : envoyer objet contact et tableau produits
-    let response = await fetch('http://localhost:3000/api/products/order', {
+    fetch('http://localhost:3000/api/products/order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },
         body: JSON.stringify(contact, productID)
-    });
-    // Promesse résolue
-    let result = await response.json();
-    // Stringifier les infos de commande et les mettre dans le localStorage
-    localStorage.setItem("order", JSON.stringify(result));
-    // Aller à la page de confirmation
-    location.href = "confirmation.html";
+    })
+    // Récupérer la réponse de l'API en format JSON
+    .then((response) => response.json())
+    // Envoyer la réponse dans l'URL et rediriger vers page de confirmation
+    .then((result) => document.location.href = `confirmation.html?orderId=${result.orderId}`)
+    // IMPORTANT : vider le localStorage
+    localStorage.clear();
 };
 
 order();

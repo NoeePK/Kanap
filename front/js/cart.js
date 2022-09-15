@@ -403,17 +403,12 @@ const order = async () => {
             console.log(contact);
 
             // Afficher un message de succès :
-            alert("Commande effectuée avec succès");
+            alert("Commande effectuée avec succès. Vous allez être redirigé.e vers une page de confirmation.");
 
             postOrder(contact, productID);
-            // NE PAS OUBLIER de stringifier productID et contact
-            // Envoyer la fiche contact et le tableau de la commande
-            // ICI mettre fonction postOrder
-
         }
-
     })
-}
+};
 
 const postOrder = async (contact, productID) => {
     // Promesse initialisée : envoyer objet contact et tableau produits
@@ -426,11 +421,10 @@ const postOrder = async (contact, productID) => {
     });
     // Promesse résolue
     let result = await response.json();
-    // Stringifier les informations de la commande et les mettre dans le localStorage
+    // Stringifier les infos de commande et les mettre dans le localStorage
     localStorage.setItem("order", JSON.stringify(result));
     // Aller à la page de confirmation
     location.href = "confirmation.html";
-
-}
+};
 
 order();

@@ -240,12 +240,9 @@ const deleteProduct = () => {
             cart = cart.filter(item => item.itemId !== targetArticle.dataset.id && item.itemColor !== targetArticle.dataset.color);
             // Ecraser l'ancien panier avec le panier modifié
             localStorage.setItem("product", JSON.stringify(cart));
-
+            console.table(cart);
             // Supprimer "article" de "section" dans le DOM
             section.removeChild(targetArticle);
-
-            // Mettre les totaux à jour
-            totalCart();
 
             // SI : panier contient encore des produits
             if (!(cart === null || !cart || cart.length === 0)) {

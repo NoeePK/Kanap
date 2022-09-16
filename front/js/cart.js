@@ -1,3 +1,4 @@
+
 // totalCart :comment sortir l'addition de la boucle ?
 // Quel regex pour adresse ?
 
@@ -51,6 +52,9 @@ const emptyCart = () => {
 // Totaux calculés en direct
 const totalCart = () => {
     // Calculer les totaux
+
+
+    
     const computeTotalCart = (arrayTotal) => {
         // Initialisation des variables
         let cartTotalQuantity = [];

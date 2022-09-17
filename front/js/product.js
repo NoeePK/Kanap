@@ -136,7 +136,7 @@ if (addToCartBtn) {
             // *************************************************
 
             // Inputs valides
-            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100)) {
+            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100 ) && Number.isInteger(inputQuantity)) {
                 // Panier existe déjà
                 if (cart) {
                     // Comparaison du panier et du nouvel ajout
@@ -191,6 +191,10 @@ if (addToCartBtn) {
             }
 
             // Input quantité négatif
+            if (!(Number.isInteger(inputQuantity))) {
+                alert("Vous ne pouvez pas acheter une quantité négative d'un produit");
+                return;
+            }
 
         };
 

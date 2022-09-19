@@ -324,6 +324,7 @@ const checkForm = (input, regex, error, message, messageSpot) => {
         else {
             error = true;
             messageSpot.innerText = message;
+            return;
         }
     })
 };
@@ -399,7 +400,7 @@ const postOrder = (contact, productID) => {
         .then((response) => response.json())
         // Envoyer la réponse dans l'URL et rediriger vers page de confirmation
         .then((data) => {
-            window.location.href = `confirmation.html?orderId=${data.orderId}`;
+            window.location.href = `./confirmation.html?orderId=` + data.orderId;
         })
         .catch((err) => {
             console.log(err);

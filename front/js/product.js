@@ -1,8 +1,3 @@
-// ERREURS A CORRIGER :
-// Empêcher input quantité négative
-// Cannot read properties of null (reading 'imageUrl')
-
-
 // ************************************************
 // Récupérer l'id dans l'url :
 // ************************************************

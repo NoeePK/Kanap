@@ -40,7 +40,7 @@ const fetchProducts = async (id) => {
 // Afficher les totaux
 // ************************************************
 
-// Totaux panier vide + message
+// Total panier vide + message
 const emptyCart = () => {
     const emptyCartMessage = document.querySelector('h1');
     // ... afficher ce nouveau titre h1
@@ -73,7 +73,8 @@ const totalCart = () => {
 };
 
 // Total modifié du panier
-const newTotalCart = () => {
+const newTotalCart = async () => {
+    // Afficher la nouvelle quantité
     const newTotalQuantity = () => {
         let totalQuantity = 0;
         for (const item of cart) {
@@ -83,27 +84,27 @@ const newTotalCart = () => {
     };
     newTotalQuantity();
 
-    const newTotalPrice = () => {
+    // Afficher le nouveau prix
+    const newTotalPrice = async () => {
         let totalPrice = 0;
+        
         for (const item of cart) {
             const targetId = item.itemId;
             const targetQuantity = item.itemQuantity;
+            // Fetch : Prix unitaire du produit
+            const data = await fetchProducts(targetId);
+            const unitPrice = parseInt(data.price)
+            console.log("Unit price : " + unitPrice);
+            
+            // Prix total du produit selon sa quantité
+            const newTotalPrice = unitPrice * targetQuantity;
+            totalPrice += newTotalPrice;
 
-            // Promesse : initialisation (avec l'id sélectionné)
-            const data = fetchProducts(targetId);
-            // Promesse : résolution (avec .then)
-            data.then((productDetails) => {
-                // Prix unitaire de chaque produit
-                const targetPrice = parseInt(productDetails.price);
-                // Prix total de chaque produit selon leur quantité
-                const newTotalPrice = targetPrice * targetQuantity;
-                totalPrice += newTotalPrice;
-            })
         }
         priceSpan.innerText = totalPrice;
     };
     newTotalPrice();
-}
+};
 
 // ************************************************
 // Afficher les cartes produit

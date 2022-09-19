@@ -1,7 +1,7 @@
 // ************************************************
 // Récupérer l'orderId dans l'url :
 // ************************************************
-const currentPageURL = window.location.href;
+const currentPageURL = window.location;
 const url = new URL(currentPageURL);
 const orderId = url.searchParams.get("orderId");
 

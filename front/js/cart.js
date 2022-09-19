@@ -1,7 +1,3 @@
-
-// totalCart :comment sortir l'addition de la boucle ?
-// Quel regex pour adresse ?
-
 // ************************************************
 // Variables
 // ************************************************
@@ -87,19 +83,16 @@ const newTotalCart = async () => {
     // Afficher le nouveau prix
     const newTotalPrice = async () => {
         let totalPrice = 0;
-        
+
         for (const item of cart) {
             const targetId = item.itemId;
             const targetQuantity = item.itemQuantity;
             // Fetch : Prix unitaire du produit
             const data = await fetchProducts(targetId);
             const unitPrice = parseInt(data.price)
-            console.log("Unit price : " + unitPrice);
-            
             // Prix total du produit selon sa quantité
             const newTotalPrice = unitPrice * targetQuantity;
             totalPrice += newTotalPrice;
-
         }
         priceSpan.innerText = totalPrice;
     };
@@ -312,14 +305,12 @@ let cityNotValid;
 let emailNotValid;
 
 // Messages d'erreur
-// const addressErrorMessage = "Veuillez indiquer une adresse";
 const nameErrorMessage = "Veuillez indiquer un nom valide";
 const emailErrorMessage = "Veuillez indiquer une adresse email valide";
 
 // Emplacement des messages d'erreur (messageSpot)
 const firstNameErr = document.getElementById('firstNameErrorMsg');
 const lastNameErr = document.getElementById('lastNameErrorMsg');
-// const addressErr = document.getElementById('addressErrorMsg');
 const cityErr = document.getElementById('cityErrorMsg');
 const emailErr = document.getElementById('emailErrorMsg');
 
@@ -378,8 +369,6 @@ const order = async () => {
                 productID.push(item.itemId);
             });
 
-            console.log(productID);
-
             // Récupérer la fiche contact :
             let contact = {
                 firstName: firstNameInput.value,
@@ -389,30 +378,35 @@ const order = async () => {
                 email: emailInput.value
             };
 
-            console.log(contact);
-
             // Afficher un message de succès :
             alert("Commande effectuée avec succès. Vous allez être redirigé.e vers une page de confirmation.");
 
+            // Envoyer l'objet "contact" et le tableau des produits à l'API
             postOrder(contact, productID);
         }
     })
 };
 
-const postOrder = async (contact, productID) => {
+const postOrder = (contact, productID) => {
     fetch('http://localhost:3000/api/products/order', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ contact, productID })
+        body: JSON.stringify({ contact, productID }),
     })
         // Récupérer la réponse de l'API en format JSON
         .then((response) => response.json())
         // Envoyer la réponse dans l'URL et rediriger vers page de confirmation
-        .then((result) => document.location.href = `confirmation.html?orderId=${result.orderId}`)
+        .then((data) => {
+            window.location.href = `confirmation.html?orderId=${data.orderId}`;
+        })
+        .catch((err) => {
+            console.log(err);
+            alert("Erreur avec l'API");
+        })
     // IMPORTANT : vider le localStorage
-    localStorage.clear();
+    // localStorage.clear();
 };
 
 order();

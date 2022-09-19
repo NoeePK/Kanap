@@ -46,6 +46,10 @@ const createCard = (produit) => {
     document.getElementById('price').innerText = produit.price + " ";
     document.getElementById('description').innerText = produit.description;
 
+    // // Valeurs négatives
+    // document.getElementById('quantity').setAttribute('inputmode', "numeric");
+    // document.getElementById('quantity').setAttribute('pattern', "[1-100]*");
+
     // Insertion options des couleurs
     const color = produit.colors;
 
@@ -136,7 +140,7 @@ if (addToCartBtn) {
             // *************************************************
 
             // Inputs valides
-            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100 ) && Number.isInteger(inputQuantity)) {
+            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100)) {
                 // Panier existe déjà
                 if (cart) {
                     // Comparaison du panier et du nouvel ajout
@@ -190,11 +194,11 @@ if (addToCartBtn) {
                 return;
             }
 
-            // Input quantité négatif
-            if (!(Number.isInteger(inputQuantity))) {
-                alert("Vous ne pouvez pas acheter une quantité négative d'un produit");
-                return;
-            }
+            // // Input quantité négatif
+            // if (!(Number.isInteger(inputQuantity))) {
+            //     alert("Vous ne pouvez pas acheter une quantité négative d'un produit");
+            //     return;
+            // }
 
         };
 

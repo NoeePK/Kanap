@@ -49,53 +49,61 @@ const emptyCart = () => {
     quantitySpan.innerText = 0;
 };
 
-const computeTotalCart = (arrayTotal) => {
-    // Pour chaque produit dans le panier
-    for (const item of cart) {
-        // Viser l'id et la quantité
-        const targetId = item.itemId;
-        const targetQuantity = parseInt(item.itemQuantity);
-
-        // Promesse : initialisation (avec l'id sélectionné)
-        const data = fetchProducts(targetId);
-        // Promesse : résolution (avec .then)
-        data.then((productDetails) => {
-            // Prix unitaire de chaque produit
-            const targetPrice = parseInt(productDetails.price);
-            // Prix total de chaque produit selon leur quantité
-            const newTotalPrice = targetPrice * targetQuantity;
-            // Push des totaux dans les array des totaux
-            cartTotalQuantity.push(targetQuantity);
-            cartTotalPrice.push(newTotalPrice);
-
-            return arrayTotal;
-        })
-    }
-};
-
-
-// Calcul du total du panier
+// Total initial du panier
 const totalCart = () => {
     // Initialisation des variables
-        let totalPrice = 0;
+    let totalPrice = 0;
+    let totalQuantity = 0;
+
+    // Pour chaque prix dans l'array 
+    for (const price of cartTotalPrice) {
+        // Additionner
+        totalPrice += price;
+    }
+
+    // Pour chaque quantité dans l'array
+    for (const quantity of cartTotalQuantity) {
+        // Additionner
+        totalQuantity += quantity;
+    }
+
+    // Afficher les totaux à leur place
+    priceSpan.innerText = totalPrice;
+    quantitySpan.innerText = totalQuantity;
+};
+
+// Total modifié du panier
+const newTotalCart = () => {
+    const newTotalQuantity = () => {
         let totalQuantity = 0;
-
-        // Pour chaque prix dans l'array 
-        for (const price of cartTotalPrice) {
-            // Additionner
-            totalPrice += price;
+        for (const item of cart) {
+            totalQuantity += parseInt(item.itemQuantity);
         }
-
-        // Pour chaque quantité dans l'array
-        for (const quantity of cartTotalQuantity) {
-            // Additionner
-            totalQuantity += quantity;
-        }
-
-        // Afficher les totaux à leur place
-        priceSpan.innerText = totalPrice;
         quantitySpan.innerText = totalQuantity;
     };
+    newTotalQuantity();
+
+    const newTotalPrice = () => {
+        let totalPrice = 0;
+        for (const item of cart) {
+            const targetId = item.itemId;
+            const targetQuantity = item.itemQuantity;
+
+            // Promesse : initialisation (avec l'id sélectionné)
+            const data = fetchProducts(targetId);
+            // Promesse : résolution (avec .then)
+            data.then((productDetails) => {
+                // Prix unitaire de chaque produit
+                const targetPrice = parseInt(productDetails.price);
+                // Prix total de chaque produit selon leur quantité
+                const newTotalPrice = targetPrice * targetQuantity;
+                totalPrice += newTotalPrice;
+            })
+        }
+        priceSpan.innerText = totalPrice;
+    };
+    newTotalPrice();
+}
 
 // ************************************************
 // Afficher les cartes produit
@@ -195,7 +203,7 @@ const createArticle = async () => {
 
                 section.appendChild(article);
 
-                totalCart();
+                totalCart(cartTotalPrice, cartTotalQuantity);
                 changeQuantity();
                 deleteProduct();
             })
@@ -231,8 +239,7 @@ const deleteProduct = () => {
             // SI : panier contient encore des produits
             if (!(cart === null || !cart || cart.length === 0)) {
                 // Mettre les totaux à jour
-                
-                totalCart();
+                newTotalCart();
             }
             // SINON : panier est vide
             else {
@@ -271,7 +278,7 @@ const changeQuantity = () => {
                 // Enregistrer les modifications dans le localStorage
                 localStorage.setItem("product", JSON.stringify(cart));
                 // Comment update les totaux sans reload ?
-                totalCart();
+                newTotalCart();
             }
             else {
                 alert("Veuillez indiquer une quantité valide (entre 0 et 100).")
@@ -294,7 +301,7 @@ const emailInput = document.getElementById('email');
 
 // Regex
 const noNumberRegex = /[a-zA-Z '-,]{1,31}$/i;
-const emailRegex = /[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,40}$/i;
+const emailRegex = /[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,3}$/i;
 
 // Types d'erreur
 let firstNameNotValid;
@@ -304,7 +311,7 @@ let cityNotValid;
 let emailNotValid;
 
 // Messages d'erreur
-// const addressErrorMessage = "Veuillez indiquer une adresse valide";
+// const addressErrorMessage = "Veuillez indiquer une adresse";
 const nameErrorMessage = "Veuillez indiquer un nom valide";
 const emailErrorMessage = "Veuillez indiquer une adresse email valide";
 
@@ -332,7 +339,6 @@ const checkForm = (input, regex, error, message, messageSpot) => {
 // Vérification de tous les inputs
 checkForm(firstNameInput, noNumberRegex, firstNameNotValid, nameErrorMessage, firstNameErr);
 checkForm(lastNameInput, noNumberRegex, lastNameNotValid, nameErrorMessage, lastNameErr);
-// checkForm(addressInput, regex, addressNotValid, addressErrorMessage, addressErr);
 checkForm(cityInput, noNumberRegex, cityNotValid, nameErrorMessage, cityErr);
 checkForm(emailInput, emailRegex, emailNotValid, emailErrorMessage, emailErr);
 
@@ -398,12 +404,12 @@ const postOrder = async (contact, productID) => {
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },
-        body: JSON.stringify({contact, productID})
+        body: JSON.stringify({ contact, productID })
     })
-    // Récupérer la réponse de l'API en format JSON
-    .then((response) => response.json())
-    // Envoyer la réponse dans l'URL et rediriger vers page de confirmation
-    .then((result) => document.location.href = `confirmation.html?orderId=${result.orderId}`)
+        // Récupérer la réponse de l'API en format JSON
+        .then((response) => response.json())
+        // Envoyer la réponse dans l'URL et rediriger vers page de confirmation
+        .then((result) => document.location.href = `confirmation.html?orderId=${result.orderId}`)
     // IMPORTANT : vider le localStorage
     localStorage.clear();
 };

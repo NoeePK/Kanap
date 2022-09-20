@@ -136,7 +136,7 @@ if (addToCartBtn) {
 
             // Inputs valides
             if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100)) {
-                // Panier existe déjà
+                // SI : Panier existe déjà
                 if (cart) {
                     // Comparaison du panier et du nouvel ajout
                     const alreadyInCart = cart.find(
@@ -164,7 +164,9 @@ if (addToCartBtn) {
                         addToCart(cart, itemDetails);
                         successMessage();
                     }
-                } else {
+                } 
+                // SINON : Panier n'existe pas 
+                else {
                     cart = [];
                     addToCart(cart, itemDetails);
                     successMessage();

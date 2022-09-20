@@ -283,23 +283,8 @@ const changeQuantity = () => {
 };
 
 // ************************************************
-// Validation du formulaire
+// Variables pour le formulaire
 // ************************************************
-
-// Fonction universelle pour vérifier un input
-const checkForm = (input, regex, error, message, messageSpot) => {
-    input.addEventListener("change", function () {
-        let checkInput = regex.test(input.value);
-        if (checkInput) {
-            error = false;
-        }
-        else {
-            error = true;
-            messageSpot.innerText = message;
-            return;
-        }
-    })
-};
 
 // Input
 const firstNameInput = document.getElementById('firstName');
@@ -329,6 +314,25 @@ const lastNameErr = document.getElementById('lastNameErrorMsg');
 const cityErr = document.getElementById('cityErrorMsg');
 const emailErr = document.getElementById('emailErrorMsg');
 
+// ************************************************
+// Validation du formulaire
+// ************************************************
+
+// Fonction universelle pour vérifier un input
+const checkForm = (input, regex, error, message, messageSpot) => {
+    input.addEventListener("change", function () {
+        let checkInput = regex.test(input.value);
+        if (checkInput) {
+            error = false;
+        }
+        else {
+            error = true;
+            messageSpot.innerText = message;
+            return;
+        }
+    })
+};
+
 // Fonction groupée pour vérifier tous les inputs
 const validateForm = () => {
     // Vérification de tous les inputs
@@ -344,7 +348,34 @@ validateForm();
 // Commander
 // ************************************************
 
-const order = async () => {
+// Récupérer fiche contact et récap de commande
+const getOrder = () => {
+    // Créer un tableau pour y mettre les produits
+    let productID = [];
+
+    //Pour chaque produit dans le panier...
+    cart.forEach(item => {
+        // ... mettre son id dans le tableau
+        productID.push(item.itemId);
+    });
+
+    // Récupérer la fiche contact :
+    let contact = {
+        firstName: firstNameInput.value,
+        lastName: lastNameInput.value,
+        address: addressInput.value,
+        city: cityInput.value,
+        email: emailInput.value
+    };
+
+    // Afficher un message de succès :
+    alert("Commande effectuée avec succès. Vous allez être redirigé.e vers une page de confirmation.");
+    // Envoyer l'objet "contact" et le tableau des produits à l'API
+    postOrder(contact, productID);
+};
+
+// Valider le formulaire de commande
+const validateOrder = async () => {
     orderBtn.addEventListener("click", (event) => {
         event.preventDefault();
         // SI : panier n'est pas vide
@@ -353,31 +384,13 @@ const order = async () => {
             if (firstNameInput.value && lastNameInput.value && addressInput.value && cityInput.value && emailInput.value) {
                 //SI:les regex sont respectés
                 if (firstNameNotValid === false && lastNameNotValid === false && addressNotValid === false && cityNotValid === false && emailNotValid === false) {
-                    // ...  créer un tableau pour y mettre les produits...
-                    let productID = [];
-                    //Pour chaque produit dans le panier...
-                    cart.forEach(item => {
-                        // ... mettre son id dans le tableau
-                        productID.push(item.itemId);
-                    });
-                    // Récupérer la fiche contact :
-                    let contact = {
-                        firstName: firstNameInput.value,
-                        lastName: lastNameInput.value,
-                        address: addressInput.value,
-                        city: cityInput.value,
-                        email: emailInput.value
-                    };
-                    // Afficher un message de succès :
-                    alert("Commande effectuée avec succès. Vous allez être redirigé.e vers une page de confirmation.");
-                    // Envoyer l'objet "contact" et le tableau des produits à l'API
-                    // Envoyer la commande à l'API
-                    postOrder(contact, productID);
+                    getOrder();
                 }
                 //SINON : les regex ne sont pas respectés
                 else {
                     alert("Veuillez vérifier les champs du formulaire.");
                     event.preventDefault();
+                    validateForm();
                 }
             }
             //SINON: les inputs ne sont pas remplis
@@ -394,27 +407,31 @@ const order = async () => {
     })
 };
 
-
-const postOrder = (contact, productID) => {
-    fetch('http://localhost:3000/api/products/order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ contact, productID }),
-    })
-        // Récupérer la réponse de l'API en format JSON
-        .then((response) => response.json())
-        // Envoyer la réponse dans l'URL et rediriger vers page de confirmation
-        .then((data) => {
-            window.location.href = `./confirmation.html?orderId=` + data.orderId;
+// Envoyer fiche contact et récap de commande
+const postOrder = async (contact, productID) => {
+    try {
+        const response = await fetch('http://localhost:3000/api/products/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ contact, productID }),
         })
-        .catch((err) => {
-            console.log(err);
-            alert("Erreur avec l'API");
-        })
-    // IMPORTANT : vider le localStorage
-    // localStorage.clear();
+        const data = await response.json();
+        return getOrderId(data);
+    }
+    catch (err) {
+        console.log("Erreur");
+        return null;
+    }
 };
 
-order();
+// Récupérer l'orderId envoyé par l'API
+const getOrderId = (data) => {
+    // Vider le localStorage
+    localStorage.clear();
+    // Diriger vers la page de confirmation
+    window.location.href = `./confirmation.html?orderId=` + data.orderId;
+};
+
+validateOrder();

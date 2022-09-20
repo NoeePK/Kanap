@@ -1,6 +1,3 @@
-// AMELIORATIONS A METTRE EN PLACE :
-// Séparer fetch API et la boucle d'insertion
-
 // ************************************************
 // Récupérer les produits dans l'API
 // ************************************************

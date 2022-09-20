@@ -150,7 +150,7 @@ if (addToCartBtn) {
                         const newQuantity = Number(alreadyInCart.itemQuantity) + Number(inputQuantity);
 
                         // Somme des old et new quantité < 100
-                        if (newQuantity < 100) {
+                        if (newQuantity <= 100) {
                             alreadyInCart.itemQuantity = newQuantity;
                             localStorage.setItem("product", JSON.stringify(cart));
                             successMessage();

@@ -1,5 +1,5 @@
 // ************************************************
-// Variables
+// Variables et arrays
 // ************************************************
 
 let cart = JSON.parse(localStorage.getItem('product'));
@@ -286,35 +286,7 @@ const changeQuantity = () => {
 // Validation du formulaire
 // ************************************************
 
-// Inputs
-const firstNameInput = document.getElementById('firstName');
-const lastNameInput = document.getElementById('lastName');
-const addressInput = document.getElementById('address');
-const cityInput = document.getElementById('city');
-const emailInput = document.getElementById('email');
-
-// Regex
-const noNumberRegex = /[a-zA-Z '-,]{1,31}$/i;
-const emailRegex = /[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,3}$/i;
-
-// Types d'erreur
-let firstNameNotValid;
-let lastNameNotValid;
-let addressNotValid;
-let cityNotValid;
-let emailNotValid;
-
-// Messages d'erreur
-const nameErrorMessage = "Veuillez indiquer un nom valide";
-const emailErrorMessage = "Veuillez indiquer une adresse email valide";
-
-// Emplacement des messages d'erreur (messageSpot)
-const firstNameErr = document.getElementById('firstNameErrorMsg');
-const lastNameErr = document.getElementById('lastNameErrorMsg');
-const cityErr = document.getElementById('cityErrorMsg');
-const emailErr = document.getElementById('emailErrorMsg');
-
-// Fonction pour vérifier les inputs (refactoring)
+// Fonction universelle pour vérifier un input
 const checkForm = (input, regex, error, message, messageSpot) => {
     input.addEventListener("change", function () {
         let checkInput = regex.test(input.value);
@@ -329,11 +301,44 @@ const checkForm = (input, regex, error, message, messageSpot) => {
     })
 };
 
-// Vérification de tous les inputs
-checkForm(firstNameInput, noNumberRegex, firstNameNotValid, nameErrorMessage, firstNameErr);
-checkForm(lastNameInput, noNumberRegex, lastNameNotValid, nameErrorMessage, lastNameErr);
-checkForm(cityInput, noNumberRegex, cityNotValid, nameErrorMessage, cityErr);
-checkForm(emailInput, emailRegex, emailNotValid, emailErrorMessage, emailErr);
+// Input
+const firstNameInput = document.getElementById('firstName');
+const lastNameInput = document.getElementById('lastName');
+const addressInput = document.getElementById('address');
+const cityInput = document.getElementById('city');
+const emailInput = document.getElementById('email');
+
+// Regex
+const noNumberRegex = /[a-zA-Z '-,]{1,31}$/i;
+const emailRegex = /[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,3}$/i;
+
+// Type d'erreur
+let firstNameNotValid;
+let lastNameNotValid;
+let addressNotValid;
+let cityNotValid;
+let emailNotValid;
+
+// Message d'erreur
+const nameErrorMessage = "Veuillez indiquer un nom ne comportant ni chiffres ni caractères spéciaux (exception : accents, trait d'union, espace et apostrophe)";
+const emailErrorMessage = "Veuillez indiquer une adresse email valide (exemple : jeanbonbeur@gmail.com)";
+
+// Emplacement du message d'erreur (messageSpot)
+const firstNameErr = document.getElementById('firstNameErrorMsg');
+const lastNameErr = document.getElementById('lastNameErrorMsg');
+const cityErr = document.getElementById('cityErrorMsg');
+const emailErr = document.getElementById('emailErrorMsg');
+
+// Fonction groupée pour vérifier tous les inputs
+const validateForm = () => {
+    // Vérification de tous les inputs
+    checkForm(firstNameInput, noNumberRegex, firstNameNotValid, nameErrorMessage, firstNameErr);
+    checkForm(lastNameInput, noNumberRegex, lastNameNotValid, nameErrorMessage, lastNameErr);
+    checkForm(cityInput, noNumberRegex, cityNotValid, nameErrorMessage, cityErr);
+    checkForm(emailInput, emailRegex, emailNotValid, emailErrorMessage, emailErr);
+};
+
+validateForm();
 
 // ************************************************
 // Commander
@@ -342,51 +347,53 @@ checkForm(emailInput, emailRegex, emailNotValid, emailErrorMessage, emailErr);
 const order = async () => {
     orderBtn.addEventListener("click", (event) => {
         event.preventDefault();
-        // SI : panier est vide
-        if (cart === null || !cart || cart.length === 0) {
-            alert("Veuillez remplir votre panier avant de passer commande.");
+        // SI : panier n'est pas vide
+        if (!(cart === null || !cart || cart.length === 0)) {
+            //SI : les inputs sont remplis
+            if (firstNameInput.value && lastNameInput.value && addressInput.value && cityInput.value && emailInput.value) {
+                //SI:les regex sont respectés
+                if (firstNameNotValid === false && lastNameNotValid === false && addressNotValid === false && cityNotValid === false && emailNotValid === false) {
+                    // ...  créer un tableau pour y mettre les produits...
+                    let productID = [];
+                    //Pour chaque produit dans le panier...
+                    cart.forEach(item => {
+                        // ... mettre son id dans le tableau
+                        productID.push(item.itemId);
+                    });
+                    // Récupérer la fiche contact :
+                    let contact = {
+                        firstName: firstNameInput.value,
+                        lastName: lastNameInput.value,
+                        address: addressInput.value,
+                        city: cityInput.value,
+                        email: emailInput.value
+                    };
+                    // Afficher un message de succès :
+                    alert("Commande effectuée avec succès. Vous allez être redirigé.e vers une page de confirmation.");
+                    // Envoyer l'objet "contact" et le tableau des produits à l'API
+                    // Envoyer la commande à l'API
+                    postOrder(contact, productID);
+                }
+                //SINON : les regex ne sont pas respectés
+                else {
+                    alert("Veuillez vérifier les champs du formulaire.");
+                    event.preventDefault();
+                }
+            }
+            //SINON: les inputs ne sont pas remplis
+            else {
+                alert("Veuillez remplir tous les champs du formulaire.");
+                event.preventDefault();
+            }
         }
-        // SINON : panier est rempli
-        // SI : les inputs sont vides
-        else if (!firstNameInput.value || !lastNameInput.value || !addressInput.value || !cityInput.value || !emailInput.value) {
-            // Avertir l'utilisateur de son oubli
-            alert("Veuillez remplir tous les champs du formulaire.");
-            // Empêcher l'envoi du formulaire
-            event.preventDefault();
-        }
-        // SINON : les inputs sont remplis
-        // SI : les regex ne sont pas respectés
-        else if (firstNameNotValid === true || lastNameNotValid === true || addressNotValid === true || cityNotValid === true || emailNotValid === true) {
-            alert("Veuillez remplir tous les champs du formulaire.");
-            event.preventDefault();
-        }
-        // SINON : les regex sont respectés
+        //SINON: le panier est vide
         else {
-            // ...  créer un tableau pour y mettre les produits...
-            let productID = [];
-            //Pour chaque produit dans le panier...
-            cart.forEach(item => {
-                // ... mettre son id dans le tableau
-                productID.push(item.itemId);
-            });
-
-            // Récupérer la fiche contact :
-            let contact = {
-                firstName: firstNameInput.value,
-                lastName: lastNameInput.value,
-                address: addressInput.value,
-                city: cityInput.value,
-                email: emailInput.value
-            };
-
-            // Afficher un message de succès :
-            alert("Commande effectuée avec succès. Vous allez être redirigé.e vers une page de confirmation.");
-
-            // Envoyer l'objet "contact" et le tableau des produits à l'API
-            postOrder(contact, productID);
+            alert("Veuillez remplir votre panier avant de passer commande.");
+            event.preventDefault();
         }
     })
 };
+
 
 const postOrder = (contact, productID) => {
     fetch('http://localhost:3000/api/products/order', {

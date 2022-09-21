@@ -10,5 +10,3 @@ const orderId = url.searchParams.get("orderId");
 // ************************************************
 let orderSpan = document.getElementById("orderId");
 orderSpan.innerText = orderId;
-
-

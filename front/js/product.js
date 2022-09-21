@@ -134,8 +134,11 @@ if (addToCartBtn) {
             // Vérification des inputs
             // *************************************************
 
+            // Empêcher la saisie d'une quantité négative
+            const noNegativRegex = /[-._!"`'#%&,:;<>=@{}~]/;
+
             // Inputs valides
-            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100)) {
+            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100 || (noNegativRegex.test(inputQuantity) == true))) {
                 // SI : Panier existe déjà
                 if (cart) {
                     // Comparaison du panier et du nouvel ajout
@@ -149,12 +152,11 @@ if (addToCartBtn) {
                         // Somme des deux quantités
                         const newQuantity = Number(alreadyInCart.itemQuantity) + Number(inputQuantity);
 
-                        // Somme des old et new quantité < 100
+                        // Somme des old et new quantités < 100
                         if (newQuantity <= 100) {
                             alreadyInCart.itemQuantity = newQuantity;
                             localStorage.setItem("product", JSON.stringify(cart));
                             successMessage();
-
 
                         } else {
                             alert("100 produits identiques maximum");
@@ -164,7 +166,7 @@ if (addToCartBtn) {
                         addToCart(cart, itemDetails);
                         successMessage();
                     }
-                } 
+                }
                 // SINON : Panier n'existe pas 
                 else {
                     cart = [];
@@ -191,12 +193,11 @@ if (addToCartBtn) {
                 return;
             }
 
-            // // Input quantité négatif
-            // if (!(Number.isInteger(inputQuantity))) {
-            //     alert("Vous ne pouvez pas acheter une quantité négative d'un produit");
-            //     return;
-            // }
-
+            // Input quantité négatif
+            if (noNegativRegex.test(inputQuantity) == false) {
+                alert("Vous ne pouvez pas acheter une quantité négative d'un produit");
+                return;
+            }
         };
 
         processAdding();

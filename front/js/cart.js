@@ -251,6 +251,8 @@ const deleteProduct = () => {
 // Modifier la quantité d'un produit
 // ************************************************
 
+const noNegativRegex = /[-._!"`'#%&,:;<>=@{}~]/;
+
 const changeQuantity = () => {
     // Sélectionner les inputs
     const quantityInput = document.querySelectorAll(".itemQuantity");
@@ -266,7 +268,7 @@ const changeQuantity = () => {
             // Sélectionner le produit à modifier (id et couleur identiques)
             let selectedProduct = cart.find(item => item.itemId === targetArticle.dataset.id && item.itemColor === targetArticle.dataset.color);
             // SI : input est une quantité valide (même conditions que product.js)
-            if (newQuantity > 0 && newQuantity <= 100 && Number.isInteger(newQuantity)) {
+            if (newQuantity > 0 && newQuantity <= 100 && (noNegativRegex.test(newQuantity) == true)) {
                 // Convertir la string de l'input
                 const parseNewQuantity = parseInt(newQuantity);
                 // Ecraser l'ancienne quantité avec la nouvelle
@@ -277,8 +279,15 @@ const changeQuantity = () => {
                 newTotalCart();
             }
             else {
-                alert("Veuillez indiquer une quantité valide (entre 0 et 100).")
-                return;
+                if(newQuantity <= 0 || newQuantity > 100) {
+                    alert("Veuillez indiquer une quantité valide (entre 1 et 100).");
+                event.preventDefault();
+                }
+                if(noNegativRegex.test(newQuantity) == false) {
+                    alert("Veuillez indiquer une quantité valide.");
+                    event.preventDefault();
+                }
+                
             }
         })
     })

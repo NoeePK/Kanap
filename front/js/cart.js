@@ -359,7 +359,7 @@ const postOrder = async (contact, products) => {
         console.log(response);
         const data = await response.json();
         console.log(data);
-        return data;
+        return getOrderId(data);
     }
     catch (err) {
         console.log("Erreur");
@@ -368,9 +368,7 @@ const postOrder = async (contact, products) => {
 };
 
 // Récupérer l'orderId envoyé par l'API
-const getOrderId = async () => {
-    // Récupérer 
-    let data = await postOrder();
+const getOrderId = async (data) => {
     // Diriger vers la page de confirmation
     window.location.href = `./confirmation.html?orderId=` + data.orderId;
     // Vider le localStorage

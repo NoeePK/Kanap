@@ -285,7 +285,7 @@ const changeQuantity = () => {
 };
 
 // ************************************************
-// Variables pour le formulaire
+// Validation du formulaire
 // ************************************************
 
 // Input
@@ -299,13 +299,6 @@ const emailInput = document.getElementById('email');
 const noNumberRegex = /[a-zA-Z '-,]{1,31}$/i;
 const emailRegex = /[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,3}$/i;
 
-// Type d'erreur
-let firstNameNotValid;
-let lastNameNotValid;
-let addressNotValid;
-let cityNotValid;
-let emailNotValid;
-
 // Message d'erreur
 const nameErrorMessage = "Veuillez indiquer un nom ne comportant ni chiffres ni caractères spéciaux (exceptions : accent, trait d'union, espace et apostrophe)";
 const emailErrorMessage = "Veuillez indiquer une adresse email valide (exemple : jeanbonbeur@gmail.com)";
@@ -316,35 +309,6 @@ const lastNameErr = document.getElementById('lastNameErrorMsg');
 const cityErr = document.getElementById('cityErrorMsg');
 const emailErr = document.getElementById('emailErrorMsg');
 
-// ************************************************
-// Validation du formulaire
-// ************************************************
-
-// Fonction universelle pour vérifier un input
-const checkForm = (input, regex, error, message, messageSpot) => {
-    input.addEventListener("change", function () {
-        let checkInput = regex.test(input.value);
-        if (checkInput) {
-            error = false;
-        }
-        else {
-            error = true;
-            messageSpot.innerText = message;
-            return;
-        }
-    })
-};
-
-// Fonction groupée pour vérifier tous les inputs
-const validateForm = () => {
-    // Vérification de tous les inputs
-    checkForm(firstNameInput, noNumberRegex, firstNameNotValid, nameErrorMessage, firstNameErr);
-    checkForm(lastNameInput, noNumberRegex, lastNameNotValid, nameErrorMessage, lastNameErr);
-    checkForm(cityInput, noNumberRegex, cityNotValid, nameErrorMessage, cityErr);
-    checkForm(emailInput, emailRegex, emailNotValid, emailErrorMessage, emailErr);
-};
-
-validateForm();
 
 // ************************************************
 // Commander
@@ -382,147 +346,6 @@ const getOrder = () => {
 
 };
 
-// // Algorithme 1 : Valider le formulaire de commande
-// const validateOrder = async () => {
-//     orderBtn.addEventListener("click", (event) => {
-//         event.preventDefault();
-//         // SI : panier est vide
-//         if (cart === null || !cart || cart.length === 0) {
-//             alert("Veuillez remplir votre panier avant de passer commande.");
-//             event.preventDefault();
-//         }
-//         // SINON : panier est rempli
-//         else {
-//             // SI : les inputs sont vides
-//             if (!firstNameInput.value || !lastNameInput.value || !addressInput.value || !cityInput.value || !emailInput.value) {
-//                 // Avertir l'utilisateur de son oubli
-//                 alert("Veuillez remplir tous les champs du formulaire.");
-//                 event.preventDefault();
-//             }
-//             // SINON : les inputs sont remplis
-//             else {
-//                 // SI : les regex ne sont pas respectés
-//                 if (firstNameNotValid === true || lastNameNotValid === true || addressNotValid === true || cityNotValid === true || emailNotValid === true) {
-//                     // Avertir l'utilisateur de son erreur
-//                     alert("Veuillez vérifier les champs du formulaire.");
-//                     event.preventDefault();
-//                 }
-//                 // SINON : les regex sont respectés
-//                 else {
-//                     getOrder()
-//                 }
-//             }
-//         }
-//     })
-// };
-
-// // Algorithme 2 : Valider le formulaire de commande
-// const validateOrder = async () => {
-//     orderBtn.addEventListener("click", (event) => {
-//         event.preventDefault();
-//         // SI : Panier est rempli
-//         if (cart && cart !== null && cart.length !== 0) {
-//             //SI : les inputs sont remplis
-//             if (firstNameInput.value && lastNameInput.value && addressInput.value && cityInput.value && emailInput.value) {
-//                 //SI : les regex sont respectés
-//                 if (firstNameNotValid === false && lastNameNotValid === false && addressNotValid === false && cityNotValid === false && emailNotValid === false) {
-//                     getOrder();
-//                 }
-//                 //SINON : les regex ne sont pas respectés
-//                 else {
-//                     alert("Veuillez vérifier les champs du formulaire.");
-//                     event.preventDefault();
-//                     validateForm();
-//                 }
-//             }
-//             //SINON: les inputs ne sont pas remplis
-//             else {
-//                 alert("Veuillez remplir tous les champs du formulaire.");
-//                 event.preventDefault();
-//             }
-//         }
-//         //SINON: Panier est vide
-//         else {
-//             alert("Veuillez remplir votre panier avant de passer commande.");
-//             event.preventDefault();
-//         }
-//     })
-// };
-
-// // Algorithme 3 : Valider le formulaire de commande
-// const validateOrder = async () => {
-//     orderBtn.addEventListener("click", (event) => {
-//         event.preventDefault();
-//         // SI : Inputs sont remplis
-//         if (firstNameInput.value && lastNameInput.value &&
-//             addressInput.value && cityInput.value && emailInput.value) {
-//             // SI : Regex sont respectés
-//             if (firstNameNotValid === false && lastNameNotValid === false &&
-//                 addressNotValid === false && cityNotValid === false && emailNotValid === false) {
-//                 // SI : Panier est rempli
-//                 if (cart && cart !== null && cart.length !== 0) {
-//                     getOrder();
-//                 }
-//                 // SINON : Panier est vide
-//                 else {
-//                     alert("Veuillez remplir votre panier avant de passer commande.");
-//                     // Empêcher l'envoi du formulaire
-//                     event.preventDefault();
-//                     // Rediriger vers la page d'accueil
-//                     window.location.href = "http://127.0.0.1:5500/front/html/index.html";
-//                 }
-//             }
-//             // SINON : Regex ne sont pas respectés
-//             alert("Veuillez vérifier les champs du formulaire.");
-//             // Empêcher l'envoi du formulaire
-//             event.preventDefault();
-//             // COMMENT changer le statut "true" après que user ait modifiés les inputs ?
-//             validateForm();
-//         }
-//         //SINON: les inputs ne sont pas remplis
-//         else {
-//             alert("Veuillez remplir tous les champs du formulaire.");
-//             event.preventDefault();
-//         }
-//     })
-// };
-
-// Algorithme 0 :
-const validateOrder = () => {
-    orderBtn.addEventListener("click", (event) => {
-        event.preventDefault();
-        // SI : panier est vide
-        if (cart === null || !cart || cart.length === 0) {
-            alert("Veuillez remplir votre panier avant de passer commande.");
-        }
-        // SINON : panier est rempli
-
-        else {
-            // SI : les inputs sont vides
-            if (!firstNameInput.value || !lastNameInput.value || !addressInput.value || !cityInput.value || !emailInput.value) {
-                // Avertir l'utilisateur de son oubli
-                alert("Veuillez remplir tous les champs du formulaire.");
-                // Empêcher l'envoi du formulaire
-                event.preventDefault();
-            }
-            // SINON : les inputs sont remplis
-            else {
-                // SI : les regex ne sont pas respectés
-                if (firstNameNotValid === true || lastNameNotValid === true || addressNotValid === true || cityNotValid === true || emailNotValid === true) {
-                    alert("Veuillez remplir tous les champs du formulaire.");
-                    event.preventDefault();
-                }
-                // SINON : les regex sont respectés
-                else {
-                    getOrder();
-                }
-            }
-        }
-
-
-    })
-};
-
 // Envoyer fiche contact et récap de commande
 const postOrder = async (contact, products) => {
     try {
@@ -554,4 +377,56 @@ const getOrderId = async () => {
     localStorage.clear();
 };
 
-validateOrder();
+if (orderBtn) {
+    // Déclencher l'envoi au clic sur "Commander"
+    orderBtn.addEventListener("click", (event) => {
+
+        // SI : Panier est rempli
+        if (cart && cart !== null && cart.length !== 0) {
+
+            //SI : les inputs sont remplis
+            if (firstNameInput.value && lastNameInput.value && addressInput.value && cityInput.value && emailInput.value) {
+
+                //SI : les regex sont respectés
+                if ((noNumberRegex.test(firstNameInput.value) == true) &&
+                    (noNumberRegex.test(lastNameInput.value) == true) &&
+                    (noNumberRegex.test(cityInput.value) == true) &&
+                    (emailRegex.test(emailInput.value) == true)) {
+                    getOrder();
+                }
+                //SINON : les regex ne sont pas respectés
+                else {
+                    alert("Veuillez vérifier les champs du formulaire.");
+                    event.preventDefault();
+
+                    // Pointer vers l'input erroné
+                    if (noNumberRegex.test(firstNameInput.value) == false) {
+                        firstNameErr.innerText = nameErrorMessage;
+                    }
+                    if (noNumberRegex.test(lastNameInput.value) == false) {
+                        lastNameErr.innerText = nameErrorMessage;
+                    }
+                    if (noNumberRegex.test(cityInput.value) == false) {
+                        cityErr.innerText = nameErrorMessage;
+                    }
+                    if (emailRegex.test(emailInput.value) == false) {
+                        emailErr.innerText = emailErrorMessage;
+                    }
+                }
+            }
+            //SINON: les inputs ne sont pas remplis
+            else {
+                alert("Veuillez remplir tous les champs du formulaire.");
+                event.preventDefault();
+            }
+        }
+        //SINON: Panier est vide
+        else {
+            alert("Veuillez remplir votre panier avant de passer commande.");
+            event.preventDefault();
+        }
+    })
+}
+else {
+    console.log("Erreur : Le DOM n'est pas encore complètement chargé")
+}

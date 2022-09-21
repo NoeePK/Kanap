@@ -1,5 +1,5 @@
 // ************************************************
-// Variables et arrays
+// Variables
 // ************************************************
 
 let cart = JSON.parse(localStorage.getItem('product'));

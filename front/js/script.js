@@ -12,9 +12,9 @@ const fetchEachProduct = async () => {
         // Pour chaque produit dans l'API...
         for (product in products) {
             // ... créer une carte...
-            const productLink = createCards(products[product]);
+            const productCard = createCards(products[product]);
             // ... et l'insérer dans la section
-            document.getElementById("items").appendChild(productLink);
+            document.getElementById("items").appendChild(productCard);
         }
     }
     catch (err) {
@@ -30,9 +30,8 @@ fetchEachProduct();
 
 const createCards = (product) => {
 
-    let productLink = document.createElement('a');
-    // Trouver le bon href
-    productLink.href = `./product.html?id=` + product._id;
+    let productCard = document.createElement('a');
+    productCard.href = `./product.html?id=` + product._id;
 
     let productArticle = document.createElement('article');
 
@@ -51,7 +50,7 @@ const createCards = (product) => {
     productDescription.innerText = product.description;
     productArticle.appendChild(productDescription);
 
-    productLink.appendChild(productArticle);
+    productCard.appendChild(productArticle);
 
-    return productLink;
+    return productCard;
 };

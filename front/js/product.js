@@ -41,10 +41,6 @@ const createCard = (produit) => {
     document.getElementById('price').innerText = produit.price + " ";
     document.getElementById('description').innerText = produit.description;
 
-    // // Valeurs négatives
-    // document.getElementById('quantity').setAttribute('inputmode', "numeric");
-    // document.getElementById('quantity').setAttribute('pattern', "[1-100]*");
-
     // Insertion options des couleurs
     const color = produit.colors;
 
@@ -118,6 +114,9 @@ if (addToCartBtn) {
         // Récupération des inputs valides
         // ************************************************
 
+        // Empêcher la saisie d'une quantité négative
+        const noNegativRegex = /^[0-9]*[1-9][0-9]*$/;
+
         const processAdding = () => {
             // Récupérer la valeur des inputs
             const inputColor = document.getElementById('colors').value;
@@ -134,11 +133,8 @@ if (addToCartBtn) {
             // Vérification des inputs
             // *************************************************
 
-            // Empêcher la saisie d'une quantité négative
-            const noNegativRegex = /[-._!"`'#%&,:;<>=@{}~]/;
-
             // Inputs valides
-            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100 || (noNegativRegex.test(inputQuantity) == true))) {
+            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100 || (noNegativRegex.test(inputQuantity) == false))) {
                 // SI : Panier existe déjà
                 if (cart) {
                     // Comparaison du panier et du nouvel ajout
@@ -175,15 +171,9 @@ if (addToCartBtn) {
                 }
             }
 
-            // Input couleur vide
-            if (inputColor == "") {
-                alert("Veuillez choisir une couleur.");
-                return;
-            }
-
-            // Input quantité vide
-            if (inputQuantity == "" || inputQuantity == 0) {
-                alert("Veuillez choisir une quantité.");
+            // Input couleur et/ou quantité vide
+            if (inputColor == "" || inputQuantity == "" || inputQuantity == 0) {
+                alert("Veuillez sélectionner une couleur et une quantité pour procéder à l'ajout au panier.");
                 return;
             }
 
@@ -198,6 +188,7 @@ if (addToCartBtn) {
                 alert("Vous ne pouvez pas acheter une quantité négative d'un produit");
                 return;
             }
+            
         };
 
         processAdding();

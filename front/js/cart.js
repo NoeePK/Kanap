@@ -251,7 +251,8 @@ const deleteProduct = () => {
 // Modifier la quantité d'un produit
 // ************************************************
 
-const noNegativRegex = /[-._!"`'#%&,:;<>=@{}~]/;
+// Empêcher la saisie d'une quantité négative
+const noNegativRegex = /^[0-9]*[1-9][0-9]*$/;
 
 const changeQuantity = () => {
     // Sélectionner les inputs
@@ -279,15 +280,9 @@ const changeQuantity = () => {
                 newTotalCart();
             }
             else {
-                if(newQuantity <= 0 || newQuantity > 100) {
-                    alert("Veuillez indiquer une quantité valide (entre 1 et 100).");
-                event.preventDefault();
-                }
-                if(noNegativRegex.test(newQuantity) == false) {
-                    alert("Veuillez indiquer une quantité valide.");
-                    event.preventDefault();
-                }
-                
+                alert("Veuillez indiquer une quantité entre 1 et 100.");
+                // Réactualiser la page dès que l'input perd le focus
+                location.reload();
             }
         })
     })

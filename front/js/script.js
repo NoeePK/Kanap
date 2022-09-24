@@ -11,7 +11,7 @@ const fetchEachProduct = async () => {
         let product = {};
         // Pour chaque produit dans l'API...
         for (product in products) {
-            // ... créer une carte...
+            // ... passer le "product" dans les paramètres de la fonction pour créer une carte...
             const productCard = createCards(products[product]);
             // ... et l'insérer dans la section
             document.getElementById("items").appendChild(productCard);
@@ -21,7 +21,7 @@ const fetchEachProduct = async () => {
         console.log('Démarrez le serveur : node server');
     }
 };
- 
+
 fetchEachProduct();
 
 // ************************************************

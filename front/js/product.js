@@ -11,10 +11,11 @@ const productId = url.searchParams.get("id");
 
 const fetchProduct = async () => {
     try {
-        // Récupérer l'API
+        // Récupérer le contenu de l'API
         const response = await fetch(`http://localhost:3000/api/products/${productId}`);
-        // Récupérer les produits dans .json
+        // Récupérer la réponse dans .json
         const data = await response.json();
+        // Renvoyer le produit
         return data;
     } catch (err) {
         console.log("Erreur");
@@ -23,16 +24,13 @@ const fetchProduct = async () => {
 };
 
 // ************************************************
-// Création de la carte produit
+// Créer la carte produit
 // ************************************************
 
 const createCard = (produit) => {
-    // Création de l'image
     let productImg = document.createElement('img');
     productImg.src = produit.imageUrl;
     productImg.alt = produit.altTxt;
-
-    // Insertion de l'image
     const imageDiv = document.getElementsByClassName('item__img');
     imageDiv[0].appendChild(productImg);
 
@@ -54,25 +52,21 @@ const createCard = (produit) => {
         // ... et ajouter l'option créée dans l'élément 'select'
         document.getElementById('colors').appendChild(colorOption);
     });
-
-    // Attribut required pour les inputs
-    document.getElementById('colors').required = true;
-    document.getElementById('quantity').required = true;
 };
 
 // ************************************************
-// Insertion de la carte produit
+// Inserer la carte produit
 // ************************************************
 
 const insertCard = async () => {
     // Récupérer le bon produit dans une Promise
     const data = await fetchProduct(productId);
-    // Utiliser la Promise pour insérer la carte (avec .then)
+    // Utiliser la réponse de la promesse comme paramètre pour insérer la carte (avec .then)
     return fetchProduct().then(createCard(data));
 };
 
 // ************************************************
-// Bouton : Ajout au panier
+// Ajouter au panier
 // ************************************************
 
 const addToCartBtn = document.getElementById('addToCart');
@@ -133,8 +127,9 @@ if (addToCartBtn) {
             // Vérification des inputs
             // *************************************************
 
-            // Inputs valides
-            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 || inputQuantity > 100 || (noNegativRegex.test(inputQuantity) == false))) {
+            // SI : Inputs valides
+            if (!(inputColor == "" || inputQuantity == "" || inputQuantity == 0 ||
+                inputQuantity > 100 || (noNegativRegex.test(inputQuantity) == false))) {
                 // SI : Panier existe déjà
                 if (cart) {
                     // Comparaison du panier et du nouvel ajout
@@ -143,22 +138,24 @@ if (addToCartBtn) {
                             product.itemId === productId &&
                             product.itemColor === inputColor
                     );
-                    // Produit(couleur aussi) identique déjà dans panier
+                    // SI : Produit(couleur aussi) identique déjà dans panier
                     if (alreadyInCart) {
                         // Somme des deux quantités
                         const newQuantity = Number(alreadyInCart.itemQuantity) + Number(inputQuantity);
-
-                        // Somme des old et new quantités < 100
+                        // SI : Somme des quantités < 100
                         if (newQuantity <= 100) {
                             alreadyInCart.itemQuantity = newQuantity;
                             localStorage.setItem("product", JSON.stringify(cart));
                             successMessage();
-
-                        } else {
+                        }
+                        // SINON : Somme des quantité > 100
+                        else {
                             alert("100 produits identiques maximum");
                             return;
                         }
-                    } else {
+                    }
+                    // SINON : Ce produit n'est pas encore dans le panier
+                    else {
                         addToCart(cart, itemDetails);
                         successMessage();
                     }
@@ -173,13 +170,13 @@ if (addToCartBtn) {
 
             // Input couleur et/ou quantité vide
             if (inputColor == "" || inputQuantity == "" || inputQuantity == 0) {
-                alert("Veuillez sélectionner une couleur et une quantité pour procéder à l'ajout au panier.");
+                alert("Veuillez sélectionner une couleur ET une quantité pour procéder à l'ajout au panier.");
                 return;
             }
 
             // Input quantité > 100
             if (inputQuantity > 100) {
-                alert("Vous ne pouvez pas acheter plus de 100 exemplaires du même produit.");
+                alert("Vous ne pouvez pas commander plus de 100 exemplaires du même produit.");
                 return;
             }
 
@@ -188,7 +185,7 @@ if (addToCartBtn) {
                 alert("Vous ne pouvez pas acheter une quantité négative d'un produit");
                 return;
             }
-            
+
         };
 
         processAdding();

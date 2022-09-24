@@ -125,6 +125,7 @@ const displayProducts = async () => {
             data.then((productDetails) => {
                 // Prix unitaire de chaque produit
                 const price = parseInt(productDetails.price);
+
                 // Prix total de chaque produit
                 const totalPrice = price * itemQuantity;
 
@@ -165,7 +166,6 @@ const displayProducts = async () => {
 
                 const productPrice = document.createElement('p');
                 productPrice.innerText = totalPrice + " €";
-                productPrice.classList.add('price');
                 description.appendChild(productPrice);
 
                 const settings = document.createElement('div');
@@ -305,14 +305,13 @@ const emailRegex = /[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.
 
 // Message d'erreur
 const nameErrorMessage = "Veuillez indiquer un nom ne comportant ni chiffres ni caractères spéciaux (exceptions : accent, trait d'union, espace et apostrophe)";
-const emailErrorMessage = "Veuillez indiquer une adresse email valide (exemple : jeanbonbeur@gmail.com)";
+const emailErrorMessage = "Veuillez indiquer une adresse email valide (exemple : JeanBonbeur@gmail.com)";
 
 // Emplacement du message d'erreur (messageSpot)
 const firstNameErr = document.getElementById('firstNameErrorMsg');
 const lastNameErr = document.getElementById('lastNameErrorMsg');
 const cityErr = document.getElementById('cityErrorMsg');
 const emailErr = document.getElementById('emailErrorMsg');
-
 
 // ************************************************
 // Commander
@@ -347,7 +346,6 @@ const getOrder = () => {
     // Envoyer l'objet "contact" et le tableau des produits à l'API
     postOrder(contact, products);
     getOrderId();
-
 };
 
 // Envoyer fiche contact et récap de commande
@@ -396,6 +394,7 @@ if (orderBtn) {
                     (emailRegex.test(emailInput.value) == true)) {
                     getOrder();
                 }
+
                 //SINON : les regex ne sont pas respectés
                 else {
                     alert("Veuillez vérifier les champs du formulaire.");
@@ -416,19 +415,18 @@ if (orderBtn) {
                     }
                 }
             }
+
             //SINON: les inputs ne sont pas remplis
             else {
                 alert("Veuillez remplir tous les champs du formulaire.");
                 event.preventDefault();
             }
         }
+
         //SINON: Panier est vide
         else {
             alert("Veuillez remplir votre panier avant de passer commande.");
             event.preventDefault();
         }
     })
-}
-else {
-    console.log("Erreur : Le DOM n'est pas encore complètement chargé")
 }

@@ -328,8 +328,6 @@ const getOrder = () => {
         products.push(item.itemId);
     });
 
-    console.log(products);
-
     // Récupérer la fiche contact :
     let contact = {
         firstName: firstNameInput.value,
@@ -339,13 +337,11 @@ const getOrder = () => {
         email: emailInput.value
     };
 
-    console.log(contact);
-
     // Afficher un message de succès :
     alert("Commande effectuée avec succès. Vous allez être redirigé.e vers une page de confirmation.");
     // Envoyer l'objet "contact" et le tableau des produits à l'API
     postOrder(contact, products);
-    getOrderId();
+    
 };
 
 // Envoyer fiche contact et récap de commande
@@ -358,9 +354,7 @@ const postOrder = async (contact, products) => {
             },
             body: JSON.stringify({ contact, products }),
         })
-        console.log(response);
         const data = await response.json();
-        console.log(data);
         return getOrderId(data);
     }
     catch (err) {
@@ -369,7 +363,7 @@ const postOrder = async (contact, products) => {
     }
 };
 
-// Récupérer l'orderId envoyé par l'API
+// Récupérer orderId envoyé par l'API
 const getOrderId = async (data) => {
     // Diriger vers la page de confirmation
     window.location.href = `./confirmation.html?orderId=` + data.orderId;

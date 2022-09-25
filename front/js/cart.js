@@ -68,37 +68,40 @@ const totalCart = () => {
     quantitySpan.innerText = totalQuantity;
 };
 
-// Total modifié du panier
-const newTotalCart = async () => {
+// // Total modifié du panier
+// const newTotalCart = async () => {
+//     newTotalQuantity();
+//     newTotalPrice();
+// };
 
-    // Afficher la nouvelle quantité :
-    const newTotalQuantity = async () => {
-        let totalQuantity = 0;
-        for (const item of cart) {
-            totalQuantity += parseInt(item.itemQuantity);
-        }
-        quantitySpan.innerText = totalQuantity;
-    };
-    newTotalQuantity();
+// Afficher la nouvelle quantité :
+const newTotalQuantity = async () => {
+    let totalQuantity = 0;
+    for (const item of cart) {
+        totalQuantity += parseInt(item.itemQuantity);
+    }
+    quantitySpan.innerText = totalQuantity;
+};
 
-    // Afficher le nouveau prix :
-    const newTotalPrice = async () => {
-        let totalPrice = 0;
+// Afficher le nouveau prix :
+const newTotalPrice = async () => {
+    let totalPrice = 0;
 
-        for (const item of cart) {
-            const targetId = item.itemId;
-            const targetQuantity = item.itemQuantity;
-            // Fetch : Prix unitaire du produit
-            const data = await fetchProducts(targetId);
-            const unitPrice = parseInt(data.price)
-            // Prix total du produit selon sa quantité
-            const subTotalPrice = unitPrice * targetQuantity;
-            // Additionner les sous-totaux pour obtenir le prix total du panier
-            totalPrice += subTotalPrice;
-        }
-        priceSpan.innerText = totalPrice;
-    };
-    newTotalPrice();
+    for (const item of cart) {
+        const targetId = item.itemId;
+        const targetQuantity = item.itemQuantity;
+        // Fetch : Prix unitaire du produit
+        const data = await fetchProducts(targetId);
+        const unitPrice = parseInt(data.price)
+        // Prix total du produit selon sa quantité
+        const subTotalPrice = unitPrice * targetQuantity;
+        // Additionner les sous-totaux pour obtenir le prix total du panier
+        totalPrice += subTotalPrice;
+
+        
+    }
+    
+    priceSpan.innerText = totalPrice;
 };
 
 // ************************************************
@@ -165,9 +168,10 @@ const displayProducts = async () => {
                 description.appendChild(colorOption);
 
                 const productPrice = document.createElement('p');
+                productPrice.setAttribute('data-price', totalPrice);
                 productPrice.innerText = totalPrice + " €";
                 description.appendChild(productPrice);
-
+                
                 const settings = document.createElement('div');
                 settings.classList.add('cart__item__content__settings');
                 itemContent.appendChild(settings);
@@ -203,6 +207,7 @@ const displayProducts = async () => {
                 totalCart(cartTotalPrice, cartTotalQuantity);
                 changeQuantity();
                 deleteProduct();
+                
             })
         })
     }
@@ -235,7 +240,8 @@ const deleteProduct = () => {
             // SI : panier contient encore des produits
             if (!(cart === null || !cart || cart.length === 0)) {
                 // Mettre les totaux à jour
-                newTotalCart();
+                newTotalQuantity();
+                newTotalPrice();
             }
             // SINON : panier est vide
             else {
@@ -266,6 +272,9 @@ const changeQuantity = () => {
             const newQuantity = Number(element.value);
             // Sélectionner l'article du DOM à modifier
             let targetArticle = element.closest('article');
+            // Sélectionner le sous-total à modifier
+            let targetDataPrice = targetArticle.dataset.price;
+            console.log(targetDataPrice);
             // Sélectionner le produit à modifier (id et couleur identiques)
             let selectedProduct = cart.find(item => item.itemId === targetArticle.dataset.id && item.itemColor === targetArticle.dataset.color);
             // SI : input est une quantité valide (même conditions que product.js)
@@ -277,7 +286,8 @@ const changeQuantity = () => {
                 // Enregistrer les modifications dans le localStorage
                 localStorage.setItem("product", JSON.stringify(cart));
                 // Mettre les totaux à jour
-                newTotalCart();
+                newTotalQuantity();
+                newTotalPrice(targetDataPrice);
             }
             else {
                 alert("Veuillez indiquer une quantité entre 1 et 100.");

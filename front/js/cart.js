@@ -86,6 +86,7 @@ const newTotalQuantity = async () => {
 // Afficher le nouveau prix :
 const newTotalPrice = async () => {
     let totalPrice = 0;
+    let subTotalPrice = 0;
 
     for (const item of cart) {
         const targetId = item.itemId;
@@ -94,13 +95,13 @@ const newTotalPrice = async () => {
         const data = await fetchProducts(targetId);
         const unitPrice = parseInt(data.price)
         // Prix total du produit selon sa quantité
-        const subTotalPrice = unitPrice * targetQuantity;
+        subTotalPrice = unitPrice * targetQuantity;
         // Additionner les sous-totaux pour obtenir le prix total du panier
         totalPrice += subTotalPrice;
-
+        console.log("Sous-total" + subTotalPrice);
+        document.getElementsByClassName('price').innerText = subTotalPrice + " €";
         
     }
-    
     priceSpan.innerText = totalPrice;
 };
 
@@ -168,10 +169,10 @@ const displayProducts = async () => {
                 description.appendChild(colorOption);
 
                 const productPrice = document.createElement('p');
-                productPrice.setAttribute('data-price', totalPrice);
+                productPrice.classList.add("price");
                 productPrice.innerText = totalPrice + " €";
                 description.appendChild(productPrice);
-                
+
                 const settings = document.createElement('div');
                 settings.classList.add('cart__item__content__settings');
                 itemContent.appendChild(settings);
@@ -207,7 +208,7 @@ const displayProducts = async () => {
                 totalCart(cartTotalPrice, cartTotalQuantity);
                 changeQuantity();
                 deleteProduct();
-                
+
             })
         })
     }
@@ -272,9 +273,6 @@ const changeQuantity = () => {
             const newQuantity = Number(element.value);
             // Sélectionner l'article du DOM à modifier
             let targetArticle = element.closest('article');
-            // Sélectionner le sous-total à modifier
-            let targetDataPrice = targetArticle.dataset.price;
-            console.log(targetDataPrice);
             // Sélectionner le produit à modifier (id et couleur identiques)
             let selectedProduct = cart.find(item => item.itemId === targetArticle.dataset.id && item.itemColor === targetArticle.dataset.color);
             // SI : input est une quantité valide (même conditions que product.js)
@@ -287,7 +285,8 @@ const changeQuantity = () => {
                 localStorage.setItem("product", JSON.stringify(cart));
                 // Mettre les totaux à jour
                 newTotalQuantity();
-                newTotalPrice(targetDataPrice);
+                newTotalPrice();
+ 
             }
             else {
                 alert("Veuillez indiquer une quantité entre 1 et 100.");
@@ -351,7 +350,7 @@ const getOrder = () => {
     alert("Commande effectuée avec succès. Vous allez être redirigé.e vers une page de confirmation.");
     // Envoyer l'objet "contact" et le tableau des produits à l'API
     postOrder(contact, products);
-    
+
 };
 
 // Envoyer fiche contact et récap de commande

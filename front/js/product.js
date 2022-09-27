@@ -194,6 +194,7 @@ if (addToCartBtn) {
 
         };
 
+        
         processAdding();
     });
 }
